@@ -49,7 +49,7 @@ if has("win32")
     source $VIMRUNTIME/mswin.vim
   endif
 
-  set directory=c:\tmp;c:\temp
+  set directory=c:\tmp,c:\temp
   set viminfo=""
 
 endif

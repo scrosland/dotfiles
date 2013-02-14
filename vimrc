@@ -114,7 +114,7 @@ else
   " Elsewhere the bundles can live in &runtimepath as normal.
   let $BUNDLEDIR = finddir('bundle', &runtimepath)
 endif
-let $VUNDLEDIR = finddir('vundle/', $BUNDLEDIR)
+let $VUNDLEDIR = finddir('vundle', $BUNDLEDIR)
 if strlen($VUNDLEDIR)
   filetype off                " otherwise Vundle won't load corrcetly
 

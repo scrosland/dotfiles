@@ -27,6 +27,9 @@ set norestorescreen
 set t_ti=
 set t_te=
 
+" disable :X encryption
+nnoremap :X :echo "Encryption disabled"<CR>
+
 syntax on
 filetype on
 filetype plugin on
@@ -143,8 +146,13 @@ let g:ctrlp_custom_ignore = {
       \ 'dir': '\v([\/]BitKeeper|[\/]SCCS|_(debug|release))$',
       \ 'file': '\v(tags|\.exe|\.lib|\.a|\.so|\.dll)$',
       \ }
-" ... start from current working directory (at least for now)
-let g:ctrlp_working_path_mode = 'c'
+if has("win32")
+  " ... on Windows, set working directory to the directory of the current file
+  let g:ctrlp_working_path_mode = 'a'
+else
+  " ... otherwise, disable the working directory feature and start in vim's cwd
+  let g:ctrlp_working_path_mode = ''
+endif
 " ... open first file in current window, then others in hidden buffers
 let g:ctrlp_open_multiple_files = '1r'
 let g:ctrlp_by_filename = 1

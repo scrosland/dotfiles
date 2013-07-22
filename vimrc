@@ -74,10 +74,10 @@ set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 command! -nargs=* -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 if has("autocmd")
-  " vim/vimrc files should support folding based on markers
+  " vim/vimrc files should support folding based on markers, but start unfolded
   augroup filetype_vim
     autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType vim setlocal foldmethod=marker nofoldenable
   augroup end
 endif
 
@@ -128,6 +128,7 @@ if strlen($VUNDLEDIR)
   " Vundle manages Vundle
   Bundle 'gmarik/vundle'
 
+  Bundle 'davidoc/taskpaper.vim'
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'
 

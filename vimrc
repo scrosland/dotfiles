@@ -52,7 +52,25 @@ if has("win32")
     source $VIMRUNTIME/mswin.vim
   endif
 
-  set directory=c:\tmp,c:\temp
+  " Find a temporary directory for swap files.
+  function! s:configure_temp_directory()
+    let l:defaults = ['c:\tmp', 'c:\temp']
+    let l:directories = []
+    for l:dir in l:defaults
+      if isdirectory(l:dir)
+        call add(l:directories, l:dir)
+      endif
+    endfor
+    if empty(l:directories)
+      echom "Cannot find any of " . string(l:defaults) . ": directory is unset!"
+      5 sleep
+    else
+      let &directory=join(l:directories, ",")
+    end
+  endfunction
+
+  call s:configure_temp_directory()
+
   set viminfo=""
 
 endif
@@ -74,6 +92,12 @@ set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 command! -nargs=* -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 if has("autocmd")
+  " taskpaper files should use hard tabs
+  augroup filetype_taskpaper
+    autocmd!
+    autocmd FileType taskpaper setlocal noexpandtab nosmarttab softtabstop=0
+  augroup end
+
   " vim/vimrc files should support folding based on markers, but start unfolded
   augroup filetype_vim
     autocmd!

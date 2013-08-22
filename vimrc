@@ -92,10 +92,23 @@ set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 command! -nargs=* -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 if has("autocmd")
+  " markdown files should start unfolded
+  augroup filetype_markdown
+    autocmd!
+    autocmd FileType mkd setlocal nofoldenable
+  augroup end
+
   " taskpaper files should use hard tabs
+  function! s:taskpaper_setup()
+    setlocal softtabstop=0
+    setlocal tabstop=4
+    setlocal shiftwidth=4
+    setlocal noexpandtab
+    setlocal nosmarttab
+  endfunction
   augroup filetype_taskpaper
     autocmd!
-    autocmd FileType taskpaper setlocal noexpandtab nosmarttab softtabstop=0
+    autocmd FileType taskpaper call s:taskpaper_setup()
   augroup end
 
   " vim/vimrc files should support folding based on markers, but start unfolded
@@ -152,6 +165,7 @@ if strlen($VUNDLEDIR)
   " Vundle manages Vundle
   Bundle 'gmarik/vundle'
 
+  Bundle 'chikamichi/mediawiki.vim'
   Bundle 'davidoc/taskpaper.vim'
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'

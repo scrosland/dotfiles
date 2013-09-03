@@ -92,10 +92,24 @@ set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 command! -nargs=* -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 if has("autocmd")
+  function! s:enable_wrap()
+    setlocal wrap linebreak
+    setlocal textwidth=0
+  endfunction
+
   " markdown files should start unfolded
   augroup filetype_markdown
     autocmd!
     autocmd FileType mkd setlocal nofoldenable
+  augroup end
+
+  " mediawiki buffer setup
+  function! s:mediawiki_setup()
+    call s:enable_wrap()
+  endfunction
+  augroup filetype_mediawiki
+    autocmd!
+    autocmd FileType mediawiki call s:mediawiki_setup()
   augroup end
 
   " taskpaper files should use hard tabs
@@ -105,6 +119,7 @@ if has("autocmd")
     setlocal shiftwidth=4
     setlocal noexpandtab
     setlocal nosmarttab
+    call s:enable_wrap()
   endfunction
   augroup filetype_taskpaper
     autocmd!
@@ -131,7 +146,7 @@ if isdirectory($HOME . "/work/misc")
 
   " Local plugins
   source ~/work/misc/tools/vim/load_plugins.vim
-  map <Leader>bk <Esc>:call Btkpr_Annotate()<cr>
+  map <Leader>bk <Esc>:call Btkpr_Annotate()<CR>
 endif
 
 " }}}
@@ -169,6 +184,7 @@ if strlen($VUNDLEDIR)
   Bundle 'davidoc/taskpaper.vim'
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'
+  Bundle 'scrooloose/nerdtree'
 
   filetype on                 " restore
 endif
@@ -185,16 +201,15 @@ let g:ctrlp_custom_ignore = {
       \ 'dir': '\v([\/]BitKeeper|[\/]SCCS|_(debug|release))$',
       \ 'file': '\v(tags|\.exe|\.lib|\.a|\.so|\.dll)$',
       \ }
-if has("win32")
-  " ... on Windows, set working directory to the directory of the current file
-  let g:ctrlp_working_path_mode = 'a'
-else
-  " ... otherwise, disable the working directory feature and start in vim's cwd
-  let g:ctrlp_working_path_mode = ''
-endif
+" ... working path mode
+let g:ctrlp_working_path_mode = 'a'
 " ... open first file in current window, then others in hidden buffers
 let g:ctrlp_open_multiple_files = '1r'
 let g:ctrlp_by_filename = 1
+
+
+" NERDTree
+nnoremap <C-n> :NERDTreeToggle<CR>
 
 
 " Netrw should ignore case in sort

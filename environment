@@ -1,0 +1,10 @@
+#
+# vim: set filetype=sh:
+#
+# Environment
+#
+
+export BROWSER='google-chrome'
+export EDITOR='vim'
+export LESS='Xm'
+

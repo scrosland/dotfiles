@@ -1,0 +1,7 @@
+# vim: set filetype=sh: 
+# 
+# Simply source all the individual scripts
+#
+for script in environment functions shrc ; do
+    source $HOME/dotfiles/${script}
+done

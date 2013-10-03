@@ -1,0 +1,68 @@
+#
+# vim: set filetype=sh:
+#
+# Bash rc
+#
+
+unset INTERACTIVE
+
+# remember this is an interactive shell
+case "$-" in
+    *i*)  export INTERACTIVE=1 ;;
+esac
+
+# 
+# Setup for running interactively.
+#
+if [[ -n $INTERACTIVE ]] ; then
+
+    # shell setup
+    set -o vi
+
+    # tells bash to check the window size after each command
+    shopt -s checkwinsize
+
+    # if TERM is not set, sort it out
+    if [ -z "$TERM" -o "$TERM" = "dumb" ] ; then
+        export TERM="xterm"         # lowest common denominator
+    fi
+
+    # debian has a customised terminfo entry
+    if [ "$TERM" = "xterm" ] ; then
+        if infocmp "xterm-debian" > /dev/null 2>&1
+        then
+            export TERM=xterm-debian
+        fi
+    fi
+
+    # general aliases
+    alias cls='clear'
+    alias ls='ls -CF'
+    alias la='ls -aCF'
+    alias r='fc -s'
+
+    # save prompt set during login
+    if [ -z "$PROMPT_LOGIN" ] ; then
+        typeset -rx PROMPT_LOGIN="$PS1"
+    fi
+
+    # change the prompt if this is a sub-shell of something else
+    if [ -n "$PROMPT_LOGIN" ] ; then
+        islogin=''
+        if [[ $(ps -o 'command=' -p $$) = "-${SHELL}" ]] ; then
+            islogin='true'
+        fi
+        if [ -n "$islogin" -o "$SHLVL" -eq 1 ] ; then
+            PS1="$PROMPT_LOGIN"
+        else
+            PS1="${PROMPT_LOGIN}<${SHLVL}> "
+        fi
+        unset islogin
+    fi
+
+fi # endif interactive
+
+# pull in local settings
+if [[ -r $HOME/.shrc.local ]] ; then
+    source $HOME/.shrc.local
+fi

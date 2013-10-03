@@ -210,6 +210,7 @@ let g:ctrlp_by_filename = 1
 
 " NERDTree
 nnoremap <C-n> :NERDTreeToggle<CR>
+let NERDTreeQuitOnOpen = 1
 
 
 " Netrw should ignore case in sort
@@ -222,7 +223,7 @@ let g:netrw_sort_options = "i"
 if has("gui_running")
 
   " Font
-  set guifont=Monospace\ 10,Consolas:h11
+  set guifont=DejaVu\ Sans\ Mono:h10,Consolas:h11,Monospace:h10
 
   " Hide mouse in the GUI
   set mousehide

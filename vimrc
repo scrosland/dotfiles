@@ -35,10 +35,6 @@ filetype on
 filetype plugin on
 filetype indent off
 
-" Set up errorfile and makeef for :cf and :make commands
-set errorfile=err
-set makeef=err
-
 " Move leader to something I can type
 let mapleader="'"
 
@@ -71,6 +67,7 @@ if has("win32")
 
   call s:configure_temp_directory()
 
+  " Don't save viminfo files
   set viminfo=""
 
 endif
@@ -78,6 +75,13 @@ endif
 " }}}
 
 " --- Value added settings (spelling, tags, etc.) --- {{{
+
+" Improved wildcard expansion.
+" First <tab> populates with longest match, and pops up a menu if needed.
+" Second <tab> selects first thing in menu.
+" <C-N> and <C-P> navigate the menu.
+set wildmenu
+set wildmode=longest:full,full
 
 " Spell checking
 set spelllang=en_gb
@@ -131,22 +135,6 @@ if has("autocmd")
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker nofoldenable
   augroup end
-endif
-
-" }}}
-
-" --- Work linux things --- {{{
-
-if isdirectory($HOME . "/work/misc")
-  " Fix up grep to work with rsgrep
-  set grepprg=rsgrep\ $*
-
-  " Path to search for include files
-  set path=$SOFTWARE/headers,$SOFTWARE/include,.,/usr/include
-
-  " Local plugins
-  source ~/work/misc/tools/vim/load_plugins.vim
-  map <Leader>bk <Esc>:call Btkpr_Annotate()<CR>
 endif
 
 " }}}
@@ -235,6 +223,14 @@ else
   " -- so disable it when not running a gui.
   set mouse=
 
+endif
+
+" --- local options --- {{{
+
+if has("win32") && exists("$USERPROFILE/vimfiles/vimrc.local")
+  source $USERPROFILE/vimfiles/vimrc.local
+elseif exists("$HOME/.vimrc.local")
+  source $HOME/.vimrc.local
 endif
 
 " }}}

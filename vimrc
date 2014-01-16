@@ -6,6 +6,7 @@ set redraw
 set visualbell
 set noerrorbells
 set showmode
+set incsearch
 
 set autoindent
 set smartindent
@@ -170,6 +171,7 @@ if strlen($VUNDLEDIR)
 
   Bundle 'chikamichi/mediawiki.vim'
   Bundle 'davidoc/taskpaper.vim'
+  Bundle 'jlanzarotta/bufexplorer'
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'
   Bundle 'scrooloose/nerdtree'
@@ -180,6 +182,10 @@ endif
 " }}}
 
 " --- Plugin options --- {{{
+
+" BufExplorer
+let g:bufExplorerShowNoName = 1
+let g:bufExplorerSplitOutPathName = 0
 
 " Ctrl-P ...
 " ... BitKeeper root
@@ -194,6 +200,8 @@ let g:ctrlp_working_path_mode = 'a'
 " ... open first file in current window, then others in hidden buffers
 let g:ctrlp_open_multiple_files = '1r'
 let g:ctrlp_by_filename = 1
+" ... map the buffer explorer
+nnoremap <Leader>bb :CtrlPBuffer<CR>
 
 
 " NERDTree

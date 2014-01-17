@@ -3,10 +3,12 @@
 set nocompatible
 set redraw
 
+" Move leader to something I can type
+let mapleader="'"
+
 set visualbell
 set noerrorbells
 set showmode
-set incsearch
 
 set autoindent
 set smartindent
@@ -28,6 +30,18 @@ set norestorescreen
 set t_ti=
 set t_te=
 
+if &t_Co == 16
+  if &term == "xterm-debian" || &term == "gnome-terminal"
+    " gnome-terminal has broken detection :(
+    set t_Co=256
+  endif
+endif
+
+" highlight search and a mapping to hide the highlight
+set incsearch
+set hlsearch
+nnoremap 'q :silent nohlsearch<CR>
+
 " disable :X encryption
 nnoremap :X :echo "Encryption disabled"<CR>
 
@@ -36,10 +50,11 @@ filetype on
 filetype plugin on
 filetype indent off
 
-" Move leader to something I can type
-let mapleader="'"
-
 " }}}
+
+function! s:find_directories(choices)
+  return filter(copy(a:choices), 'isdirectory(expand(v:val))')
+endfunction
 
 " --- MS Windows --- {{{
 
@@ -52,12 +67,7 @@ if has("win32")
   " Find a temporary directory for swap files.
   function! s:configure_temp_directory()
     let l:defaults = ['c:\tmp', 'c:\temp']
-    let l:directories = []
-    for l:dir in l:defaults
-      if isdirectory(l:dir)
-        call add(l:directories, l:dir)
-      endif
-    endfor
+    let l:directories = s:find_directories(l:defaults)
     if empty(l:directories)
       echom "Cannot find any of " . string(l:defaults) . ": directory is unset!"
       5 sleep
@@ -175,6 +185,7 @@ if strlen($VUNDLEDIR)
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'
   Bundle 'scrooloose/nerdtree'
+  " Bundle 'scrosland/nvsimple'
 
   filetype on                 " restore
 endif
@@ -203,14 +214,21 @@ let g:ctrlp_by_filename = 1
 " ... map the buffer explorer
 nnoremap <Leader>bb :CtrlPBuffer<CR>
 
-
 " NERDTree
 nnoremap <C-n> :NERDTreeToggle<CR>
 let NERDTreeQuitOnOpen = 1
 
-
 " Netrw should ignore case in sort
 let g:netrw_sort_options = "i"
+
+" nvSimple notes directory
+if exists('$USERPROFILE/Dropbox/notes')
+  let g:nvsimple_notes_directory = '$USERPROFILE/Dropbox/notes'
+elseif exists('$HOME/Dropbox/notes')
+  let g:nvsimple_notes_directory = '$HOME/Dropbox/notes'
+endif
+nnoremap 'nv :Nv<CR>
+nnoremap 'no :Nvopen<CR>
 
 " }}}
 

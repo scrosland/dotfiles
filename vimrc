@@ -185,7 +185,7 @@ if strlen($VUNDLEDIR)
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'
   Bundle 'scrooloose/nerdtree'
-  " Bundle 'scrosland/nvsimple'
+  Bundle 'scrosland/nvsimple'
 
   filetype on                 " restore
 endif

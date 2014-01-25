@@ -56,13 +56,20 @@ function! s:find_directories(choices)
   return filter(copy(a:choices), 'isdirectory(expand(v:val))')
 endfunction
 
+function! s:source_if_readable(filename)
+  let l:filename = expand(a:filename)
+  if filereadable(l:filename)
+    execute "source " . l:filename
+    return 1
+  endif
+  return 0
+endfunction
+
 " --- MS Windows --- {{{
 
 if has("win32")
 
-  if exists("$VIMRUNTIME/mswin.vim")
-    source $VIMRUNTIME/mswin.vim
-  endif
+  call s:source_if_readable("$VIMRUNTIME/mswin.vim")
 
   " Find a temporary directory for swap files.
   function! s:configure_temp_directory()
@@ -253,10 +260,10 @@ endif
 
 " --- local options --- {{{
 
-if has("win32") && exists("$USERPROFILE/vimfiles/vimrc.local")
-  source $USERPROFILE/vimfiles/vimrc.local
-elseif exists("$HOME/.vimrc.local")
-  source $HOME/.vimrc.local
+if has("win32")
+  call s:source_if_readable("$USERPROFILE/vimfiles/vimrc.local")
+else
+  call s:source_if_readable("$HOME/.vimrc.local")
 endif
 
 " }}}

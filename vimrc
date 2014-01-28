@@ -249,6 +249,10 @@ if has("gui_running")
   " Hide mouse in the GUI
   set mousehide
 
+  " Initial window size
+  set columns=80
+  set lines=42
+
 else
 
   " Mouse mode should work in a modern terminal

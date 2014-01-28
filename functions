@@ -5,32 +5,36 @@
 #
 
 # $1 = filename to convert to abs
-function abs_file()
+abs_file()
 {
   local file="$1"
   file=$(cd $(dirname "$file") && pwd)/$(basename "$file")
-  echo "$file"
+  echo "$file" ;
 }
 
 # echo the abs path of this file (expanding one level of symlink)
-function this_file()
+this_file()
 {
   local source="${BASH_SOURCE[0]}"
   local file=$(test -L "$source" && readlink "$source" || echo "$source")
-  abs_file "$file"
+  abs_file "$file" ;
 }
 
 # echo the abs path of the running script $0 (no symlink expansion)
-function this_script()
+this_script()
 {
   local source="${BASH_SOURCE[0]}"
-  abs_file "$source"
+  abs_file "$source" ;
 }
 
 # set terminal title
-function set-title()
+set_title()
 {
     local title=${1:-"Terminal"}
-    echo -ne "\033]0;${title}\007"
+    local opts="-n"
+    if [ -n "$BASH_VERSION" ] ; then
+      opts="${opts} -e"
+    fi
+    echo ${opts} "\033]0;${title}\007" ;
 }
 

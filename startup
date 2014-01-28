@@ -3,5 +3,5 @@
 # Simply source all the individual scripts
 #
 for script in environment functions shrc ; do
-    source $HOME/dotfiles/${script}
+    . $HOME/dotfiles/${script}
 done

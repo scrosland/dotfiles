@@ -4,7 +4,7 @@
 # Environment
 #
 
-export BROWSER='google-chrome'
-export EDITOR='vim'
-export LESS='Xm'
+BROWSER='google-chrome' ; export BROWSER
+EDITOR='vim' ; export EDITOR
+LESS='Xm' ; export LESS
 

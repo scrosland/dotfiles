@@ -29,12 +29,16 @@ if [ -n "$INTERACTIVE" ] ; then
         TERM="xterm" ; export TERM      # lowest common denominator
     fi
 
-    # debian has a customised terminfo entry
+    # look for the best "xterm" terminfo entry
     if [ "$TERM" = "xterm" ] ; then
-        if infocmp "xterm-debian" > /dev/null 2>&1
-        then
-            TERM=xterm-debian ; export TERM
-        fi
+        for info in xterm-256color xterm-debian ; do
+          if infocmp "${info}" > /dev/null 2>&1
+          then
+              TERM=${info} ; export TERM
+              break
+          fi
+        done
+        unset info
     fi
 
     # general aliases

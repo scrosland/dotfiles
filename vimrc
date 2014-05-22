@@ -52,6 +52,36 @@ filetype indent off
 
 " }}}
 
+" --- System Detection --- {{{
+
+function! GetSystemType()
+  if has("win32") || has("win64")
+    return "windows"
+  endif
+  if has("mac") || has("macunix") || has("gui_macvim")
+    return "osx"
+  endif
+  if has("unix")
+    if system('uname') =~ 'Darwin'
+      return "osx"
+    else
+      return "unix"
+    endif
+  endif
+  throw "GetSystemType(): unknown system type"
+endfunction
+
+let g:system_type = GetSystemType()
+lockvar g:system_type
+let g:is_osx      = (g:system_type == "osx")
+lockvar g:is_osx
+let g:is_unix     = (g:system_type == "unix")
+lockvar g:is_unix
+let g:is_windows  = (g:system_type == "windows")
+lockvar g:is_windows
+
+" }}}
+
 function! s:find_directories(choices)
   return filter(copy(a:choices), 'isdirectory(expand(v:val))')
 endfunction
@@ -67,7 +97,7 @@ endfunction
 
 " --- MS Windows --- {{{
 
-if has("win32")
+if g:is_windows
 
   call s:source_if_readable("$VIMRUNTIME/mswin.vim")
 
@@ -110,8 +140,11 @@ nnoremap <silent> <F7> :setlocal spell!<CR><Bar>:echo "Spell check: " . strpart(
 " Tags files may not be in current directory
 set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 
+" Add a :Grep wrapper to :grep
+command! -nargs=+ -complete=shellcmd Grep execute 'silent grep <args>' | copen
+
 " Add a :Shell command to run a command and read the stdout into a new buffer
-command! -nargs=* -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
+command! -nargs=+ -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 if has("autocmd")
   function! s:enable_wrap()
@@ -188,6 +221,9 @@ if strlen($VUNDLEDIR)
 
   Bundle 'chikamichi/mediawiki.vim'
   Bundle 'davidoc/taskpaper.vim'
+  if g:is_osx
+    Bundle 'itspriddle/vim-marked'
+  endif
   Bundle 'jlanzarotta/bufexplorer'
   Bundle 'kien/ctrlp.vim'
   Bundle 'plasticboy/vim-markdown'
@@ -262,12 +298,29 @@ else
 
 endif
 
+" --- other vimrc files --- {{{
+
+let g:vimrc = resolve(expand("<sfile>:p"))
+lockvar g:vimrc
+let g:vimrc_dir = resolve(fnamemodify(g:vimrc, ":h"))
+lockvar g:vimrc_dir
+let g:vimrc_extras_dir = g:vimrc_dir . '/vim'
+lockvar g:vimrc_extras_dir
+
+function! s:load_vimrc_extras()
+  let l:pattern = g:vimrc_extras_dir . '/*.vim'
+  let l:files = split(glob(l:pattern), "\n")
+  call map(l:files, 's:source_if_readable(v:val)')
+endfunction
+call s:load_vimrc_extras()
+
+" }}}
+
 " --- local options --- {{{
 
-if has("win32")
-  call s:source_if_readable("$USERPROFILE/vimfiles/vimrc.local")
-else
-  call s:source_if_readable("$HOME/.vimrc.local")
-endif
+let s:vimrc_local = g:is_windows ?
+                      \ "$USERPROFILE/vimfiles/vimrc.local" :
+                      \ "$HOME/.vimrc.local"
+call s:source_if_readable(s:vimrc_local)
 
 " }}}

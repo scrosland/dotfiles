@@ -62,7 +62,8 @@ function! GetSystemType()
     return "osx"
   endif
   if has("unix")
-    if system('uname') =~ 'Darwin'
+    " case insensitive regex comparison
+    if system('uname') =~? 'Darwin'
       return "osx"
     else
       return "unix"

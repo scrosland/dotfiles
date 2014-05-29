@@ -31,10 +31,12 @@ endfunction
 " --- Automatic cleanup ---
 
 function! s:add_cleanup(tag, fn)
+  let l:pathname = fnameescape(expand('%:p'))
+  let l:cleanup = printf("%s('%s', '%s')", a:fn, a:tag, l:pathname)
   silent! execute 'augroup ' . s:cleanup_group(a:tag)
     autocmd!
-    silent! exe 'autocmd BufDelete <buffer> call ' . a:fn . '("' . a:tag . '")'
-    silent! exe 'autocmd VimLeavePre * call ' . a:fn . '("' . a:tag . '")'
+    silent! exe 'autocmd BufDelete <buffer> call ' . l:cleanup
+    silent! exe 'autocmd VimLeavePre * call ' . l:cleanup
   augroup END
 endfunction
 
@@ -68,21 +70,31 @@ function! s:markedly_unix()
   return l:command
 endfunction
 
-function! s:markedly_cleanup_unix(tag)
+function! s:markedly_cleanup_unix(tag, pathname)
   call s:remove_cleanup(a:tag)
   silent! execute '!screen -S "' . a:tag . '" -X quit'
 endfunction!
 
-" --- Windows ---
-"
-" It would be great to use the same trick as on linux, and schtasks is close
-" but will not kill markedly properly :(
+" --- Windows: run in minimized cmd window, and kill using powershell ---
+
+function! s:markedly_stop()
+  return shellescape(g:path_join(g:vimrc_extras_dir, 'markedly_stop.ps1'))
+endfunction
 
 function! s:markedly_windows()
-  let l:command = '!start cmd /c cd C:\Ruby193\bin&'
+  let l:tag = s:tag()
+  call s:add_cleanup(l:tag, "s:markedly_cleanup_windows")
+  let l:command = '!start /min cmd /c cd C:\Ruby193\bin&'
   let l:command = l:command . 'ruby markedly ' . join(g:markedly_options, ' ')
   let l:command = l:command . ' ' . s:current_file() . '&pause'
   return l:command
+endfunction
+
+function! s:markedly_cleanup_windows(tag, pathname)
+  call s:remove_cleanup(a:tag)
+  let l:command = '!start /b powershell ' . s:markedly_stop()
+  let l:command = l:command . ' "' . a:pathname . '"'
+  silent! execute l:command
 endfunction
 
 " --- Main entry point ---
@@ -91,7 +103,8 @@ function! s:markedly()
   try
     let l:command = s:markedly_{g:system_type}()
   catch
-    throw "s:markedly() has not been implemented for this platform"
+    echom "caught exception: " . v:exception
+    throw "s:markedly() may not have been implemented for this platform"
   endtry
   silent! execute l:command
 endfunction

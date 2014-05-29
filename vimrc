@@ -81,7 +81,14 @@ lockvar g:is_unix
 let g:is_windows  = (g:system_type == "windows")
 lockvar g:is_windows
 
+let g:path_separator = g:is_windows ? '\' : '/'
+lockvar g:path_separator
+
 " }}}
+
+function! g:path_join(...)
+  return join(a:000, g:path_separator)
+endfunction
 
 function! s:find_directories(choices)
   return filter(copy(a:choices), 'isdirectory(expand(v:val))')
@@ -305,11 +312,11 @@ let g:vimrc = resolve(expand("<sfile>:p"))
 lockvar g:vimrc
 let g:vimrc_dir = resolve(fnamemodify(g:vimrc, ":h"))
 lockvar g:vimrc_dir
-let g:vimrc_extras_dir = g:vimrc_dir . '/vim'
+let g:vimrc_extras_dir = g:path_join(g:vimrc_dir, 'vim')
 lockvar g:vimrc_extras_dir
 
 function! s:load_vimrc_extras()
-  let l:pattern = g:vimrc_extras_dir . '/*.vim'
+  let l:pattern = g:path_join(g:vimrc_extras_dir, '*.vim')
   let l:files = split(glob(l:pattern), "\n")
   call map(l:files, 's:source_if_readable(v:val)')
 endfunction

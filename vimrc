@@ -237,9 +237,11 @@ if strlen($VUNDLEDIR)
   Plugin 'jlanzarotta/bufexplorer'
   Plugin 'kien/ctrlp.vim'
   Plugin 'plasticboy/vim-markdown'
+  Plugin 'PProvost/vim-ps1'
   Plugin 'scrooloose/nerdtree'
   Plugin 'scrosland/nvsimple.vim'
-  "Plugin 'file:///C:/Users/scrosland/Documents/GitHub/nvsimple.vim'
+  "Plugin 'file:///C:/Users/scrosland/Documents/GitHub/nvsimple.vim',
+  "  \ {'name': 'nvsimple.local'}
 
   call vundle#end()
 

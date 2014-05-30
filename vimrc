@@ -198,17 +198,18 @@ endif
 
 " }}}
 
-" --- Bundles (vundle) --- {{{
+" --- Plugins (vundle) --- {{{
 "
-"  :BundleList          - list configured bundles
-"  :BundleInstall(!)    - install(update) bundles (then u for changelog)
+"  :PluginList          - list configured plugins
+"  :PluginInstall(!)    - install(update) plugins (then u for changelog)
 "
-"  see :help vundle for more details
-"  NOTE: comments after Bundle commands are not allowed..
+"  See :help vundle for more details.
+"  NOTE: Comments after Bundle commands are not allowed.
+"        They are after Plugin commands.
 "
 
 if strlen($USERPROFILE)
-  " On Windows force the bundles to be in C:\Users\<user>\vimfiles
+  " On Windows force the plugins to be in C:\Users\<user>\vimfiles
   " to ensure that the directory is writable without needing to deal
   " with UAC.
   let $BUNDLEDIR = expand("$USERPROFILE/vimfiles/bundle")
@@ -216,27 +217,31 @@ else
   " Elsewhere the bundles can live in &runtimepath as normal.
   let $BUNDLEDIR = finddir('bundle', &runtimepath)
 endif
-let $VUNDLEDIR = finddir('vundle', $BUNDLEDIR)
+" Find vundle itself
+let $VUNDLEDIR = finddir('Vundle.vim', $BUNDLEDIR)
 if strlen($VUNDLEDIR)
   filetype off                " otherwise Vundle won't load corrcetly
 
   " setup
   set runtimepath+=$VUNDLEDIR
-  call vundle#rc($BUNDLEDIR)
+  call vundle#begin($BUNDLEDIR)
 
   " Vundle manages Vundle
-  Bundle 'gmarik/vundle'
+  Plugin 'gmarik/Vundle.vim'
 
-  Bundle 'chikamichi/mediawiki.vim'
-  Bundle 'davidoc/taskpaper.vim'
+  Plugin 'chikamichi/mediawiki.vim'
+  Plugin 'davidoc/taskpaper.vim'
   if g:is_osx
-    Bundle 'itspriddle/vim-marked'
+    Plugin 'itspriddle/vim-marked'
   endif
-  Bundle 'jlanzarotta/bufexplorer'
-  Bundle 'kien/ctrlp.vim'
-  Bundle 'plasticboy/vim-markdown'
-  Bundle 'scrooloose/nerdtree'
-  Bundle 'scrosland/nvsimple.vim'
+  Plugin 'jlanzarotta/bufexplorer'
+  Plugin 'kien/ctrlp.vim'
+  Plugin 'plasticboy/vim-markdown'
+  Plugin 'scrooloose/nerdtree'
+  Plugin 'scrosland/nvsimple.vim'
+  "Plugin 'file:///C:/Users/scrosland/Documents/GitHub/nvsimple.vim'
+
+  call vundle#end()
 
   filetype on                 " restore
 endif

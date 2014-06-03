@@ -28,15 +28,34 @@ function! s:tag()
   return substitute(tempname(), "[\\/]", '', 'g')
 endfunction
 
+" --- Tag to pathname cache ---
+
+let s:tagsdict = {}
+
+function! s:add_tag(tag, pathname)
+  let s:tagsdict[a:tag] = a:pathname
+endfunction
+
+function! s:remove_tag(tag)
+  if has_key(s:tagsdict, a:tag)
+    call remove(s:tagsdict, a:tag)
+  endif
+endfunction
+
+function! s:tag2pathname(tag)
+  return s:tagsdict[a:tag]
+endfunction
+
 " --- Automatic cleanup ---
 
 function! s:add_cleanup(tag, fn)
-  let l:pathname = fnameescape(expand('%:p'))
-  let l:cleanup = printf("%s('%s', '%s')", a:fn, a:tag, l:pathname)
+  let l:pathname = expand('%:p')
+  call s:add_tag(a:tag, l:pathname)
+  let l:cleanup = printf("%s('%s')", a:fn, a:tag)
   silent! execute 'augroup ' . s:cleanup_group(a:tag)
     autocmd!
-    silent! exe 'autocmd BufDelete <buffer> call ' . l:cleanup
-    silent! exe 'autocmd VimLeavePre * call ' . l:cleanup
+    silent! execute 'autocmd BufDelete <buffer> call ' . l:cleanup
+    silent! execute 'autocmd VimLeavePre * call ' . l:cleanup
   augroup END
 endfunction
 
@@ -45,6 +64,7 @@ function! s:remove_cleanup(tag)
     autocmd!
   augroup END
   silent! execute 'augroup! ' . s:cleanup_group(a:tag)
+  call s:remove_tag(a:tag)
 endfunction!
 
 " --- System specific implementations ---
@@ -90,10 +110,11 @@ function! s:markedly_windows()
   return l:command
 endfunction
 
-function! s:markedly_cleanup_windows(tag, pathname)
+function! s:markedly_cleanup_windows(tag)
+  let l:pathname = shellescape(s:tag2pathname(a:tag))
   call s:remove_cleanup(a:tag)
   let l:command = '!start /b powershell ' . s:markedly_stop()
-  let l:command = l:command . ' "' . a:pathname . '"'
+  let l:command = l:command . ' ' . l:pathname
   silent! execute l:command
 endfunction
 

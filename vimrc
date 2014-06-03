@@ -37,6 +37,17 @@ if &t_Co == 16
   endif
 endif
 
+if has("multi_byte")
+  " UI encoding
+  set encoding=utf-8
+  " encoding detection
+  set fileencodings=ucs-bom,utf-8,default,latin1
+  " default for new files
+  setglobal fileencoding=utf-8
+  "set listchars=eol:¶
+  set listchars=eol:←
+endif
+
 " highlight search and a mapping to hide the highlight
 set incsearch
 set hlsearch
@@ -132,6 +143,14 @@ endif
 
 " --- Value added settings (spelling, tags, etc.) --- {{{
 
+" Digraphs - CTRL-K plus two characters
+if has("digraphs") && has("multi_byte")
+  " EN DASH U+2013
+  digraphs n- 8211
+  " EM DASH U+2014
+  digraphs m- 8212
+endif
+
 " Improved wildcard expansion.
 " First <tab> populates with longest match, and pops up a menu if needed.
 " Second <tab> selects first thing in menu.
@@ -154,25 +173,68 @@ command! -nargs=+ -complete=shellcmd Grep execute 'silent grep <args>' | copen
 " Add a :Shell command to run a command and read the stdout into a new buffer
 command! -nargs=+ -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
-if has("autocmd")
-  function! s:enable_wrap()
-    setlocal wrap linebreak
-    setlocal textwidth=0
-  endfunction
+" }}}
 
+
+" --- Wrap mode and and file type handling --- {{{
+
+function! s:soft_wrap_enable()
+  setlocal wrap linebreak
+  setlocal textwidth=0
+  " fix up motion keys to move between displayed lines, not real lines
+  " ... beginning and end of line ...
+  nnoremap <buffer> <silent> $ g$
+  nnoremap <buffer> <silent> 0 g0
+  vnoremap <buffer> <silent> $ g$
+  vnoremap <buffer> <silent> 0 g0
+  " ... up and down lines ...
+  nnoremap <buffer> <silent> j gj
+  nnoremap <buffer> <silent> k gk
+  vnoremap <buffer> <silent> j gj
+  vnoremap <buffer> <silent> k gk
+endfunction
+command! -nargs=0 WrapSoft call s:soft_wrap_enable()
+
+function! s:hard_wrap_enable()
+  call s:wrap_default()
+  setlocal textwidth=74
+endfunction
+command! -nargs=0 WrapHard call s:hard_wrap_enable()
+
+function! s:wrap_default()
+  setlocal wrap< linebreak<
+  setlocal textwidth<
+  try
+    " fix up motion keys to move up down displayed lines in the buffer
+    " ... beginning and end of line ...
+    nunmap <buffer> $
+    nunmap <buffer> 0
+    vunmap <buffer> $
+    vunmap <buffer> 0
+    " ... up and down lines ...
+    nunmap <buffer> j
+    nunmap <buffer> k
+    vunmap <buffer> j
+    vunmap <buffer> k
+  catch
+  endtry
+endfunction
+command! -nargs=0 WrapDefault call s:wrap_default()
+
+function! WrapDescribeForAirline()
+  return (&wrap && &linebreak) ? "SOFT"
+      \ : (&wrap && &fo =~ "t" && &tw != 0) ? "tw=" . &textwidth
+      \ : ""
+endfunction
+
+" --- File type handling ---
+
+if has("autocmd")
   " markdown files should start unfolded
   augroup filetype_markdown
     autocmd!
-    autocmd FileType mkd setlocal nofoldenable
-  augroup end
-
-  " mediawiki buffer setup
-  function! s:mediawiki_setup()
-    call s:enable_wrap()
-  endfunction
-  augroup filetype_mediawiki
-    autocmd!
-    autocmd FileType mediawiki call s:mediawiki_setup()
+    autocmd FileType markdown setlocal nofoldenable
+    autocmd FileType mkd      setlocal nofoldenable
   augroup end
 
   " taskpaper files should use hard tabs
@@ -182,7 +244,6 @@ if has("autocmd")
     setlocal shiftwidth=4
     setlocal noexpandtab
     setlocal nosmarttab
-    call s:enable_wrap()
   endfunction
   augroup filetype_taskpaper
     autocmd!
@@ -193,6 +254,16 @@ if has("autocmd")
   augroup filetype_vim
     autocmd!
     autocmd FileType vim setlocal foldmethod=marker nofoldenable
+  augroup end
+
+  " use soft wrap for text-like files
+  augroup wrapping
+    autocmd!
+    autocmd FileType markdown  WrapSoft
+    autocmd FileType mkd       WrapSoft
+    autocmd FileType mediawiki WrapSoft
+    autocmd FileType taskpaper WrapSoft
+    autocmd FileType text      WrapSoft
   augroup end
 endif
 
@@ -229,6 +300,7 @@ if strlen($VUNDLEDIR)
   " Vundle manages Vundle
   Plugin 'gmarik/Vundle.vim'
 
+  Plugin 'bling/vim-airline'
   Plugin 'chikamichi/mediawiki.vim'
   Plugin 'davidoc/taskpaper.vim'
   if g:is_osx
@@ -251,6 +323,14 @@ endif
 " }}}
 
 " --- Plugin options --- {{{
+
+" Airline
+"   monochrome  - a touch dark
+"   lucius      - quite good, but a little subtle
+"   sol         - quiet, but colourful
+let g:airline_theme = 'sol'
+let g:airline_section_b = '%{WrapDescribeForAirline()}'
+set laststatus=2
 
 " BufExplorer
 let g:bufExplorerShowNoName = 1

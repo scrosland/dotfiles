@@ -330,6 +330,9 @@ endif
 "   sol         - quiet, but colourful
 let g:airline_theme = 'sol'
 let g:airline_section_b = '%{WrapDescribeForAirline()}'
+" Disable trailing whitespace checks (too noisy). The default is:
+"   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
+let g:airline#extensions#whitespace#checks = [ 'indent' ]
 set laststatus=2
 
 " BufExplorer

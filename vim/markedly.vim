@@ -90,7 +90,7 @@ function! s:markedly_unix()
   return l:command
 endfunction
 
-function! s:markedly_cleanup_unix(tag, pathname)
+function! s:markedly_cleanup_unix(tag)
   call s:remove_cleanup(a:tag)
   silent! execute '!screen -S "' . a:tag . '" -X quit'
 endfunction!

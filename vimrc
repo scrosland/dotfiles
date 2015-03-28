@@ -300,6 +300,12 @@ if strlen($VUNDLEDIR)
   " Vundle manages Vundle
   Plugin 'gmarik/Vundle.vim'
 
+  " color schemes
+  Plugin 'jonathanfilip/vim-lucius'
+  Plugin 'summerfruit256.vim'
+
+  " plugins
+
   Plugin 'bling/vim-airline'
   Plugin 'chikamichi/mediawiki.vim'
   Plugin 'davidoc/taskpaper.vim'
@@ -312,8 +318,6 @@ if strlen($VUNDLEDIR)
   Plugin 'PProvost/vim-ps1'
   Plugin 'scrooloose/nerdtree'
   Plugin 'scrosland/nvsimple.vim'
-  "Plugin 'file:///C:/Users/scrosland/Documents/GitHub/nvsimple.vim',
-  "  \ {'name': 'nvsimple.local'}
 
   call vundle#end()
 
@@ -323,6 +327,13 @@ endif
 " }}}
 
 " --- Plugin options --- {{{
+
+" color scheme
+colorscheme lucius
+LuciusWhiteHighContrast
+highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
+highlight Search term=reverse cterm=reverse ctermfg=Yellow ctermbg=Black
+"highlight Search term=reverse cterm=bold,undercurl ctermfg=Red ctermbg=NONE
 
 " Airline
 "   monochrome  - a touch dark

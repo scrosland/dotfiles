@@ -65,7 +65,7 @@ filetype indent off
 
 " --- System Detection --- {{{
 
-function! GetSystemType()
+function! s:getSystemType()
   if has("win32") || has("win64")
     return "windows"
   endif
@@ -80,10 +80,10 @@ function! GetSystemType()
       return "unix"
     endif
   endif
-  throw "GetSystemType(): unknown system type"
+  throw "s:getSystemType(): unknown system type"
 endfunction
 
-let g:system_type = GetSystemType()
+let g:system_type = s:getSystemType()
 lockvar g:system_type
 let g:is_osx      = (g:system_type == "osx")
 lockvar g:is_osx
@@ -168,10 +168,12 @@ nnoremap <silent> <F7> :setlocal spell!<CR><Bar>:echo "Spell check: " . strpart(
 set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 
 " Add a :Grep wrapper to :grep
-command! -nargs=+ -complete=shellcmd Grep execute 'silent grep <args>' | copen
+command! -nargs=+ -complete=shellcmd Grep 
+  \ execute 'silent grep <args>' | copen | redraw!
 
 " Add a :Shell command to run a command and read the stdout into a new buffer
-command! -nargs=+ -complete=shellcmd Shell enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
+command! -nargs=+ -complete=shellcmd Shell 
+  \ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 " }}}
 
@@ -303,6 +305,7 @@ if strlen($VUNDLEDIR)
   " color schemes
   Plugin 'jonathanfilip/vim-lucius'
   Plugin 'summerfruit256.vim'
+  Plugin 'altercation/vim-colors-solarized'
 
   " plugins
 
@@ -328,12 +331,45 @@ endif
 
 " --- Plugin options --- {{{
 
-" color scheme
-colorscheme lucius
-LuciusWhiteHighContrast
-highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
-highlight Search term=reverse cterm=reverse ctermfg=Yellow ctermbg=Black
-"highlight Search term=reverse cterm=bold,undercurl ctermfg=Red ctermbg=NONE
+" Color schemes
+
+function! s:fixHighlights(yellow)
+  highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
+  let l:command = "highlight Search term=reverse cterm=reverse ctermfg=" 
+    \. a:yellow . " ctermbg=Black"
+  exec l:command
+endfunction
+
+" Lucius
+function! s:setLucius()
+  colorscheme lucius
+  LuciusWhiteHighContrast
+  call s:fixHighlights("Yellow")
+endfunction
+command! -nargs=0 Lucius call s:setLucius()
+
+" Solarized
+function! s:setSolarized(contrast)
+  " Use the 256 colour mode so the terminal can remain in default colours.
+  let g:solarized_termcolors = 256
+  " Don't mess with the terminal background.
+  let g:solarized_termtrans = 1
+  " With a light background, high contrast often works best for me.
+  let g:solarized_contrast = a:contrast
+  " Turn it on ...
+  colorscheme solarized
+  " ... and drop the annoying options command
+  delcommand SolarizedOptions
+  let l:yellow = (a:contrast == "high") ? "Yellow" : "LightYellow"
+  call s:fixHighlights(l:yellow)
+endfunction
+command! -nargs=0 SolarizedWhite call s:setSolarized("normal")
+command! -nargs=0 SolarizedWhiteHighContrast call s:setSolarized("high")
+
+" Set initial color scheme
+SolarizedWhiteHighContrast
+
+" Other plugins
 
 " Airline
 "   monochrome  - a touch dark
@@ -344,6 +380,7 @@ let g:airline_section_b = '%{WrapDescribeForAirline()}'
 " Disable trailing whitespace checks (too noisy). The default is:
 "   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
 let g:airline#extensions#whitespace#checks = [ 'indent' ]
+" Turn on the status bar everywhere.
 set laststatus=2
 
 " BufExplorer

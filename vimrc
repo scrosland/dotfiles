@@ -349,6 +349,20 @@ endfunction
 command! -nargs=0 Lucius call s:setLucius()
 
 " Solarized
+function! s:dropSolarizedOptions()
+  if exists(":SolarizedOptions")
+    delcommand SolarizedOptions
+  endif
+  if has("autocmd")
+    " add a group to re-do it later if the colorscheme is reloaded
+    if !exists("#DropSolarizedOptions")
+      augroup DropSolarizedOptions
+        autocmd!
+        autocmd ColorScheme * call s:dropSolarizedOptions()
+      augroup END
+    endif
+  endif
+endfunction
 function! s:setSolarized(contrast)
   " Use the 256 colour mode so the terminal can remain in default colours.
   let g:solarized_termcolors = 256
@@ -359,15 +373,24 @@ function! s:setSolarized(contrast)
   " Turn it on ...
   colorscheme solarized
   " ... and drop the annoying options command
-  delcommand SolarizedOptions
+  call s:dropSolarizedOptions()
   let l:yellow = (a:contrast == "high") ? "Yellow" : "LightYellow"
   call s:fixHighlights(l:yellow)
 endfunction
-command! -nargs=0 SolarizedWhite call s:setSolarized("normal")
-command! -nargs=0 SolarizedWhiteHighContrast call s:setSolarized("high")
+function! s:initSolarized()
+  "let l:contrast = has("gui_running") ? "normal" : "high"
+  let l:contrast = "high"
+  call s:setSolarized(l:contrast)
+endfunction
+function! s:solarizedToggleContrast()
+  let l:contrast = (g:solarized_contrast == "normal") ? "high" : "normal"
+  call s:setSolarized(l:contrast)
+endfunction
+command! -nargs=0 Solarized call s:initSolarized()
+command! -nargs=0 SolarizedToggleContrast call s:solarizedToggleContrast()
 
 " Set initial color scheme
-SolarizedWhiteHighContrast
+Solarized
 
 " Other plugins
 
@@ -424,6 +447,9 @@ nnoremap 'no :Nvopen<CR>
 " --- GUI options --- {{{
 
 if has("gui_running")
+
+  " Light background please
+  set background=light
 
   " Font
   set guifont=DejaVu\ Sans\ Mono:h10,Consolas:h11,Monospace:h10

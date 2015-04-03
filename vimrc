@@ -267,6 +267,14 @@ if has("autocmd")
     autocmd FileType taskpaper WrapSoft
     autocmd FileType text      WrapSoft
   augroup end
+
+  " add mappings to the quickfix window
+  "   <S-O> : jump to the location and close the QuickFix window
+  augroup quickfix_mapping
+    autocmd!
+    autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:cclose<CR>
+  augroup END
+
 endif
 
 " }}}

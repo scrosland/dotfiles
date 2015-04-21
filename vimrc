@@ -427,10 +427,13 @@ let g:ctrlp_custom_ignore = {
       \ 'file': '\v(tags|\.exe|\.lib|\.a|\.so|\.dll)$',
       \ }
 " ... working path mode
-let g:ctrlp_working_path_mode = 'a'
+let g:ctrlp_working_path_mode = 'ra'
+" ... stuff the path with the basename of the current file
+let g:ctrlp_default_input = 1
 " ... open first file in current window, then others in hidden buffers
 let g:ctrlp_open_multiple_files = '1r'
-let g:ctrlp_by_filename = 1
+" ... start in filename mode, not path mode. ^D to change.
+"let g:ctrlp_by_filename = 1
 " ... map the buffer explorer
 nnoremap <Leader>bb :CtrlPBuffer<CR>
 

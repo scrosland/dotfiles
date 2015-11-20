@@ -25,6 +25,8 @@ set smartcase
 
 set pastetoggle=<F10>
 
+set path=.,,**
+
 " disable screen restoration on exit
 set norestorescreen
 set t_ti=
@@ -51,7 +53,7 @@ endif
 " highlight search and a mapping to hide the highlight
 set incsearch
 set hlsearch
-nnoremap 'q :silent nohlsearch<CR>
+nnoremap <Leader>q :silent nohlsearch<CR>
 
 " disable :X encryption
 nnoremap :X :echo "Encryption disabled"<CR>
@@ -151,12 +153,28 @@ if has("digraphs") && has("multi_byte")
   digraphs m- 8212
 endif
 
-" Improved wildcard expansion.
-" First <tab> populates with longest match, and pops up a menu if needed.
-" Second <tab> selects first thing in menu.
-" <C-N> and <C-P> navigate the menu.
-set wildmenu
-set wildmode=longest:full,full
+if has("wildmenu")
+  " Improved wildcard expansion.
+  " First <tab> populates with longest match, and pops up a menu if needed.
+  " Second <tab> selects first thing in menu.
+  " <C-N> and <C-P> navigate the menu.
+  set wildignorecase
+  let s:suffixes = [
+    \ ".a",
+    \ ".d",
+    \ ".d2",
+    \ ".dll",
+    \ ".exe",
+    \ ".lib",
+    \ ".o",
+    \ ".so",
+    \ ]
+  for s:suffix in s:suffixes
+    execute 'set wildignore+=*' . s:suffix
+  endfor
+  set wildmenu
+  set wildmode=longest:full,full
+endif
 
 " Spell checking
 set spelllang=en_gb
@@ -168,8 +186,8 @@ nnoremap <silent> <F7> :setlocal spell!<CR><Bar>:echo "Spell check: " . strpart(
 set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 
 " Add a :Grep wrapper to :grep
-command! -nargs=+ -complete=shellcmd Grep 
-  \ execute 'silent grep <args>' | copen | redraw!
+command! -nargs=+ -complete=shellcmd Grep
+  \ execute 'silent grep! <args>' | copen | redraw!
 
 " Add a :Shell command to run a command and read the stdout into a new buffer
 command! -nargs=+ -complete=shellcmd Shell 
@@ -323,8 +341,6 @@ if strlen($VUNDLEDIR)
   if g:is_osx
     Plugin 'itspriddle/vim-marked'
   endif
-  Plugin 'jlanzarotta/bufexplorer'
-  Plugin 'kien/ctrlp.vim'
   Plugin 'plasticboy/vim-markdown'
   Plugin 'PProvost/vim-ps1'
   Plugin 'scrooloose/nerdtree'
@@ -414,28 +430,8 @@ let g:airline#extensions#whitespace#checks = [ 'indent' ]
 " Turn on the status bar everywhere.
 set laststatus=2
 
-" BufExplorer
-let g:bufExplorerShowNoName = 1
-let g:bufExplorerSplitOutPathName = 0
-
-" Ctrl-P ...
-" ... BitKeeper root
-let g:ctrlp_root_markers = ['BitKeeper/']
-" ... various things to ignore
-let g:ctrlp_custom_ignore = {
-      \ 'dir': '\v([\/]BitKeeper|[\/]SCCS|_(debug|release))$',
-      \ 'file': '\v(tags|\.exe|\.lib|\.a|\.so|\.dll)$',
-      \ }
-" ... working path mode
-let g:ctrlp_working_path_mode = 'ra'
-" ... stuff the path with the basename of the current file
-let g:ctrlp_default_input = 1
-" ... open first file in current window, then others in hidden buffers
-let g:ctrlp_open_multiple_files = '1r'
-" ... start in filename mode, not path mode. ^D to change.
-"let g:ctrlp_by_filename = 1
-" ... map the buffer explorer
-nnoremap <Leader>bb :CtrlPBuffer<CR>
+" Simple BufExplorer alternative
+nnoremap <Leader>be :ls<CR>:b
 
 " NERDTree
 nnoremap <C-n> :NERDTreeToggle<CR>

@@ -3,6 +3,12 @@
 set nocompatible
 set redraw
 
+" Debugging on Windows: uncomment the next line to preserve cmd.exe windows
+" after commands finish in order to see what the output was. Useful if
+" git throws errors as Vundle's error handling is suspect.
+"
+" set shellcmdflag=/k
+
 " Move leader to something I can type
 let mapleader="'"
 
@@ -185,10 +191,6 @@ nnoremap <silent> <F7> :setlocal spell!<CR><Bar>:echo "Spell check: " . strpart(
 " Tags files may not be in current directory
 set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 
-" Add a :Grep wrapper to :grep
-command! -nargs=+ -complete=shellcmd Grep
-  \ execute 'silent grep! <args>' | copen | redraw!
-
 " Add a :Shell command to run a command and read the stdout into a new buffer
 command! -nargs=+ -complete=shellcmd Shell 
   \ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
@@ -242,7 +244,7 @@ endfunction
 command! -nargs=0 WrapDefault call s:wrap_default()
 
 function! WrapDescribeForAirline()
-  return (&wrap && &linebreak) ? "SOFT"
+  return (&wrap && &linebreak) ? "soft"
       \ : (&wrap && &fo =~ "t" && &tw != 0) ? "tw=" . &textwidth
       \ : ""
 endfunction
@@ -286,10 +288,12 @@ if has("autocmd")
     autocmd FileType text      WrapSoft
   augroup end
 
+  " Open the quickfix window after any grep command
   " add mappings to the quickfix window
   "   <S-O> : jump to the location and close the QuickFix window
   augroup quickfix_mapping
     autocmd!
+    autocmd QuickFixCmdPost *grep* copen | redraw!
     autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:cclose<CR>
   augroup END
 
@@ -345,6 +349,10 @@ if strlen($VUNDLEDIR)
   Plugin 'PProvost/vim-ps1'
   Plugin 'scrooloose/nerdtree'
   Plugin 'scrosland/nvsimple.vim'
+
+  " git plugins
+  Plugin 'tpope/vim-fugitive'
+  Plugin 'gitignore'
 
   call vundle#end()
 
@@ -422,11 +430,42 @@ Solarized
 "   monochrome  - a touch dark
 "   lucius      - quite good, but a little subtle
 "   sol         - quiet, but colourful
-let g:airline_theme = 'sol'
-let g:airline_section_b = '%{WrapDescribeForAirline()}'
-" Disable trailing whitespace checks (too noisy). The default is:
-"   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
-let g:airline#extensions#whitespace#checks = [ 'indent' ]
+function! AirlineSectionB()
+  let l:parts = []
+  call add(l:parts, WrapDescribeForAirline())
+  call add(l:parts, airline#extensions#branch#get_head())
+  " Hook for .vimrc.local
+  if exists('*LocalPartsForAirline')
+    let l:parts += LocalPartsForAirline()
+  endif
+  " This should use airline#util#append() but that seems to insert a two
+  " space prefix instead of a single space prefix which is annoying.
+  let l:value = join(
+                    \ map(
+                        \ filter(l:parts, 'len(v:val)'),
+                        \ 'airline#util#wrap(v:val, 0)'
+                        \ ),
+                    \ ' > '
+                    \ )
+  return l:value
+endfunction
+
+function! s:initAirline()
+  let g:airline_theme = 'sol'
+  " Disable trailing whitespace checks (too noisy). The default is:
+  "   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
+  let g:airline#extensions#whitespace#checks = [ 'indent' ]
+  let g:airline#extensions#branch#enabled = 1
+  " Define a part for section 'b' and use it
+  call airline#parts#define_function('section-b', 'AirlineSectionB')
+  let g:airline_section_b = airline#section#create(['section-b'])
+endfunction
+if has("autocmd")
+  augroup InitAirline
+    autocmd!
+    autocmd User AirlineAfterInit call s:initAirline()
+  augroup END
+endif
 " Turn on the status bar everywhere.
 set laststatus=2
 

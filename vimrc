@@ -32,6 +32,8 @@ set smartcase
 set pastetoggle=<F10>
 
 set path=.,,**
+" set g:ruby_path to prevent the ruby ftplugin messing with &path
+let g:ruby_path = &path
 
 " disable screen restoration on exit
 set norestorescreen
@@ -164,7 +166,9 @@ if has("wildmenu")
   " First <tab> populates with longest match, and pops up a menu if needed.
   " Second <tab> selects first thing in menu.
   " <C-N> and <C-P> navigate the menu.
-  set wildignorecase
+  if exists("+wildignorecase")
+    set wildignorecase
+  endif
   let s:suffixes = [
     \ ".a",
     \ ".d",
@@ -330,7 +334,7 @@ if strlen($VUNDLEDIR)
   call vundle#begin($BUNDLEDIR)
 
   " Vundle manages Vundle
-  Plugin 'gmarik/Vundle.vim'
+  Plugin 'VundleVim/Vundle.vim'
 
   " color schemes
   Plugin 'jonathanfilip/vim-lucius'
@@ -339,7 +343,8 @@ if strlen($VUNDLEDIR)
 
   " plugins
 
-  Plugin 'bling/vim-airline'
+  Plugin 'vim-airline/vim-airline'
+  Plugin 'vim-airline/vim-airline-themes'
   Plugin 'chikamichi/mediawiki.vim'
   Plugin 'davidoc/taskpaper.vim'
   if g:is_osx

@@ -98,7 +98,7 @@ endfunction!
 " --- Windows: run in minimized cmd window, and kill using powershell ---
 
 function! s:markedly_stop()
-  return shellescape(g:path_join(g:vimrc_extras_dir, 'markedly_stop.ps1'))
+  return shellescape(SCPathJoin(g:vimrc_extras_dir, 'markedly_stop.ps1'))
 endfunction
 
 function! s:markedly_windows()

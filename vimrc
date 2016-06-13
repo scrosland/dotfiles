@@ -107,7 +107,7 @@ lockvar g:path_separator
 
 " }}}
 
-function! g:path_join(...)
+function! SCPathJoin(...)
   return join(a:000, g:path_separator)
 endfunction
 
@@ -171,7 +171,6 @@ if has("wildmenu")
   endif
   let s:suffixes = [
     \ ".a",
-    \ ".d",
     \ ".d2",
     \ ".dll",
     \ ".exe",
@@ -527,11 +526,11 @@ let g:vimrc = resolve(expand("<sfile>:p"))
 lockvar g:vimrc
 let g:vimrc_dir = resolve(fnamemodify(g:vimrc, ":h"))
 lockvar g:vimrc_dir
-let g:vimrc_extras_dir = g:path_join(g:vimrc_dir, 'vim')
+let g:vimrc_extras_dir = SCPathJoin(g:vimrc_dir, 'vim')
 lockvar g:vimrc_extras_dir
 
 function! s:load_vimrc_extras()
-  let l:pattern = g:path_join(g:vimrc_extras_dir, '*.vim')
+  let l:pattern = SCPathJoin(g:vimrc_extras_dir, '*.vim')
   let l:files = split(glob(l:pattern), "\n")
   call map(l:files, 's:source_if_readable(v:val)')
 endfunction

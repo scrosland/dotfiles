@@ -30,11 +30,17 @@ this_script()
 # set terminal title
 set_title()
 {
-    local title=${1:-"Terminal"}
-    local opts="-n"
+    local ansititle="\033]0;${1}\007"
     if [ -n "$BASH_VERSION" ] ; then
-      opts="${opts} -e"
+        if [ -z "$ORIG_PROMPT_COMMAND" ] ; then
+            ORIG_PROMPT_COMMAND="${PROMPT_COMMAND}"
+        fi
+        if [ -z "$1" ] ; then
+            PROMPT_COMMAND="${ORIG_PROMPT_COMMAND}"
+        else
+            PROMPT_COMMAND="echo -ne '${ansititle}'"
+        fi
+    else
+        echo -n "${ansititle}"
     fi
-    echo ${opts} "\033]0;${title}\007" ;
 }
-

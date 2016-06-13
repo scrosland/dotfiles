@@ -15,7 +15,7 @@
 
   1. `mkdir -p $HOME/.vim/bundle`
 
-  1. `git clone http://github.com/gmarik/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim`
+  1. `git clone http://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim`
 
   1. `vim -c ":PluginInstall"`
 
@@ -46,7 +46,7 @@ gem, install Marked2 from http://marked2app.com/.
       cd %USERPROFILE%
       mkdir %USERPROFILE%\vimfiles\bundle
       git clone https://github.com/scrosland/dotfiles %USERPROFILE%\dotfiles
-      git clone https://github.com/gmarik/Vundle.vim.git %USERPROFILE%\vimfiles\bundle\Vundle.vim
+      git clone https://github.com/VundleVim/Vundle.vim.git %USERPROFILE%\vimfiles\bundle\Vundle.vim
       gem install markedly
       ```
 

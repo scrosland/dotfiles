@@ -25,6 +25,10 @@
 Follow the Linux/Unix instructions, but instead of installing the markedly ruby
 gem, install Marked2 from http://marked2app.com/.
 
+Then:
+
+  1. Run `$HOME/dotfiles/install-mac.sh` to install a few more things.
+
 
 ## For Windows:
 

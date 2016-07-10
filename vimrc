@@ -354,10 +354,6 @@ if strlen($VUNDLEDIR)
   Plugin 'scrooloose/nerdtree'
   Plugin 'scrosland/nvsimple.vim'
 
-  " git plugins
-  Plugin 'tpope/vim-fugitive'
-  Plugin 'gitignore'
-
   call vundle#end()
 
   filetype on                 " restore
@@ -431,13 +427,9 @@ Solarized
 " Other plugins
 
 " Airline
-"   monochrome  - a touch dark
-"   lucius      - quite good, but a little subtle
-"   sol         - quiet, but colourful
 function! AirlineSectionB()
   let l:parts = []
   call add(l:parts, WrapDescribeForAirline())
-  call add(l:parts, airline#extensions#branch#get_head())
   " Hook for .vimrc.local
   if exists('*LocalPartsForAirline')
     let l:parts += LocalPartsForAirline()
@@ -455,6 +447,9 @@ function! AirlineSectionB()
 endfunction
 
 function! s:initAirline()
+  " monochrome  - a touch dark
+  " lucius      - quite good, but a little subtle
+  " sol         - quiet, but colourful
   let g:airline_theme = 'sol'
   " Disable trailing whitespace checks (too noisy). The default is:
   "   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]

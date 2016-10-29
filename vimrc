@@ -502,6 +502,12 @@ if has("gui_running")
   " Hide mouse in the GUI
   set mousehide
 
+  " Disable the awful Select mode
+  set selectmode=""
+
+  " Enable autoselect
+  set guioptions+=a
+
   " Initial window size
   set columns=80
   set lines=42
@@ -509,9 +515,11 @@ if has("gui_running")
 else
 
   " Mouse mode should work in a modern terminal
-  " -- but breaks up X cut-n-paste and is generally not the vim-way :)
-  " -- so disable it when not running a gui.
-  set mouse=
+  set mouse=a
+  behave xterm
+
+  " Enable autoselect
+  set clipboard+=autoselect
 
 endif
 

@@ -13,9 +13,7 @@ Control-p: menu-complete
 # xterm style
 "\e[H": beginning-of-line
 "\e[F": end-of-line
-"\e[5D": backward-word
 "\e[1;5D": backward-word
-"\e[5C": forward-word
 "\e[1;5C": forward-word
 # PuTTY style
 "\e[1~": beginning-of-line

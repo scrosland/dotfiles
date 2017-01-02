@@ -2,6 +2,10 @@
 "
 " Using rubygems "markedly" on unix and Windows, or Marked.app on OSX.
 "
+" Might want to replace the non-macOS implementations with
+" https://github.com/iamcco/markdown-preview.vim
+" which is a pure vim/python implemention which works on Linux and Windows.
+"
 
 " --- Options ---
 

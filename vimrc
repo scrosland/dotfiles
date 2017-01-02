@@ -11,6 +11,7 @@ set redraw
 
 " Move leader to something I can type
 let mapleader="'"
+let maplocalleader="'"
 
 set visualbell
 set noerrorbells
@@ -262,19 +263,6 @@ if has("autocmd")
     autocmd FileType mkd      setlocal nofoldenable
   augroup end
 
-  " taskpaper files should use hard tabs
-  function! s:taskpaper_setup()
-    setlocal softtabstop=0
-    setlocal tabstop=4
-    setlocal shiftwidth=4
-    setlocal noexpandtab
-    setlocal nosmarttab
-  endfunction
-  augroup filetype_taskpaper
-    autocmd!
-    autocmd FileType taskpaper call s:taskpaper_setup()
-  augroup end
-
   " vim/vimrc files should support folding based on markers, but start unfolded
   augroup filetype_vim
     autocmd!
@@ -287,7 +275,6 @@ if has("autocmd")
     autocmd FileType markdown  WrapSoft
     autocmd FileType mkd       WrapSoft
     autocmd FileType mediawiki WrapSoft
-    autocmd FileType taskpaper WrapSoft
     autocmd FileType text      WrapSoft
   augroup end
 
@@ -345,7 +332,6 @@ if strlen($VUNDLEDIR)
   Plugin 'vim-airline/vim-airline'
   Plugin 'vim-airline/vim-airline-themes'
   Plugin 'chikamichi/mediawiki.vim'
-  Plugin 'davidoc/taskpaper.vim'
   if g:is_osx
     Plugin 'itspriddle/vim-marked'
   endif

@@ -9,7 +9,7 @@ EDITOR='vim' ; export EDITOR
 LESS='Xm' ; export LESS
 
 if [ -d $HOME/bin ] ; then
-  echo ":$PATH:" | grep -q ":(\$HOME|$HOME)/bin:"
+  echo ":$PATH:" | egrep -q ":(\$HOME|$HOME)/bin:"
   if [ $? -ne 0 ] ; then
     PATH=$HOME/bin:$PATH
     export PATH

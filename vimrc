@@ -334,6 +334,8 @@ if strlen($VUNDLEDIR)
   Plugin 'chikamichi/mediawiki.vim'
   if g:is_osx
     Plugin 'itspriddle/vim-marked'
+  else
+    Plugin 'iamcco/markdown-preview.vim'
   endif
   Plugin 'plasticboy/vim-markdown'
   Plugin 'PProvost/vim-ps1'

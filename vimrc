@@ -56,6 +56,7 @@ if has("multi_byte")
   " default for new files
   setglobal fileencoding=utf-8
   "set listchars=eol:¶
+  "set listchars=eol:◆
   set listchars=eol:←
 endif
 
@@ -103,14 +104,7 @@ lockvar g:is_unix
 let g:is_windows  = (g:system_type == "windows")
 lockvar g:is_windows
 
-let g:path_separator = g:is_windows ? '\' : '/'
-lockvar g:path_separator
-
 " }}}
-
-function! SCPathJoin(...)
-  return join(a:000, g:path_separator)
-endfunction
 
 function! s:find_directories(choices)
   return filter(copy(a:choices), 'isdirectory(expand(v:val))')
@@ -188,7 +182,11 @@ endif
 
 " Spell checking
 set spelllang=en_gb
-set spellfile=~/.vim/spellfile.utf-8.add
+if g:is_windows
+  set spellfile=~/vimfiles/spellfile.utf-8.add
+else
+  set spellfile=~/.vim/spellfile.utf-8.add
+end
 " Toggle spell checking with <F7>
 nnoremap <silent> <F7> :setlocal spell!<CR><Bar>:echo "Spell check: " . strpart("OffOn", 3 * &spell, 3)<CR>
 
@@ -323,8 +321,6 @@ if strlen($VUNDLEDIR)
   Plugin 'VundleVim/Vundle.vim'
 
   " color schemes
-  Plugin 'jonathanfilip/vim-lucius'
-  Plugin 'summerfruit256.vim'
   Plugin 'altercation/vim-colors-solarized'
 
   " plugins
@@ -359,14 +355,6 @@ function! s:fixHighlights(yellow)
     \. a:yellow . " ctermbg=Black"
   exec l:command
 endfunction
-
-" Lucius
-function! s:setLucius()
-  colorscheme lucius
-  LuciusWhiteHighContrast
-  call s:fixHighlights("Yellow")
-endfunction
-command! -nargs=0 Lucius call s:setLucius()
 
 " Solarized
 function! s:dropSolarizedOptions()
@@ -435,14 +423,11 @@ function! AirlineSectionB()
 endfunction
 
 function! s:initAirline()
-  " monochrome  - a touch dark
-  " lucius      - quite good, but a little subtle
   " sol         - quiet, but colourful
   let g:airline_theme = 'sol'
   " Disable trailing whitespace checks (too noisy). The default is:
   "   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
   let g:airline#extensions#whitespace#checks = [ 'indent' ]
-  let g:airline#extensions#branch#enabled = 1
   " Define a part for section 'b' and use it
   call airline#parts#define_function('section-b', 'AirlineSectionB')
   let g:airline_section_b = airline#section#create(['section-b'])
@@ -472,8 +457,8 @@ if exists('$USERPROFILE/Dropbox/notes')
 elseif exists('$HOME/Dropbox/notes')
   let g:nvsimple_notes_directory = '$HOME/Dropbox/notes'
 endif
-nnoremap 'nv :Nv<CR>
-nnoremap 'no :Nvopen<CR>
+nnoremap <Leader>nv :Nv<CR>
+nnoremap <Leader>no :Nvopen<CR>
 
 " }}}
 
@@ -513,15 +498,12 @@ endif
 
 " --- other vimrc files --- {{{
 
-let g:vimrc = resolve(expand("<sfile>:p"))
-lockvar g:vimrc
-let g:vimrc_dir = resolve(fnamemodify(g:vimrc, ":h"))
-lockvar g:vimrc_dir
-let g:vimrc_extras_dir = SCPathJoin(g:vimrc_dir, 'vim')
-lockvar g:vimrc_extras_dir
+" This needs to be a file scope, otherwise it returns a pathname ending
+" .../function which isn't helpful.
+let s:vimrc = resolve(expand("<sfile>:p"))
 
 function! s:load_vimrc_extras()
-  let l:pattern = SCPathJoin(g:vimrc_extras_dir, '*.vim')
+  let l:pattern = resolve(fnamemodify(s:vimrc, ":h")) . '/vim/*.vim'
   let l:files = split(glob(l:pattern), "\n")
   call map(l:files, 's:source_if_readable(v:val)')
 endfunction

@@ -2,16 +2,11 @@
 
   1. `git clone https://github.com/scrosland/dotfiles $HOME/dotfiles`
 
-  1. Copy profile.sample and bashrc.sample to $HOME/.profile and .bashrc, or
-     otherwise configure the same files.
+  1. Copy profile.sample and bashrc.sample to $HOME/.profile and .bashrc, or otherwise configure the same files.
 
   1. `ln -s $HOME/dotfiles/vimrc $HOME/.vimrc`
 
   1. Create $HOME/.vimrc.local if required.
-
-  1. Ensure ruby is installed.
-
-  1. sudo gem install markedly
 
   1. `mkdir -p $HOME/.vim/bundle`
 
@@ -22,8 +17,7 @@
 
 ## For Mac OS X:
 
-Follow the Linux/Unix instructions, but instead of installing the markedly ruby
-gem, install Marked2 from http://marked2app.com/.
+Follow the Linux/Unix instructions, and then install Marked2 from http://marked2app.com.
 
 Then:
 
@@ -32,13 +26,9 @@ Then:
 
 ## For Windows:
 
-  1. Install git from https://git-scm.com/download/win. Configure to be
-     accessible from cmd as well as bash.
+  1. Install git from https://git-scm.com/download/win. Configure to be accessible from cmd as well as bash.
 
   1. Install vim from http://www.vim.org/download.php.
-
-  1. Install ruby 1.9.3 and the associated devkit from
-     http://rubyinstaller.org/downloads/.
 
   1. Install DejaVu fonts from http://dejavu-fonts.org/.
 
@@ -51,7 +41,6 @@ Then:
       mkdir %USERPROFILE%\vimfiles\bundle
       git clone https://github.com/scrosland/dotfiles %USERPROFILE%\dotfiles
       git clone https://github.com/VundleVim/Vundle.vim.git %USERPROFILE%\vimfiles\bundle\Vundle.vim
-      gem install markedly
       ```
 
   1. Edit `C:\Program Files (x86)\Vim\_vimrc` so it contains:

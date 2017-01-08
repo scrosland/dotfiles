@@ -1,44 +1,76 @@
 #!/bin/bash
 
+run()
+{
+  echo ""
+  echo "# $@"
+  "$@"
+}
+
+# mkalias source_file directory_containing_alias
+# e.g. mkalias /usr/local/Cellar/macvim/8.0-120/MacVim.app /Applications
+# This will replace any existing file of the same name in the target directory.
+mkalias()
+{
+  local srcfile="$1"
+  local aliasdir="$2"
+  local alias="${aliasdir}/$(basename "${srcfile}" '.app')"
+  if [[ -f "$alias" ]] ; then
+    rm "$alias"
+  fi
+  osascript -e "tell app \"Finder\" to make new alias file at POSIX file \"$aliasdir\" to POSIX file \"$srcfile\""
+  if [[ ! -f "$alias" ]] ; then
+    local actual=$(ls -1t "${alias} alias"* | head -1)
+    echo "# Finder misnamed the alias '${actual}', renaming ..."
+    mv "${actual}" "${alias}"
+    ls -1 "${alias}"*
+  fi
+}
+
 # Update brew and packages ...
 if [[ -e /usr/local/bin/brew ]] ; then
-  brew update
-  brew update
-  brew upgrade
+  run brew update
+  run brew update
+  run brew upgrade
 else
 # ... or install brew and all packages
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  brew update
+  run /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  run brew update
 
   # Install ffmpeg
-  brew install ffmpeg
+  run brew install ffmpeg
 
   # FLAC
-  brew install flac
+  run brew install flac
 
   # Install macvim
   if [[ -d /Applications/Xcode.app ]] ; then
-    brew install macvim --with-override-system-vim
+    run brew install macvim --with-override-system-vim
   else
     echo "Error: Installation of macvim was skipped as Xcode.app is not installed" >&2
   fi
 
   # Install newer copy of rsync
-  brew install homebrew/dupes/rsync
+  run brew install homebrew/dupes/rsync
 
   # Install newer copy of python, along with Python Launcher etc.
-  brew install python
+  run brew install python
 fi
 
-# Create links into /Applications
-brew linkapps
-# Convert the symlinks into aliases so that they show in Spotlight, see
-# https://github.com/Homebrew/legacy-homebrew/issues/16639 for the source
-find /Applications -maxdepth 1 -type l | while read f ; do osascript -e "tell app \"Finder\" to make new alias file at POSIX file \"/Applications\" to POSIX file \"$(readlink "$f")\"" ; rm "$f" ; done
+# Create aliases in /Applications
+# This is not using "brew linkapps" because that creates symlinks into /usr
+# which Spotlight will refuse to index.
+echo ""
+echo "# Creating application aliases in /Applications"
+find /usr/local/Cellar -depth 3 -type d -name '*.app' -print |
+  while read app ; do
+    run mkalias "${app}" /Applications
+  done
 
 # Cleanup temporary files
-brew cleanup
+run brew cleanup
 
+echo ""
 echo "Go to http://dejavu-fonts.org and install the latest ttf files."
 
 exit 0

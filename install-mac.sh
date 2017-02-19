@@ -71,6 +71,15 @@ find /usr/local/Cellar -depth 3 -type d -name '*.app' -print |
 run brew cleanup
 
 echo ""
-echo "Go to http://dejavu-fonts.org and install the latest ttf files."
+echo "# Checking for JDK."
+java -version
+
+if [ ! -r /Applications/SCM.app ] ; then
+  echo ""
+  echo "# Go to https://github.com/software-jessies-org/jessies/wiki/Downloads and get the latest version of SCM.app."
+fi
+
+echo ""
+echo "# Go to http://dejavu-fonts.org and install the latest ttf files."
 
 exit 0

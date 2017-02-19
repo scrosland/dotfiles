@@ -8,10 +8,17 @@ BROWSER='google-chrome' ; export BROWSER
 EDITOR='vim' ; export EDITOR
 LESS='Xm' ; export LESS
 
-if [ -d $HOME/bin ] ; then
-  echo ":$PATH:" | egrep -q ":(\$HOME|$HOME)/bin:"
-  if [ $? -ne 0 ] ; then
-    PATH=$HOME/bin:$PATH
-    export PATH
+add_to_path()
+{
+  dir="$1"
+  if [ -d ${dir} ] ; then
+    echo ":$PATH:" | egrep -q ":${dir}:"
+    if [ $? -ne 0 ] ; then
+      PATH=${dir}:$PATH
+      export PATH
+    fi
   fi
-fi
+}
+
+add_to_path /Applications/SCM.app/Contents/Resources/scm/bin
+add_to_path $HOME/bin

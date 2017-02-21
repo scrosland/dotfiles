@@ -447,9 +447,9 @@ nnoremap <Leader>be :ls<CR>:b
 " NERDTree
 " mapping to (re)open NERDTree and load the directory of the current file
 nnoremap <C-n> :NERDTreeToggle %:.:h<CR>
-" mapping to reopen extsing NERDTree, or open it first time and load the cwd
-" gnome-terminal steals <S-C-n> but <M-C-n> also works
-nnoremap <S-C-n> :NERDTreeToggle<CR>
+" mapping to reopen existing NERDTree, or open it first time and load the cwd
+" <Esc>n === <M-n> in a more reliable way on linux at least.
+nnoremap <Esc>n :NERDTreeToggle<CR>
 let NERDTreeQuitOnOpen = 1
 
 " Netrw should ignore case in sort

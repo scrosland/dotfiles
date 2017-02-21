@@ -48,6 +48,10 @@ if [ -n "$INTERACTIVE" ] ; then
         unset info
     fi
 
+    if [ "$TERM" = "screen-256color" ] ; then
+        stty erase ^h kill ^u
+    fi
+
     # general aliases
     alias cls='clear'
     alias ls='ls -CF'

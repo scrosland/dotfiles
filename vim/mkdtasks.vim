@@ -8,6 +8,11 @@
 " https://github.com/polm/github-tasks.vim
 "
 
+if exists('g:vimrc_mkdtasks')
+  finish
+endif
+let g:vimrc_mkdtasks = 1
+
 function! mkdtasks#toggle()
   let l:winview = winsaveview()
   let l:line = getline(".")

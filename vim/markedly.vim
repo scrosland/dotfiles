@@ -4,6 +4,11 @@
 " or the markdown-preview plugin.
 "
 
+if exists('g:vimrc_markedly')
+  finish
+endif
+let g:vimrc_markedly = 1
+
 " --- Utility functions ---
 
 function! s:have_plugin(name)

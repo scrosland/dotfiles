@@ -24,7 +24,7 @@ if strlen($USERPROFILE)
   " with UAC, and to cope with work where $HOME is off on the network.
   let s:basedir = expand("$USERPROFILE/vimfiles")
   " deal with the non-standard location of vim-plug
-  set runtimepath += s:basedir
+  execute 'set runtimepath+='.s:basedir
 else
   " Elsewhere the plugins can live in ~/.vim as normal
   let s:basedir = expand(has('nvim') ? '~/.local/share/nvim/site' : '~/.vim')
@@ -37,10 +37,10 @@ let s:bundledir = finddir('bundle', s:basedir)
 function! plugins#bootstrap()
   if exists('*plug#begin')
     echom "Plugin bootstrap skipped: vim-plug is already installed."
-    echom "Run ':PlugStatus to determine pluging status."
+    echom "Run ':PlugStatus to determine plugin status."
     return
   endif
-  let vimplug = s:basedir.'/autoload/plug.vim'
+  let vimplug = expand(s:basedir.'/autoload/plug.vim')
   if g:is_windows
     let url = 'https://github.com/junegunn/vim-plug'
     echom "See instructions at ".url." and save as '".vimplug."'"

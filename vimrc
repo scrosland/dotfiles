@@ -318,13 +318,20 @@ endif
 
 " --- other vimrc files ---
 
-" This needs to be a file scope, otherwise it returns a pathname ending
+" This needs to be at file scope, otherwise it returns a pathname ending
 " .../function which isn't helpful.
 let s:vimrc = resolve(expand("<sfile>:p"))
 
 function! s:load_vimrc_extras()
   let l:pattern = resolve(fnamemodify(s:vimrc, ":h")) . '/vim/*.vim'
-  let l:files = split(glob(l:pattern), "\n")
+  let l:files = sort(split(glob(l:pattern), "\n"))
+  " load plugins.vim first
+  let l:matches = filter(copy(l:files), 'v:val =~? "plugins\.vim"')
+  let l:plugins_vim = get(l:matches, 0, '')
+  call s:source_if_readable(l:plugins_vim)
+  " then load the rest
+  " this is lazy and relies on the fact that plugins.vim will not let itself
+  " be reloaded, so we can just load every file in the list
   call map(l:files, 's:source_if_readable(v:val)')
 endfunction
 call s:load_vimrc_extras()

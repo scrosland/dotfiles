@@ -1,11 +1,11 @@
-" --- Basics --- {{{
+" --- Basics ---
 
 set nocompatible
-set redraw
+set redraw        " vi only
 
 " Debugging on Windows: uncomment the next line to preserve cmd.exe windows
-" after commands finish in order to see what the output was. Useful if
-" git throws errors as Vundle's error handling is suspect.
+" after commands finish in order to see what the output was. Useful for
+" diagnosing git errors.
 "
 " set shellcmdflag=/k
 
@@ -73,9 +73,7 @@ filetype on
 filetype plugin on
 filetype indent off
 
-" }}}
-
-" --- System Detection --- {{{
+" --- System Detection ---
 
 function! s:getSystemType()
   if has("win32") || has("win64")
@@ -96,15 +94,10 @@ function! s:getSystemType()
 endfunction
 
 let g:system_type = s:getSystemType()
-lockvar g:system_type
 let g:is_osx      = (g:system_type == "osx")
-lockvar g:is_osx
 let g:is_unix     = (g:system_type == "unix")
-lockvar g:is_unix
 let g:is_windows  = (g:system_type == "windows")
-lockvar g:is_windows
-
-" }}}
+lockvar g:system_type g:is_osx g:is_unix g:is_windows
 
 function! s:find_directories(choices)
   return filter(copy(a:choices), 'isdirectory(expand(v:val))')
@@ -119,7 +112,7 @@ function! s:source_if_readable(filename)
   return 0
 endfunction
 
-" --- MS Windows --- {{{
+" --- MS Windows ---
 
 if g:is_windows
 
@@ -144,9 +137,7 @@ if g:is_windows
 
 endif
 
-" }}}
-
-" --- Value added settings (spelling, tags, etc.) --- {{{
+" --- Value added settings (spelling, tags, etc.) ---
 
 " Digraphs - CTRL-K plus two characters
 if has("digraphs") && has("multi_byte")
@@ -197,10 +188,14 @@ set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 command! -nargs=+ -complete=shellcmd Shell 
   \ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
-" }}}
+" Insert mode completion
+" Also CTRL-N and CTRL-P are available based on options in 'complete'.
+inoremap ^] ^X^]  " Tag completion. Hides 'trigger abbreviation'. i_CTRL-].
+inoremap ^F ^X^F  " Filename completion. Hides reindent current line. i_CTRL-F.
+inoremap ^L ^X^L  " (Previous) Line completion. Hides useless i_CTRL-L.
+inoremap ^O ^X^O  " Omni completion. Hides execute single command. i_CTRL-O.
 
-
-" --- Wrap mode and and file type handling --- {{{
+" --- Wrap mode and and file type handling ---
 
 function! s:soft_wrap_enable()
   setlocal wrap linebreak
@@ -287,182 +282,7 @@ if has("autocmd")
 
 endif
 
-" }}}
-
-" --- Plugins (vundle) --- {{{
-"
-"  :PluginList          - list configured plugins
-"  :PluginInstall(!)    - install(update) plugins (then u for changelog)
-"
-"  See :help vundle for more details.
-"  NOTE: Comments after Bundle commands are not allowed.
-"        They are after Plugin commands.
-"
-
-if strlen($USERPROFILE)
-  " On Windows force the plugins to be in C:\Users\<user>\vimfiles
-  " to ensure that the directory is writable without needing to deal
-  " with UAC.
-  let $BUNDLEDIR = expand("$USERPROFILE/vimfiles/bundle")
-else
-  " Elsewhere the bundles can live in &runtimepath as normal.
-  let $BUNDLEDIR = finddir('bundle', &runtimepath)
-endif
-" Find vundle itself
-let $VUNDLEDIR = finddir('Vundle.vim', $BUNDLEDIR)
-if strlen($VUNDLEDIR)
-  filetype off                " otherwise Vundle won't load corrcetly
-
-  " setup
-  set runtimepath+=$VUNDLEDIR
-  call vundle#begin($BUNDLEDIR)
-
-  " Vundle manages Vundle
-  Plugin 'VundleVim/Vundle.vim'
-
-  " color schemes
-  Plugin 'altercation/vim-colors-solarized'
-
-  " plugins
-
-  Plugin 'vim-airline/vim-airline'
-  Plugin 'vim-airline/vim-airline-themes'
-  Plugin 'chikamichi/mediawiki.vim'
-  if g:is_osx
-    Plugin 'itspriddle/vim-marked'
-  else
-    Plugin 'iamcco/markdown-preview.vim'
-  endif
-  Plugin 'plasticboy/vim-markdown'
-  Plugin 'PProvost/vim-ps1'
-  Plugin 'scrooloose/nerdtree'
-  Plugin 'scrosland/nvsimple.vim'
-
-  call vundle#end()
-
-  filetype on                 " restore
-endif
-
-" }}}
-
-" --- Plugin options --- {{{
-
-" Color schemes
-
-function! s:fixHighlights(yellow)
-  highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
-  let l:command = "highlight Search term=reverse cterm=reverse ctermfg=" 
-    \. a:yellow . " ctermbg=Black"
-  exec l:command
-endfunction
-
-" Solarized
-function! s:dropSolarizedOptions()
-  if exists(":SolarizedOptions")
-    delcommand SolarizedOptions
-  endif
-  if has("autocmd")
-    " add a group to re-do it later if the colorscheme is reloaded
-    if !exists("#DropSolarizedOptions")
-      augroup DropSolarizedOptions
-        autocmd!
-        autocmd ColorScheme * call s:dropSolarizedOptions()
-      augroup END
-    endif
-  endif
-endfunction
-function! s:setSolarized(contrast)
-  " Use the 256 colour mode so the terminal can remain in default colours.
-  let g:solarized_termcolors = 256
-  " Don't mess with the terminal background.
-  let g:solarized_termtrans = 1
-  " With a light background, high contrast often works best for me.
-  let g:solarized_contrast = a:contrast
-  " Turn it on ...
-  colorscheme solarized
-  " ... and drop the annoying options command
-  call s:dropSolarizedOptions()
-  let l:yellow = (a:contrast == "high") ? "Yellow" : "LightYellow"
-  call s:fixHighlights(l:yellow)
-endfunction
-function! s:initSolarized()
-  "let l:contrast = has("gui_running") ? "normal" : "high"
-  let l:contrast = "high"
-  call s:setSolarized(l:contrast)
-endfunction
-function! s:solarizedToggleContrast()
-  let l:contrast = (g:solarized_contrast == "normal") ? "high" : "normal"
-  call s:setSolarized(l:contrast)
-endfunction
-command! -nargs=0 Solarized call s:initSolarized()
-command! -nargs=0 SolarizedToggleContrast call s:solarizedToggleContrast()
-
-" Set initial color scheme
-Solarized
-
-" Other plugins
-
-" Airline
-function! AirlineSectionB()
-  let l:parts = []
-  call add(l:parts, WrapDescribeForAirline())
-  " Hook for .vimrc.local
-  if exists('*LocalPartsForAirline')
-    let l:parts += LocalPartsForAirline()
-  endif
-  " This should use airline#util#append() but that seems to insert a two
-  " space prefix instead of a single space prefix which is annoying.
-  let l:value = join(
-                    \ map(
-                        \ filter(l:parts, 'len(v:val)'),
-                        \ 'airline#util#wrap(v:val, 0)'
-                        \ ),
-                    \ ' > '
-                    \ )
-  return l:value
-endfunction
-
-function! s:initAirline()
-  " sol         - quiet, but colourful
-  let g:airline_theme = 'sol'
-  " Disable trailing whitespace checks (too noisy). The default is:
-  "   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
-  let g:airline#extensions#whitespace#checks = [ 'indent' ]
-  " Define a part for section 'b' and use it
-  call airline#parts#define_function('section-b', 'AirlineSectionB')
-  let g:airline_section_b = airline#section#create(['section-b'])
-endfunction
-if has("autocmd")
-  augroup InitAirline
-    autocmd!
-    autocmd User AirlineAfterInit call s:initAirline()
-  augroup END
-endif
-" Turn on the status bar everywhere.
-set laststatus=2
-
-" Simple BufExplorer alternative
-nnoremap <Leader>be :ls<CR>:b
-
-" NERDTree
-nnoremap <C-n> :NERDTreeToggle<CR>
-let NERDTreeQuitOnOpen = 1
-
-" Netrw should ignore case in sort
-let g:netrw_sort_options = "i"
-
-" nvSimple notes directory
-if exists('$USERPROFILE/Dropbox/notes')
-  let g:nvsimple_notes_directory = '$USERPROFILE/Dropbox/notes'
-elseif exists('$HOME/Dropbox/notes')
-  let g:nvsimple_notes_directory = '$HOME/Dropbox/notes'
-endif
-nnoremap <Leader>nv :Nv<CR>
-nnoremap <Leader>no :Nvopen<CR>
-
-" }}}
-
-" --- GUI options --- {{{
+" --- GUI options ---
 
 if has("gui_running")
 
@@ -496,26 +316,29 @@ else
 
 endif
 
-" --- other vimrc files --- {{{
+" --- other vimrc files ---
 
-" This needs to be a file scope, otherwise it returns a pathname ending
+" This needs to be at file scope, otherwise it returns a pathname ending
 " .../function which isn't helpful.
 let s:vimrc = resolve(expand("<sfile>:p"))
 
 function! s:load_vimrc_extras()
   let l:pattern = resolve(fnamemodify(s:vimrc, ":h")) . '/vim/*.vim'
-  let l:files = split(glob(l:pattern), "\n")
+  let l:files = sort(split(glob(l:pattern), "\n"))
+  " load plugins.vim first
+  let l:matches = filter(copy(l:files), 'v:val =~? "plugins\.vim"')
+  let l:plugins_vim = get(l:matches, 0, '')
+  call s:source_if_readable(l:plugins_vim)
+  " then load the rest
+  " this is lazy and relies on the fact that plugins.vim will not let itself
+  " be reloaded, so we can just load every file in the list
   call map(l:files, 's:source_if_readable(v:val)')
 endfunction
 call s:load_vimrc_extras()
 
-" }}}
-
-" --- local options --- {{{
+" --- local options ---
 
 let s:vimrc_local = g:is_windows ?
                       \ "$USERPROFILE/vimfiles/vimrc.local" :
                       \ "$HOME/.vimrc.local"
 call s:source_if_readable(s:vimrc_local)
-
-" }}}

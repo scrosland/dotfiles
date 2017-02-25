@@ -4,18 +4,19 @@
 " or the markdown-preview plugin.
 "
 
+if exists('g:vimrc_markedly')
+  finish
+endif
+let g:vimrc_markedly = 1
+
 " --- Utility functions ---
 
+" Find plugins in vim-plug's list
 function! s:have_plugin(name)
-  if !exists('g:vundle#bundles')
+  if !exists('g:plugs')
     return 0
   end
-  for b in g:vundle#bundles
-    if a:name == b.name
-      return 1
-    end
-  endfor
-  return 0
+  return has_key(g:plugs, a:name)
 endfunction
 
 " --- Either vim-marked setup ---

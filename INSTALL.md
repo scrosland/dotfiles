@@ -1,27 +1,24 @@
 ## For Linux/Unix:
 
-  1. `git clone https://github.com/scrosland/dotfiles $HOME/dotfiles`
-
-  1. Copy profile.sample and bashrc.sample to $HOME/.profile and .bashrc, or otherwise configure the same files.
-
-  1. `ln -s $HOME/dotfiles/vimrc $HOME/.vimrc`
-
-  1. Create $HOME/.vimrc.local if required.
-
-  1. `mkdir -p $HOME/.vim/bundle`
-
-  1. `git clone http://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim`
-
-  1. `vim -c ":PluginInstall"`
+  ```
+  git clone https://github.com/scrosland/dotfiles $HOME/dotfiles
+  # Copy profile.sample and bashrc.sample to $HOME/.profile and .bashrc,
+  # or otherwise configure the same files.
+  # This is one option:
+  echo ". \$HOME/dotfiles/startup" >$HOME/.bashrc
+  echo ". \$HOME/dotfiles/startup" >$HOME/.profile
+  echo "\$include $HOME/dotfiles/inputrc" >$HOME/.inputrc
+  echo "source \$HOME/dotfiles/vimrc" > $HOME/.vimrc
+  # Create $HOME/.vimrc.local if required.
+  vim -c "call plugins#bootstrap()"
+  ```
 
 
 ## For Mac OS X:
 
-Follow the Linux/Unix instructions, and then install Marked2 from http://marked2app.com.
-
-Then:
-
-  1. Run `$HOME/dotfiles/install-mac.sh` to install a few more things.
+  1. Run `$HOME/dotfiles/install-mac.sh` to install some basics.
+  1. Follow the Linux/Unix instructions.
+  1. Install Marked2 from http://marked2app.com.
 
 
 ## For Windows:
@@ -35,12 +32,12 @@ Then:
   1. (Optional) Install Github Desktop from https://desktop.github.com/.
 
   1. Start cmd and
-  
+
       ```
       cd %USERPROFILE%
+      mkdir %USERPROFILE%\vimfiles\autoload
       mkdir %USERPROFILE%\vimfiles\bundle
       git clone https://github.com/scrosland/dotfiles %USERPROFILE%\dotfiles
-      git clone https://github.com/VundleVim/Vundle.vim.git %USERPROFILE%\vimfiles\bundle\Vundle.vim
       ```
 
   1. Edit `C:\Program Files (x86)\Vim\_vimrc` so it contains:
@@ -50,7 +47,7 @@ Then:
       source $USERPROFILE/dotfiles/vimrc
       ```
 
-  1. Create "%USERPROFILE%/vimfiles/vimrc.local" if required.
+  1. Create `%USERPROFILE%/vimfiles/vimrc.local` if required.
 
-  1. `gvim -c ":PluginInstall"` or start Gvim from the menu and then `:PluginInstall`
+  1. `gvim -c "plugins#bootstrap()"` and follow the instructions.
 

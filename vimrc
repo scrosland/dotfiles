@@ -249,11 +249,16 @@ endfunction
 " --- File type handling ---
 
 if has("autocmd")
-  " markdown files should start unfolded
+  function! s:init_markdown()
+    setlocal nofoldenable
+    setlocal conceallevel=2
+    setlocal softtabstop=4
+    setlocal shiftwidth=4
+  endfunction
   augroup filetype_markdown
     autocmd!
-    autocmd FileType markdown setlocal nofoldenable
-    autocmd FileType mkd      setlocal nofoldenable
+    autocmd FileType markdown call s:init_markdown()
+    autocmd FileType mkd      call s:init_markdown()
   augroup end
 
   " vim/vimrc files should support folding based on markers, but start unfolded

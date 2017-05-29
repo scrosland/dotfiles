@@ -1,0 +1,55 @@
+# Global .gitignore file
+#
+# Linux, macOS:
+#  git config --global core.excludesfile $HOME/dotfiles/gitignore.global
+#
+# Windows:
+#  git config --global core.excludesfile %USERPROFILE%\dotfiles\gitignore.global
+#
+
+# Linux
+.fuse_hidden*
+.nfs*
+.Trash-*
+
+# macOS
+._*
+.AppleDouble
+.com.apple.timemachine.donotpresent
+.DocumentRevisions-V100
+*.DS_Store
+*.DS_Store?
+.fseventsd
+.LSOverride
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Windows
+*.stackdump
+$RECYCLE.BIN/
+Desktop.ini
+ehthumbs.db
+Thumbs.db
+
+# built objects
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# autogenerate files
+generated/
+
+# vim
+*~
+.netrwhist
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+Session.vim
+tags

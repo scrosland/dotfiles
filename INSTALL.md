@@ -2,6 +2,7 @@
 
   ```
   git clone https://github.com/scrosland/dotfiles $HOME/dotfiles
+  git config --global core.excludesfile $HOME/dotfiles/gitignore.global
   # Copy profile.sample and bashrc.sample to $HOME/.profile and .bashrc,
   # or otherwise configure the same files.
   # This is one option:
@@ -38,6 +39,7 @@
       mkdir %USERPROFILE%\vimfiles\autoload
       mkdir %USERPROFILE%\vimfiles\bundle
       git clone https://github.com/scrosland/dotfiles %USERPROFILE%\dotfiles
+      git config --global core.excludesfile %USERPROFILE%\dotfiles\gitignore.global
       ```
 
   1. Edit `C:\Program Files (x86)\Vim\_vimrc` so it contains:

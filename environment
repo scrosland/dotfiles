@@ -22,4 +22,5 @@ add_to_path()
 }
 
 add_to_path /Applications/SCM.app/Contents/Resources/scm/bin
+add_to_path /Users/Shared/scripts
 add_to_path $HOME/bin

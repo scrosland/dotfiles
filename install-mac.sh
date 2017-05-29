@@ -55,6 +55,7 @@ else
 
   # Install newer copy of python, along with Python Launcher etc.
   run brew install python
+  run brew install python3
 fi
 
 # Create aliases in /Applications

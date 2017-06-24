@@ -27,6 +27,12 @@ mkalias()
   fi
 }
 
+# xcode command line tools
+echo "# Checking for Xcode command line tools"
+if ! xcode-select --print-path ; then
+  run xcode-select --install
+fi
+
 # Update brew and packages ...
 if [[ -e /usr/local/bin/brew ]] ; then
   run brew update
@@ -56,6 +62,9 @@ else
   # Install newer copy of python, along with Python Launcher etc.
   run brew install python
   run brew install python3
+
+  # Install newer copy of ruby
+  run brew install ruby
 fi
 
 # Create aliases in /Applications
@@ -68,8 +77,14 @@ find /usr/local/Cellar -depth 3 -type d -name '*.app' -print |
     run mkalias "${app}" /Applications
   done
 
-# Cleanup temporary files
+# Cleanup temporary brew files
 run brew cleanup
+hash -r
+
+# ruby gems
+run gem install nokogiri
+run gem install redcarpet
+run gem install wolfram
 
 echo ""
 echo "# Checking for JDK."

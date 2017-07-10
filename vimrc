@@ -115,7 +115,7 @@ endfunction
 " --- MS Windows ---
 
 if g:is_windows
-
+  " Get the system defaults
   call s:source_if_readable("$VIMRUNTIME/mswin.vim")
 
   " Find a temporary directory for swap files.
@@ -129,15 +129,44 @@ if g:is_windows
       let &directory=join(l:directories, ",")
     end
   endfunction
-
   call s:configure_temp_directory()
 
   " Don't save viminfo files
   set viminfo=""
+endif
 
+" --- GUI options ---
+
+if has("gui_running")
+  " Light background please
+  set background=light
+  " Font
+  set guifont=DejaVu\ Sans\ Mono:h10,Consolas:h11,Monospace:h10
+  " Hide mouse in the GUI
+  set mousehide
+  " Mouse right-click does popup in GUIs
+  set mousemodel=popup_setpos
+  if has("unix")
+    " Enable autoselect on platforms with two clipboards
+    set guioptions+=a
+  end
+  " Initial window size
+  set columns=80
+  set lines=42
+else
+  behave xterm
 endif
 
 " --- Value added settings (spelling, tags, etc.) ---
+
+" Clipboard, select mode and mouse settings need to be after sourcing mswin.vim
+set clipboard+=unnamed
+set clipboard+=autoselect
+" Disable the awful Select mode
+set selectmode=""
+" Mouse in normal, visual, command and prompts.
+" Visual has to be included otherwise drag to select does not work.
+set mouse=nvcr
 
 " Digraphs - CTRL-K plus two characters
 if has("digraphs") && has("multi_byte")
@@ -284,40 +313,6 @@ if has("autocmd")
     autocmd QuickFixCmdPost *grep* copen | redraw!
     autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:cclose<CR>
   augroup END
-
-endif
-
-" --- GUI options ---
-
-if has("gui_running")
-
-  " Light background please
-  set background=light
-
-  " Font
-  set guifont=DejaVu\ Sans\ Mono:h10,Consolas:h11,Monospace:h10
-
-  " Hide mouse in the GUI
-  set mousehide
-
-  " Disable the awful Select mode
-  set selectmode=""
-
-  " Enable autoselect
-  set guioptions+=a
-
-  " Initial window size
-  set columns=80
-  set lines=42
-
-else
-
-  " Mouse mode should work in a modern terminal
-  set mouse=a
-  behave xterm
-
-  " Enable autoselect
-  set clipboard+=autoselect
 
 endif
 

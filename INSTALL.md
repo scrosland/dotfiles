@@ -10,6 +10,7 @@
   echo ". \$HOME/dotfiles/startup" >$HOME/.profile
   echo "\$include $HOME/dotfiles/inputrc" >$HOME/.inputrc
   echo "source \$HOME/dotfiles/vimrc" > $HOME/.vimrc
+  echo "source \$HOME/dotfiles/gvimrc" > $HOME/.gvimrc
   # Create $HOME/.vimrc.local if required.
   vim -c "call plugins#bootstrap()"
   ```
@@ -47,6 +48,12 @@
       ```
       set nocompatible
       source $USERPROFILE/dotfiles/vimrc
+      ```
+
+  1. Edit `C:\Program Files (x86)\Vim\_gvimrc` so it contains:
+
+      ```
+      source $USERPROFILE/dotfiles/gvimrc
       ```
 
   1. Create `%USERPROFILE%/vimfiles/vimrc.local` if required.

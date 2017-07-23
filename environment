@@ -9,18 +9,21 @@ EDITOR='vim' ; export EDITOR
 LESS='Xm' ; export LESS
 VISUAL="$EDITOR" ; export VISUAL
 
-add_to_path()
+add_to_path_var()
 {
-  dir="$1"
-  if [ -d ${dir} ] ; then
-    echo ":$PATH:" | egrep -q ":${dir}:"
-    if [ $? -ne 0 ] ; then
-      PATH=${dir}:$PATH
-      export PATH
-    fi
+  local var="$1"
+  local dir="$2"
+  if [ ! -d "${dir}" ] ; then
+    return
   fi
+  eval `ruby -e 'var = ARGV.shift() ; value = ARGV.shift() ; current = ENV[var] || "" ; parts = current.split(":") ; unless parts.include?(value) ; parts.insert(0, value) ; end ; puts("#{var}=#{parts.join(":").inspect()}")' "${var}" "${dir}"`
+  export "${var}"
 }
 
-add_to_path /Applications/SCM.app/Contents/Resources/scm/bin
-add_to_path /Users/Shared/scripts
-add_to_path $HOME/bin
+add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
+add_to_path_var PATH "/Users/Shared/tools/scripts"
+add_to_path_var PATH "${HOME}/bin"
+
+add_to_path_var PYTHONPATH /Users/Shared/tools/libs/python
+add_to_path_var RUBYLIB /Users/Shared/tools/libs/ruby

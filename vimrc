@@ -33,8 +33,6 @@ set smartcase
 set pastetoggle=<F10>
 
 set path=.,,**
-" set g:ruby_path to prevent the ruby ftplugin messing with &path
-let g:ruby_path = &path
 
 " disable screen restoration on exit
 set norestorescreen
@@ -200,13 +198,6 @@ set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 command! -nargs=+ -complete=shellcmd Shell 
 \ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
-" Insert mode completion
-" Also CTRL-N and CTRL-P are available based on options in 'complete'.
-inoremap ^] ^X^]  " Tag completion. Hides 'trigger abbreviation'. i_CTRL-].
-inoremap ^F ^X^F  " Filename completion. Hides reindent current line. i_CTRL-F.
-inoremap ^L ^X^L  " (Previous) Line completion. Hides useless i_CTRL-L.
-inoremap ^O ^X^O  " Omni completion. Hides execute single command. i_CTRL-O.
-
 " --- Wrap mode and and file type handling ---
 
 function! s:soft_wrap_enable()
@@ -267,6 +258,7 @@ function! s:init_markdown()
   setlocal softtabstop=4
   setlocal shiftwidth=4
 endfunction
+
 augroup filetype_markdown
   autocmd!
   autocmd FileType markdown call s:init_markdown()
@@ -279,13 +271,24 @@ augroup filetype_vim
   autocmd FileType vim setlocal foldmethod=marker nofoldenable
 augroup end
 
+  " Smart dash to EN DASH and EM DASH converstion
+function! s:smartdashes()
+  iab <buffer> -- <c-k>n-
+  iab <buffer> ~~ <c-k>m-
+endfunction
+
 " use soft wrap for text-like files
-augroup wrapping
+function s:init_textlike()
+  call s:smartdashes()
+  WrapSoft
+endfunction
+
+augroup filetype_textlike
   autocmd!
-  autocmd FileType markdown  WrapSoft
-  autocmd FileType mkd       WrapSoft
-  autocmd FileType mediawiki WrapSoft
-  autocmd FileType text      WrapSoft
+  autocmd FileType markdown  call s:init_textlike()
+  autocmd FileType mkd       call s:init_textlike()
+  autocmd FileType mediawiki call s:init_textlike()
+  autocmd FileType text      call s:init_textlike()
 augroup end
 
 " Open the quickfix window after any grep command
@@ -297,7 +300,13 @@ augroup quickfix_mapping
   autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:cclose<CR>
 augroup END
 
-endif
+" Reset path as the ruby ftplugin will change it to the ruby load path
+augroup filetype_ruby
+  autocmd!
+  autocmd FileType ruby setlocal path=.,,**
+augroup END
+
+endif " has autocmd
 
 " --- other vimrc files ---
 

@@ -94,8 +94,10 @@ if g:is_osx
 else
   Plug 'iamcco/markdown-preview.vim'
 endif
+Plug 'lifepillar/vim-mucomplete'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
+Plug 'vim-ruby/vim-ruby'
 " Only load NERDTree on open
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeOpen', 'NERDTreeToggle']}
 Plug 'scrosland/nvsimple.vim'
@@ -192,11 +194,9 @@ set laststatus=2
 nnoremap <Leader>be :ls<CR>:b
 
 " NERDTree
-" mapping to (re)open NERDTree and load the directory of the current file
+" mapping to reopen an existing NERDTree or open a new NERDTree and load the
+" directory of the current file
 nnoremap <C-n> :NERDTreeToggle %:.:h<CR>
-" mapping to reopen existing NERDTree, or open it first time and load the cwd
-" <Esc>n === <M-n> in a more reliable way on linux at least.
-nnoremap <Esc>n :NERDTreeToggle<CR>
 let NERDTreeQuitOnOpen = 1
 
 " Netrw should ignore case in sort
@@ -210,3 +210,30 @@ elseif exists('$HOME/Dropbox/notes')
 endif
 nnoremap <Leader>nv :Nv<CR>
 nnoremap <Leader>no :Nvopen<CR>
+
+" Completion
+set completeopt=""
+set completeopt+=menuone
+set completeopt+=longest
+if has('patch-7.4.775')
+  " Configure completion auto-popup
+  set completeopt+=noinsert
+  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
+  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
+  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
+  let g:mucomplete#enable_auto_at_startup = 1
+end
+" The mucomplete 'path' completion requires the four argument glob() that
+" arrived in patch-7.4.654, so it doesn't work on Debian Jessie
+let s:file_or_path = has('patch-7.4.654') ? 'path' : 'file'
+let g:mucomplete#chains = {
+    \ 'default' : [s:file_or_path, 'omni', 'keyn', 'tags', 'uspl'],
+    \ 'vim'     : [s:file_or_path, 'cmd', 'keyn']
+    \ }
+" Disable completion messages
+"set shortmess+=c
+" map <CR> to accept the current completion in the menu, or insert <CR>
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u<CR>"
+let g:rubycomplete_classes_in_global = 1
+let g:rubycomplete_buffer_loading = 1
+

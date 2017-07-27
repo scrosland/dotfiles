@@ -70,7 +70,9 @@ if [ -n "$INTERACTIVE" ] ; then
     # change the prompt if this is a sub-shell of something else
     if [ -n "$PROMPT_LOGIN" ] ; then
         islogin=''
-        if [ "$(ps -o 'command=' -p $$)" = "-${SHELL}" ] ; then
+        cmd=$(ps -o 'command=' -p $$)
+        arg=$(echo "${cmd}" | egrep -w -- "-l|--login")
+        if [ "${cmd}" = "-${SHELL}" ] || [ -n "${arg}" ] ; then
             islogin='true'
         fi
         if [ -n "$islogin" -o "$SHLVL" -eq 1 ] ; then
@@ -78,7 +80,7 @@ if [ -n "$INTERACTIVE" ] ; then
         else
             PS1="${PROMPT_LOGIN}<${SHLVL}> "
         fi
-        unset islogin
+        unset islogin cmd arg
     fi
 
 fi # endif interactive

@@ -98,8 +98,6 @@ Plug 'lifepillar/vim-mucomplete'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
 Plug 'vim-ruby/vim-ruby'
-" Only load NERDTree on open
-Plug 'scrooloose/nerdtree', {'on': ['NERDTreeOpen', 'NERDTreeToggle']}
 Plug 'scrosland/nvsimple.vim'
 
 call plug#end()
@@ -192,12 +190,6 @@ set laststatus=2
 
 " Simple BufExplorer alternative
 nnoremap <Leader>be :ls<CR>:b
-
-" NERDTree
-" mapping to reopen an existing NERDTree or open a new NERDTree and load the
-" directory of the current file
-nnoremap <C-n> :NERDTreeToggle %:.:h<CR>
-let NERDTreeQuitOnOpen = 1
 
 " Netrw should ignore case in sort
 let g:netrw_sort_options = "i"

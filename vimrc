@@ -183,6 +183,7 @@ endif
 
 " Spell checking
 set spelllang=en_gb
+set spellsuggest=5
 if g:is_windows
 set spellfile=~/vimfiles/spellfile.utf-8.add
 else
@@ -280,6 +281,7 @@ endfunction
 " use soft wrap for text-like files
 function s:init_textlike()
   call s:smartdashes()
+  setlocal spell
   WrapSoft
 endfunction
 

@@ -213,7 +213,9 @@ if has('patch-7.4.775')
   inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
   inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
   inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
-  let g:mucomplete#enable_auto_at_startup = 1
+  " The auto complete is broken under MacVim.
+  " Disable everywhere as the popup can be distracting: it's easy to enable.
+  let g:mucomplete#enable_auto_at_startup = 0
 end
 " The mucomplete 'path' completion requires the four argument glob() that
 " arrived in patch-7.4.654, so it doesn't work on Debian Jessie

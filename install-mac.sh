@@ -20,7 +20,7 @@ mkalias()
   fi
   osascript -e "tell app \"Finder\" to make new alias file at POSIX file \"$aliasdir\" to POSIX file \"$srcfile\""
   if [[ ! -f "$alias" ]] ; then
-    local actual=$(ls -1t "${alias} alias"* | head -1)
+    local actual=$(ls -1t "${alias} "*alias* | head -1)
     echo "# Finder misnamed the alias '${actual}', renaming ..."
     mv "${actual}" "${alias}"
     ls -1 "${alias}"*

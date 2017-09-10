@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+def _spawnv(cmdname, *args, capture=False):
+    cmdline = [ cmdname, *args ]
+    options = {}
+    options["check"] = True
+    options["encoding"] = "UTF-8"
+    capture_or_close = subprocess.PIPE if capture else subprocess.DEVNULL
+    options["stdout"] = capture_or_close
+    options["stderr"] = capture_or_close
+    return subprocess.run(args=cmdline, **options)
+
+def backquote(cmdname, *args):
+    result = _spawnv(cmdname, *args, capture=True)
+    return result.stdout
+
+def spawnv(cmdname, *args):
+    result = _spawnv(cmdname, *args)
+    return result.returncode
+
+parser = argparse.ArgumentParser(description="Make a MacOS Alias.")
+parser.add_argument("-f", "--force", action="store_true",
+                    help="Overwrite the destination if it exists")
+parser.add_argument("source", metavar="source", type=Path,
+                    help="The source file to alias")
+parser.add_argument("targetd", metavar="directory", type=Path,
+                    help="The directory in which the alis will be created")
+args = parser.parse_args()
+
+if not args.source.exists():
+    print("Error: '{}' does not exist.".format(str(args.source)),
+          file=sys.stderr)
+    sys.exit(1)
+
+if not ((args.source.is_dir() and args.source.suffix == ".app") \
+        or args.source.is_file()):
+    print("Error: '{}' should be a file or *.app.".format(str(args.source)),
+          file=sys.stderr)
+    sys.exit(1)
+
+if not args.targetd.is_dir():
+    print("Error: '{}' should be a directory.".format(str(args.targetd)),
+          file=sys.stderr)
+    sys.exit(1)
+
+alias = args.targetd / args.source.name
+if alias.exists():
+    if not args.force:
+        print("Error: '{}' exists. Use --force to overwrite it.".
+              format(str(alias)),
+              file=sys.stderr)
+        sys.exit(1)
+    try:
+        alias.unlink()
+    except OSError as e:
+        print("Error: {}".format(e), file=sys.stderr)
+        sys.exit(1)
+
+script = "tell app \"Finder\" to make new alias file "
+script += "at POSIX file \"{targetd}\" ".format(targetd=str(args.targetd))
+script += "to POSIX file \"{source}\"".format(source=str(args.source))
+
+spawnv("osascript", "-e", script)
+
+if alias.is_file():
+    print("Created {}.".format(str(alias)))
+    sys.exit(0)
+
+# Finder sometimes chooses a different target file to the one we expect.
+# In this case, look for files in the correct directory with the right stem,
+# but also with the word "alias".
+pattern = "{}*alias*".format(alias.stem)
+for possible in args.targetd.glob(pattern):
+    output = backquote("file", "--brief", str(possible))
+    if "MacOS Alias" in output:
+        possible.rename(alias)
+        if alias.is_file():
+            print("Created {}.".format(str(alias)))
+            sys.exit(0)
+
+print("Error: alias created with wrong name in '{}'.".format(str(args.targetd)), file=sys.stderr)
+sys.exit(2)

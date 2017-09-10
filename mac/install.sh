@@ -7,26 +7,6 @@ run()
   "$@"
 }
 
-# mkalias source_file directory_containing_alias
-# e.g. mkalias /usr/local/Cellar/macvim/8.0-120/MacVim.app /Applications
-# This will replace any existing file of the same name in the target directory.
-mkalias()
-{
-  local srcfile="$1"
-  local aliasdir="$2"
-  local alias="${aliasdir}/$(basename "${srcfile}" '.app')"
-  if [[ -f "$alias" ]] ; then
-    rm "$alias"
-  fi
-  osascript -e "tell app \"Finder\" to make new alias file at POSIX file \"$aliasdir\" to POSIX file \"$srcfile\""
-  if [[ ! -f "$alias" ]] ; then
-    local actual=$(ls -1t "${alias} "*alias* | head -1)
-    echo "# Finder misnamed the alias '${actual}', renaming ..."
-    mv "${actual}" "${alias}"
-    ls -1 "${alias}"*
-  fi
-}
-
 # xcode command line tools
 echo "# Checking for Xcode command line tools"
 if ! xcode-select --print-path ; then
@@ -67,19 +47,26 @@ else
   run brew install ruby
 fi
 
-# Create aliases in /Applications
-# This is not using "brew linkapps" because that creates symlinks into /usr
-# which Spotlight will refuse to index.
-echo ""
-echo "# Creating application aliases in /Applications"
-find /usr/local/Cellar -depth 3 -type d -name '*.app' -print |
-  while read app ; do
-    run mkalias "${app}" /Applications
-  done
-
 # Cleanup temporary brew files
 run brew cleanup
 hash -r
+
+# Create aliases in /Applications
+# This is not using "brew linkapps" because that creates symlinks into /usr
+# which Spotlight will refuse to index.
+mkalias="$(dirname $0)/mkalias"
+echo ""
+echo "# Creating application aliases in /Applications"
+find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
+  while read app ; do
+    run ${mkalias} --force "${app}" /Applications
+  done
+
+# python2 packages
+run pip2 install mutagen
+
+# python3 packages
+run pip3 install piexif
 
 # ruby gems
 run gem install nokogiri

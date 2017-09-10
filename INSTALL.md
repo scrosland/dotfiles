@@ -18,7 +18,7 @@
 
 ## For Mac OS X:
 
-  1. Run `$HOME/dotfiles/install-mac.sh` to install some basics.
+  1. Run `$HOME/dotfiles/mac/install.sh` to install some basics.
   1. Follow the Linux/Unix instructions.
   1. Install Marked2 from http://marked2app.com.
 

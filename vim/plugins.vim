@@ -82,7 +82,9 @@ if s:error
 endif
 
 " color schemes
-Plug 'altercation/vim-colors-solarized'
+Plug 'altercation/vim-colors-solarized'   " the original
+Plug 'lifepillar/vim-solarized8'          " with truecolor support
+Plug 'icymind/NeoSolarized'               " also with truecolor support
 
 " plugins
 
@@ -146,15 +148,41 @@ function! s:initSolarized()
   "let l:contrast = has("gui_running") ? "normal" : "high"
   let l:contrast = "high"
   call s:setSolarized(l:contrast)
+  command! -nargs=0 SolarizedToggleContrast call s:solarizedToggleContrast()
 endfunction
 function! s:solarizedToggleContrast()
   let l:contrast = (g:solarized_contrast == "normal") ? "high" : "normal"
   call s:setSolarized(l:contrast)
 endfunction
-command! -nargs=0 SolarizedToggleContrast call s:solarizedToggleContrast()
+
+function! s:initSolarized8()
+  set termguicolors
+  colorscheme solarized8_light_high
+  call s:fixHighlights("Yellow")
+endfunction
+
+" TERM_PROGRAM=Apple_Terminal
+" COLORTERM=truecolor
+function! s:terminalSupportsTrueColor()
+  if has("gui_running")
+    return 0
+  end
+  if !has("termguicolors")
+    return 0
+  end
+  " Not checking for Terminal.app as it seems broken.
+  if $COLORTERM == "truecolor"
+    return 1
+  end
+  return 0
+endfunction
 
 " Set initial color scheme
-call s:initSolarized()
+if s:terminalSupportsTrueColor()
+  call s:initSolarized8()
+else
+  call s:initSolarized()
+end
 
 " Other plugins
 

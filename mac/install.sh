@@ -29,12 +29,15 @@ else
   # FLAC
   run brew install flac
 
-  # Install macvim
-  if [[ -d /Applications/Xcode.app ]] ; then
-    run brew install macvim --with-override-system-vim
-  else
-    echo "Error: Installation of macvim was skipped as Xcode.app is not installed" >&2
+  if false ; then
+    # Install macvim
+    if [[ -d /Applications/Xcode.app ]] ; then
+      run brew install macvim --with-override-system-vim
+    else
+      echo "Error: Installation of macvim was skipped as Xcode.app is not installed" >&2
+    fi
   fi
+  run brew install vim --with-override-system-vi
 
   # Install newer copy of rsync
   run brew install homebrew/dupes/rsync

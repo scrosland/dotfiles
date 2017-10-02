@@ -221,6 +221,11 @@ nnoremap <Leader>be :ls<CR>:b
 
 " Netrw should ignore case in sort
 let g:netrw_sort_options = "i"
+" Use the long listing which includes time stamps and file size
+let g:netrw_liststyle = 1
+" Sort directories first, then files; setting this to empty would sort all
+" files/directories by name alone
+let g:netrw_sort_sequence = '[\/]$,*'
 
 " nvSimple notes directory
 if exists('$USERPROFILE/Dropbox/notes')

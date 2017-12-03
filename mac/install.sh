@@ -48,6 +48,12 @@ else
 
   # Install newer copy of ruby
   run brew install ruby
+
+  # Install exiftool
+  run brew install exiftool
+
+  # Install jq for json manipulation
+  run brew install jq
 fi
 
 # Cleanup temporary brew files
@@ -69,7 +75,6 @@ find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
 run pip2 install mutagen
 
 # python3 packages
-run pip3 install piexif
 
 # ruby gems
 run gem install nokogiri

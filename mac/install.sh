@@ -13,51 +13,31 @@ if ! xcode-select --print-path ; then
   run xcode-select --install
 fi
 
-# Update brew and packages ...
-if [[ -e /usr/local/bin/brew ]] ; then
-  run brew update
-  run brew update
-  run brew upgrade
-else
-# ... or install brew and all packages
-  run /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-  run brew update
-
-  # Install ffmpeg
-  run brew install ffmpeg
-
-  # FLAC
-  run brew install flac
-
-  if false ; then
-    # Install macvim
-    if [[ -d /Applications/Xcode.app ]] ; then
-      run brew install macvim --with-override-system-vim
-    else
-      echo "Error: Installation of macvim was skipped as Xcode.app is not installed" >&2
-    fi
-  fi
-  run brew install vim --with-override-system-vi
-
-  # Install newer copy of rsync
-  run brew install homebrew/dupes/rsync
-
-  # Install newer copy of python, along with Python Launcher etc.
-  run brew install python
-  run brew install python3
-
-  # Install newer copy of ruby
-  run brew install ruby
-
-  # Install exiftool
-  run brew install exiftool
-
-  # Install jq for json manipulation
-  run brew install jq
+# Install brew if needed
+if [[ ! -e /usr/local/bin/brew ]] ; then
+  SCRIPT=/tmp/brew.$$
+  URL="https://raw.githubusercontent.com/Homebrew/install/master/install"
+  echo "Getting brew install script."
+  run curl -fsSL "${URL}" > ${SCRIPT}
+  echo "Check the script before running."
+  sleep 5
+  less ${SCRIPT}
+  echo "Interrupt now or the script will be run"
+  sleep 5
+  run /usr/bin/ruby ${SCRIPT}
+  rm -f ${SCRIPT}
 fi
 
+# Update brew
+run brew update
+
+# Install and upgrade packages using bundle ...
+run brew bundle --file=$HOME/dotfiles/mac/Brewfile --verbose
+# ... and then a manual upgrade just to be sure
+run brew upgrade
 # Cleanup temporary brew files
 run brew cleanup
+
 hash -r
 
 # Create aliases in /Applications
@@ -83,6 +63,9 @@ run gem install wolfram
 
 echo ""
 echo "# Checking for JDK."
+if ! /usr/libexec/java_home --failfast ; then
+  echo "Cannot find Java."
+fi
 java -version
 
 if [ ! -r /Applications/SCM.app ] ; then

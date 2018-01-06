@@ -32,7 +32,12 @@ fi
 run brew update
 
 # Install and upgrade packages using bundle ...
-run brew bundle --file=$HOME/dotfiles/mac/Brewfile --verbose
+BREWFILE="$HOME/dotfiles/mac/Brewfile"
+if [[ ! -r ${BREWFILE} ]] ; then
+  echo "Cannot find the brewfile, '${BREWFILE}'" >&2
+  exit 1
+fi
+run brew bundle --file=${BREWFILE} --verbose
 # ... and then a manual upgrade just to be sure
 run brew upgrade
 # Cleanup temporary brew files

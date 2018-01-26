@@ -99,6 +99,7 @@ endif
 Plug 'lifepillar/vim-mucomplete'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
+Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby'
 Plug 'scrosland/nvsimple.vim'
 
@@ -116,43 +117,14 @@ function! s:fixHighlights(yellow)
 endfunction
 
 " Solarized
-function! s:dropSolarizedOptions()
-  if exists(":SolarizedOptions")
-    delcommand SolarizedOptions
-  endif
-  if has("autocmd")
-    " add a group to re-do it later if the colorscheme is reloaded
-    if !exists("#DropSolarizedOptions")
-      augroup DropSolarizedOptions
-        autocmd!
-        autocmd ColorScheme * call s:dropSolarizedOptions()
-      augroup END
-    endif
-  endif
-endfunction
-function! s:setSolarized(contrast)
-  " Use the 256 colour mode so the terminal can remain in default colours.
+function! s:setSolarized()
   let g:solarized_termcolors = 256
-  " Don't mess with the terminal background.
   let g:solarized_termtrans = 1
-  " With a light background, high contrast often works best for me.
-  let g:solarized_contrast = a:contrast
-  " Turn it on ...
   colorscheme solarized
-  " ... and drop the annoying options command
-  call s:dropSolarizedOptions()
-  let l:yellow = (a:contrast == "high") ? "Yellow" : "LightYellow"
-  call s:fixHighlights(l:yellow)
+  call s:fixHighlights("Yellow")
 endfunction
 function! s:initSolarized()
-  "let l:contrast = has("gui_running") ? "normal" : "high"
-  let l:contrast = "high"
-  call s:setSolarized(l:contrast)
-  command! -nargs=0 SolarizedToggleContrast call s:solarizedToggleContrast()
-endfunction
-function! s:solarizedToggleContrast()
-  let l:contrast = (g:solarized_contrast == "normal") ? "high" : "normal"
-  call s:setSolarized(l:contrast)
+  call s:setSolarized()
 endfunction
 
 function! s:initSolarized8()

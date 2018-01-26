@@ -151,163 +151,167 @@ set mouse=nvcr
 
 " Digraphs - CTRL-K plus two characters
 if has("digraphs") && has("multi_byte")
-" EN DASH U+2013
-digraphs n- 8211
-" EM DASH U+2014
-digraphs m- 8212
+  " EN DASH U+2013
+  digraphs n- 8211
+  " EM DASH U+2014
+  digraphs m- 8212
 endif
 
 if has("wildmenu")
-" Improved wildcard expansion.
-" First <tab> populates with longest match, and pops up a menu if needed.
-" Second <tab> selects first thing in menu.
-" <C-N> and <C-P> navigate the menu.
-if exists("+wildignorecase")
-  set wildignorecase
-endif
-let s:suffixes = [
-  \ ".a",
-  \ ".d2",
-  \ ".dll",
-  \ ".exe",
-  \ ".lib",
-  \ ".o",
-  \ ".so",
-  \ ]
-for s:suffix in s:suffixes
-  execute 'set wildignore+=*' . s:suffix
-endfor
-set wildmenu
-set wildmode=longest:full,full
+  " Improved wildcard expansion.
+  " First <tab> populates with longest match, and pops up a menu if needed.
+  " Second <tab> selects first thing in menu.
+  " <C-N> and <C-P> navigate the menu.
+  if exists("+wildignorecase")
+    set wildignorecase
+  endif
+  let s:suffixes = [
+    \ ".a",
+    \ ".d2",
+    \ ".dll",
+    \ ".exe",
+    \ ".lib",
+    \ ".o",
+    \ ".so",
+    \ ]
+  for s:suffix in s:suffixes
+    execute 'set wildignore+=*' . s:suffix
+  endfor
+  set wildmenu
+  set wildmode=longest:full,full
 endif
 
 " Spell checking
 set spelllang=en_gb
 set spellsuggest=5
 if g:is_windows
-set spellfile=~/vimfiles/spellfile.utf-8.add
+  set spellfile=~/vimfiles/spellfile.utf-8.add
 else
-set spellfile=~/.vim/spellfile.utf-8.add
+  set spellfile=~/.vim/spellfile.utf-8.add
 end
 " Toggle spell checking with <F7>
 nnoremap <silent> <F7> :setlocal spell!<CR><Bar>:echo "Spell check: " . strpart("OffOn", 3 * &spell, 3)<CR>
 
 " Tags files may not be in current directory
-set tags=./tags,./../tags,./../../tags,./../../../tags,tags
+if has('path_extra')
+  " The ; has special significance see 'help file-searching'.
+  setglobal tags-=./tags tags-=./tags; tags^=./tags;
+else
+  set tags=./tags,./../tags,./../../tags,./../../../tags,tags
+end
 
 " Add a :Shell command to run a command and read the stdout into a new buffer
 command! -nargs=+ -complete=shellcmd Shell 
-\ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
+  \ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
 " --- Wrap mode and and file type handling ---
 
 function! s:soft_wrap_enable()
-setlocal wrap linebreak
-setlocal textwidth=0
-" fix up motion keys to move between displayed lines, not real lines
-" ... beginning and end of line ...
-nnoremap <buffer> <silent> $ g$
-nnoremap <buffer> <silent> 0 g0
-vnoremap <buffer> <silent> $ g$
-vnoremap <buffer> <silent> 0 g0
-" ... up and down lines ...
-nnoremap <buffer> <silent> j gj
-nnoremap <buffer> <silent> k gk
-vnoremap <buffer> <silent> j gj
-vnoremap <buffer> <silent> k gk
+  setlocal wrap linebreak
+  setlocal textwidth=0
+  " fix up motion keys to move between displayed lines, not real lines
+  " ... beginning and end of line ...
+  nnoremap <buffer> <silent> $ g$
+  nnoremap <buffer> <silent> 0 g0
+  vnoremap <buffer> <silent> $ g$
+  vnoremap <buffer> <silent> 0 g0
+  " ... up and down lines ...
+  nnoremap <buffer> <silent> j gj
+  nnoremap <buffer> <silent> k gk
+  vnoremap <buffer> <silent> j gj
+  vnoremap <buffer> <silent> k gk
 endfunction
 command! -nargs=0 WrapSoft call s:soft_wrap_enable()
 
 function! s:hard_wrap_enable()
-call s:wrap_default()
-setlocal textwidth=74
+  call s:wrap_default()
+  setlocal textwidth=74
 endfunction
 command! -nargs=0 WrapHard call s:hard_wrap_enable()
 
 function! s:wrap_default()
-setlocal wrap< linebreak<
-setlocal textwidth<
-try
-  " fix up motion keys to move up down displayed lines in the buffer
-  " ... beginning and end of line ...
-  nunmap <buffer> $
-  nunmap <buffer> 0
-  vunmap <buffer> $
-  vunmap <buffer> 0
-  " ... up and down lines ...
-  nunmap <buffer> j
-  nunmap <buffer> k
-  vunmap <buffer> j
-  vunmap <buffer> k
-catch
-endtry
+  setlocal wrap< linebreak<
+  setlocal textwidth<
+  try
+    " fix up motion keys to move up down displayed lines in the buffer
+    " ... beginning and end of line ...
+    nunmap <buffer> $
+    nunmap <buffer> 0
+    vunmap <buffer> $
+    vunmap <buffer> 0
+    " ... up and down lines ...
+    nunmap <buffer> j
+    nunmap <buffer> k
+    vunmap <buffer> j
+    vunmap <buffer> k
+  catch
+  endtry
 endfunction
 command! -nargs=0 WrapDefault call s:wrap_default()
 
 function! WrapDescribeForAirline()
-return (&wrap && &linebreak) ? "soft"
-    \ : (&wrap && &fo =~ "t" && &tw != 0) ? "tw=" . &textwidth
-    \ : ""
+  return (&wrap && &linebreak) ? "soft"
+      \ : (&wrap && &fo =~ "t" && &tw != 0) ? "tw=" . &textwidth
+      \ : ""
 endfunction
 
 " --- File type handling ---
 
 if has("autocmd")
-function! s:init_markdown()
-  setlocal nofoldenable
-  setlocal conceallevel=2
-  setlocal softtabstop=4
-  setlocal shiftwidth=4
-endfunction
+  function! s:init_markdown()
+    setlocal nofoldenable
+    setlocal conceallevel=2
+    setlocal softtabstop=4
+    setlocal shiftwidth=4
+  endfunction
 
-augroup filetype_markdown
-  autocmd!
-  autocmd FileType markdown call s:init_markdown()
-  autocmd FileType mkd      call s:init_markdown()
-augroup end
+  augroup filetype_markdown
+    autocmd!
+    autocmd FileType markdown call s:init_markdown()
+    autocmd FileType mkd      call s:init_markdown()
+  augroup end
 
-" vim/vimrc files should support folding based on markers, but start unfolded
-augroup filetype_vim
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker nofoldenable
-augroup end
+  " vim/vimrc files should support folding based on markers, but start unfolded
+  augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker nofoldenable
+  augroup end
 
   " Smart dash to EN DASH and EM DASH converstion
-function! s:smartdashes()
-  iab <buffer> -- <c-k>n-
-  iab <buffer> ~~ <c-k>m-
-endfunction
+  function! s:smartdashes()
+    iab <buffer> -- <c-k>n-
+    iab <buffer> ~~ <c-k>m-
+  endfunction
 
-" use soft wrap for text-like files
-function s:init_textlike()
-  call s:smartdashes()
-  setlocal spell
-  WrapSoft
-endfunction
+  " use soft wrap for text-like files
+  function s:init_textlike()
+    call s:smartdashes()
+    setlocal spell
+    WrapSoft
+  endfunction
 
-augroup filetype_textlike
-  autocmd!
-  autocmd FileType markdown  call s:init_textlike()
-  autocmd FileType mkd       call s:init_textlike()
-  autocmd FileType mediawiki call s:init_textlike()
-  autocmd FileType text      call s:init_textlike()
-augroup end
+  augroup filetype_textlike
+    autocmd!
+    autocmd FileType markdown  call s:init_textlike()
+    autocmd FileType mkd       call s:init_textlike()
+    autocmd FileType mediawiki call s:init_textlike()
+    autocmd FileType text      call s:init_textlike()
+  augroup end
 
-" Open the quickfix window after any grep command
-" add mappings to the quickfix window
-"   <S-O> : jump to the location and close the QuickFix window
-augroup quickfix_mapping
-  autocmd!
-  autocmd QuickFixCmdPost *grep* copen | redraw!
-  autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:cclose<CR>
-augroup END
+  " Open the quickfix window after any grep command
+  " add mappings to the quickfix window
+  "   <S-O> : jump to the location and close the QuickFix window
+  augroup quickfix_mapping
+    autocmd!
+    autocmd QuickFixCmdPost *grep* copen | redraw!
+    autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:cclose<CR>
+  augroup end
 
-" Reset path as the ruby ftplugin will change it to the ruby load path
-augroup filetype_ruby
-  autocmd!
-  autocmd FileType ruby setlocal path=.,,**
-augroup END
-
+  " Reset path as the ruby ftplugin will change it to the ruby load path
+  augroup filetype_ruby
+    autocmd!
+    autocmd FileType ruby setlocal path=.,,**
+  augroup end
 endif " has autocmd
 
 " --- other vimrc files ---
@@ -317,22 +321,22 @@ endif " has autocmd
 let s:vimrc = resolve(expand("<sfile>:p"))
 
 function! s:load_vimrc_extras()
-let l:pattern = resolve(fnamemodify(s:vimrc, ":h")) . '/vim/*.vim'
-let l:files = sort(split(glob(l:pattern), "\n"))
-" load plugins.vim first
-let l:matches = filter(copy(l:files), 'v:val =~? "plugins\.vim"')
-let l:plugins_vim = get(l:matches, 0, '')
-call s:source_if_readable(l:plugins_vim)
-" then load the rest
-" this is lazy and relies on the fact that plugins.vim will not let itself
-" be reloaded, so we can just load every file in the list
-call map(l:files, 's:source_if_readable(v:val)')
+  let l:pattern = resolve(fnamemodify(s:vimrc, ":h")) . '/vim/*.vim'
+  let l:files = sort(split(glob(l:pattern), "\n"))
+  " load plugins.vim first
+  let l:matches = filter(copy(l:files), 'v:val =~? "plugins\.vim"')
+  let l:plugins_vim = get(l:matches, 0, '')
+  call s:source_if_readable(l:plugins_vim)
+  " then load the rest
+  " this is lazy and relies on the fact that plugins.vim will not let itself
+  " be reloaded, so we can just load every file in the list
+  call map(l:files, 's:source_if_readable(v:val)')
 endfunction
 call s:load_vimrc_extras()
 
 " --- local options ---
 
 let s:vimrc_local = g:is_windows ?
-                    \ "$USERPROFILE/vimfiles/vimrc.local" :
-                    \ "$HOME/.vimrc.local"
+                      \ "$USERPROFILE/vimfiles/vimrc.local" :
+                      \ "$HOME/.vimrc.local"
 call s:source_if_readable(s:vimrc_local)

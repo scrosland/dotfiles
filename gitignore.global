@@ -40,6 +40,9 @@ Thumbs.db
 *.exe
 *.o
 *.so
+__pycache__/
+*.pyc
+*.pyo
 
 # autogenerate files
 generated/

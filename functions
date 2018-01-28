@@ -1,64 +1,43 @@
 #
 # vim: set filetype=sh:
 #
-# Bash functions
+# Shell functions
 #
+
+# ----- Functions common to sh and bash -----
 
 # $1 = filename to convert to abs
 abs_file()
 {
-  local file="$1"
-  file=$(cd $(dirname "$file") && pwd)/$(basename "$file")
-  echo "$file" ;
+    local file="$1"
+    file=$(cd $(dirname "$file") && pwd)/$(basename "$file")
+    echo "$file" ;
 }
 
-# echo the abs path of this file (expanding one level of symlink)
-this_file()
-{
-  local source="${BASH_SOURCE[0]}"
-  local file=$(test -L "$source" && readlink "$source" || echo "$source")
-  abs_file "$file" ;
-}
+if [ "$(uname -s)" = "Darwin" ] ; then
+    man()
+    {
+        if [ ! -t 1 ] ; then
+          MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
+          return
+        fi
+        /usr/bin/man "$@"
+        return
+    }
+fi
 
-# echo the abs path of the running script $0 (no symlink expansion)
-this_script()
-{
-  local source="${BASH_SOURCE[0]}"
-  abs_file "$source" ;
-}
+# ----- bash specific functions -----
+
+if [ -n "${BASH_VERSION}" ] ; then
+    . "${BASH_SOURCE[0]}.bash"
+    return
+fi
+
+# ----- Fallback functions for non-bash shells -----
 
 # set terminal title
 set_title()
 {
     local ansititle="\033]0;${1}\007"
-    if [ -n "$BASH_VERSION" ] ; then
-        if [ -z "$ORIG_PROMPT_COMMAND" ] ; then
-            ORIG_PROMPT_COMMAND="${PROMPT_COMMAND}"
-        fi
-        if [ -z "$1" ] ; then
-            PROMPT_COMMAND="${ORIG_PROMPT_COMMAND}"
-        else
-            PROMPT_COMMAND="echo -ne '${ansititle}'"
-        fi
-    else
-        echo -n "${ansititle}"
-    fi
-}
-
-# tmux attach and resize parent terminal to match the target session
-tma()
-{
-  local session="$1"
-  details=$(tmux ls -F '#{session_name}:#{session_width}:#{session_height}' | grep -s "^$1:")
-  if [ -z "${details}" ] ; then 
-    echo "error: unknown session '${session}'" >&2
-    return
-  fi
-  local _session width height
-  IFS=: read _session width height <<< "${details}"
-  # add one line to allow for the tmux status bar
-  height=$(expr ${height} + 1)
-  local command="\033[8;${height};${width}t"
-  echo -ne "${command}"
-  tmux attach -t "${session}"
+    echo -n "${ansititle}"
 }

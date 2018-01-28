@@ -44,3 +44,21 @@ set_title()
         echo -n "${ansititle}"
     fi
 }
+
+# tmux attach and resize parent terminal to match the target session
+tma()
+{
+  local session="$1"
+  details=$(tmux ls -F '#{session_name}:#{session_width}:#{session_height}' | grep -s "^$1:")
+  if [ -z "${details}" ] ; then 
+    echo "error: unknown session '${session}'" >&2
+    return
+  fi
+  local _session width height
+  IFS=: read _session width height <<< "${details}"
+  # add one line to allow for the tmux status bar
+  height=$(expr ${height} + 1)
+  local command="\033[8;${height};${width}t"
+  echo -ne "${command}"
+  tmux attach -t "${session}"
+}

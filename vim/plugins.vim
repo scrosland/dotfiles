@@ -99,6 +99,7 @@ endif
 Plug 'lifepillar/vim-mucomplete'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
+Plug 'tmux-plugins/vim-tmux'
 Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby'
 Plug 'scrosland/nvsimple.vim'

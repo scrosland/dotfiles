@@ -23,21 +23,35 @@ this_script()
 set_title()
 {
     local ansititle="\033]0;${1}\007"
-    if [ -z "$ORIG_PROMPT_COMMAND" ] ; then
+    if [ -z "$(declare -p | grep -s ^ORIG_PROMPT_COMMAND)" ] ; then
         ORIG_PROMPT_COMMAND="${PROMPT_COMMAND}"
     fi
     if [ -z "$1" ] ; then
         PROMPT_COMMAND="${ORIG_PROMPT_COMMAND}"
+        if [[ -z ${PROMPT_COMMAND} ]] ; then
+            printf "${ansititle}"
+        fi
     else
-        PROMPT_COMMAND="echo -ne '${ansititle}'"
+        PROMPT_COMMAND="printf '${ansititle}'"
     fi
+}
+
+tmux_session_geometry()
+{
+    local session="$1"
+    details=$(
+      command tmux ls -F '#{session_name}:#{session_width}:#{session_height}' |
+      grep -s "^${session}:"
+      )
+    echo "${details}"
+    return 0
 }
 
 # tmux attach and resize parent terminal to match the target session
 tmux_resize_to_match_session()
 {
     local session="$1"
-    details=$(tmux ls -F '#{session_name}:#{session_width}:#{session_height}' | grep -s "^$1:")
+    details=$(tmux_session_geometry "${session}")
     if [ -z "${details}" ] ; then 
         echo "error: unknown session '${session}'" >&2
         return 1
@@ -46,8 +60,7 @@ tmux_resize_to_match_session()
     IFS=: read _session width height <<< "${details}"
     # add one line to allow for the tmux status bar
     height=$(expr ${height} + 1)
-    local command="\033[8;${height};${width}t"
-    echo -ne "${command}"
+    resize_terminal "${height}" "${width}"
     return 0
 }
 

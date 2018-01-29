@@ -1,4 +1,4 @@
-#
+# syntax: bash
 # vim: set filetype=sh:
 #
 # Shell functions
@@ -21,10 +21,18 @@ if [ "$(uname -s)" = "Darwin" ] ; then
           MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
           return
         fi
-        /usr/bin/man "$@"
+        command man "$@"
         return
     }
 fi
+
+resize_terminal()
+{
+    local width="$1"
+    local height="$2"
+    local command="\033[8;${height};${width}t"
+    printf "${command}"
+}
 
 # ----- bash specific functions -----
 

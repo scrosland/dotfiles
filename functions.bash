@@ -36,11 +36,26 @@ set_title()
     fi
 }
 
+# ----- tmux helpers -----
+
+# gets a custom user option
+tmux_get_custom_session_option()
+{
+    local session="$1"
+    local option="$2"
+    # use of the 'start \; show-options' idiom allows this
+    # to work even when the tmux server is not running
+    command tmux start \; \
+        show-options -g -v "@session_${session}_${option}" 2>/dev/null
+}
+
+# gets the geometry of a running session
 tmux_session_geometry()
 {
     local session="$1"
+    local format='#{session_name}:#{session_width}:#{session_height}'
     details=$(
-      command tmux ls -F '#{session_name}:#{session_width}:#{session_height}' |
+      command tmux list-sessions -F "${format}" 2>/dev/null |
       grep -s "^${session}:"
       )
     echo "${details}"
@@ -53,22 +68,78 @@ tmux_resize_to_match_session()
     local session="$1"
     details=$(tmux_session_geometry "${session}")
     if [ -z "${details}" ] ; then 
-        echo "error: unknown session '${session}'" >&2
         return 1
     fi
     local _session width height
     IFS=: read _session width height <<< "${details}"
     # add one line to allow for the tmux status bar
     height=$(expr ${height} + 1)
-    resize_terminal "${height}" "${width}"
+    resize_terminal "${width}" "${height}"
     return 0
 }
 
-tma()
+tmux_reattach()
 {
     local session="$1"
     if ! tmux_resize_to_match_session "${session}" ; then
-        return
+        return 1
     fi
-    tmux attach -t "${session}"
+    command tmux attach -t "${session}"
+}
+
+tmux_create_session()
+{
+    local session="$1"
+    if command tmux has-session -t "${session}" 2>/dev/null ; then
+        echo "error: session '${session}' is already running" >&2
+        return 1
+    fi
+    local width height
+    IFS="x" read width height <<< $(
+        tmux_get_custom_session_option "${session}" "geometry" 2>/dev/null
+        )
+    if [[ -z ${width} ]] || [[ -z ${height} ]] ; then
+        echo "error: cannot find the default geometry for '${session}'"
+        return 1
+    fi
+    command tmux new-session -d -s "${session}" -x "${width}" -y "${height}"
+    if (( $? != 0 )) ; then
+        echo "error: failed to create new session '${session}'" >&2
+    fi
+    local pane=$(command tmux list-panes -t "${session}" -F '#{pane_id}')
+    local cmds
+    IFS='§' cmds=( $(
+        tmux_get_custom_session_option "${session}" "command"
+        ) )
+    for cmd in "${cmds[@]}" ; do
+        eval command ${cmd} -t "${pane}"
+    done
+    return 0
+}
+
+tmux_start_or_attach()
+{
+    local session="$1"
+    if tmux_reattach "${session}" ; then
+        return 0
+    fi
+    if ! tmux_create_session "${session}" ; then
+        return 1
+    fi
+    tmux_reattach "${session}"
+}
+
+tmux()
+{
+    local command="$1"
+    if [[ ${command} = "go" ]] ; then
+        local session="$2"
+        if [[ -z ${session} ]] ; then
+            echo "usage: tmux go <target-session>" >&2
+            return 2
+        fi
+        tmux_start_or_attach "$2"
+        return $?
+    fi
+    command tmux "$@"
 }

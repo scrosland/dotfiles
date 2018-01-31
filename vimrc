@@ -312,6 +312,12 @@ if has("autocmd")
     autocmd!
     autocmd FileType ruby setlocal path=.,,**
   augroup end
+
+  " Change tab stops for shell code
+  augroup filetype_shell
+    autocmd!
+    autocmd FileType sh setlocal softtabstop=4 shiftwidth=4
+  augroup end
 endif " has autocmd
 
 " --- other vimrc files ---

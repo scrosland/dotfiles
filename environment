@@ -11,13 +11,21 @@ VISUAL="$EDITOR" ; export VISUAL
 
 add_to_path_var()
 {
-  local var="$1"
-  local dir="$2"
-  if [ ! -d "${dir}" ] ; then
-    return
-  fi
-  eval `ruby -e 'var = ARGV.shift() ; value = ARGV.shift() ; current = ENV[var] || "" ; parts = current.split(":") ; unless parts.include?(value) ; parts.insert(0, value) ; end ; puts("#{var}=#{parts.join(":").inspect()}")' "${var}" "${dir}"`
-  export "${var}"
+    local var="$1"
+    local dir="$2"
+    if [ ! -d "${dir}" ] ; then
+        return 1
+    fi
+    eval `ruby -e 'var = ARGV.shift() ; value = ARGV.shift() ; current = ENV[var] || "" ; parts = current.split(":") ; unless parts.include?(value) ; parts.insert(0, value) ; end ; puts("#{var}=#{parts.join(":").inspect()}")' "${var}" "${dir}"`
+    return 0
+}
+
+add_to_path_var_and_export()
+{
+    local var="$1"
+    if add_to_path_var "$@" ; then
+        export "${var}"
+    fi
 }
 
 if [[ -z ${CDPATH} ]] ; then
@@ -30,5 +38,5 @@ add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
 add_to_path_var PATH "${HOME}/bin"
 
-add_to_path_var PYTHONPATH /Users/Shared/tools/libs/python
-add_to_path_var RUBYLIB /Users/Shared/tools/libs/ruby
+add_to_path_var_and_export PYTHONPATH /Users/Shared/tools/libs/python
+add_to_path_var_and_export RUBYLIB /Users/Shared/tools/libs/ruby

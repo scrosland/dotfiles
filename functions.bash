@@ -4,6 +4,10 @@
 # Bash functions
 #
 
+[ "$(uname)" = "Darwin" ] &&
+    [ -f /usr/local/etc/profile.d/bash_completion.sh ] &&
+        source /usr/local/etc/profile.d/bash_completion.sh
+
 # echo the abs path of this file (expanding one level of symlink)
 this_file()
 {

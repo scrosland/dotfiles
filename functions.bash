@@ -34,7 +34,7 @@ tmux_update_environment()
     fi
 }
 
-__sc_prompt_command()
+_sc_prompt_command()
 {
     printf "\033]0;%s\007" "${TERMINAL_TITLE}"
     if [[ -z $TERMINAL_TITLE ]] ; then
@@ -53,8 +53,8 @@ set_title()
     if ! declare -p ORIG_PROMPT_COMMAND >/dev/null 2>&1 ; then
         ORIG_PROMPT_COMMAND="${PROMPT_COMMAND}"
     fi
-    PROMPT_COMMAND="__sc_prompt_command"
-    __sc_prompt_command
+    PROMPT_COMMAND="_sc_prompt_command"
+    _sc_prompt_command
     return 0
 }
 
@@ -68,7 +68,7 @@ fi
 # ----- tmux helpers -----
 
 # gets a custom user option
-tmux_get_custom_session_option()
+_tmux_get_custom_session_option()
 {
     local session="$1"
     local option="$2"
@@ -78,7 +78,15 @@ tmux_get_custom_session_option()
         show-options -g -v "@session_${session}_${option}" 2>/dev/null
 }
 
-tmux_current_session()
+_tmux_get_default_custom_session()
+{
+    # use of the 'start \; show-options' idiom allows this
+    # to work even when the tmux server is not running
+    command tmux start \; \
+        show-options -g -v "@session_default_name" 2>/dev/null
+}
+
+_tmux_current_session()
 {
     if [[ -z $TMUX ]] ; then
         echo ""
@@ -89,7 +97,7 @@ tmux_current_session()
 }
 
 # gets the geometry of a running session
-tmux_session_geometry()
+_tmux_session_geometry()
 {
     local session="$1"
     local format='#{session_name}:#{session_width}:#{session_height}'
@@ -102,15 +110,17 @@ tmux_session_geometry()
 }
 
 # tmux attach and resize parent terminal to match the target session
-tmux_resize_to_match_session()
+_tmux_resize_to_match_session()
 {
     local session="$1"
-    details=$(tmux_session_geometry "${session}")
-    if [ -z "${details}" ] ; then 
+    local details
+    IFS=: details=( $(_tmux_session_geometry "${session}") )
+    if [ "${#details[@]}" -lt 3 ] ; then 
         return 1
     fi
-    local _session width height
-    IFS=: read _session width height <<< "${details}"
+    # local _session="${details[0]}"
+    local width="${details[1]}"
+    local height="${details[2]}"
     # add one line to allow for the tmux status bar
     height=$(expr ${height} + 1)
     resize_terminal "${width}" "${height}"
@@ -120,7 +130,7 @@ tmux_resize_to_match_session()
 tmux_reattach()
 {
     local session="$1"
-    if ! tmux_resize_to_match_session "${session}" ; then
+    if ! _tmux_resize_to_match_session "${session}" ; then
         return 1
     fi
     command tmux attach -t "${session}"
@@ -128,7 +138,7 @@ tmux_reattach()
 
 tmux_configure_window()
 {
-    local session=$(tmux_current_session)
+    local session=$(_tmux_current_session)
     local pane=''
 
     if [[ $# -gt 0 ]] ; then
@@ -140,7 +150,7 @@ tmux_configure_window()
 
     local cmds
     IFS='§' cmds=( $(
-        tmux_get_custom_session_option "${session}" "command"
+        _tmux_get_custom_session_option "${session}" "command"
         ) )
     for cmd in "${cmds[@]}" ; do
         eval command ${cmd} ${pane:+"-t"} ${pane}
@@ -154,15 +164,18 @@ tmux_create_session()
         echo "error: session '${session}' is already running" >&2
         return 1
     fi
-    local width height
-    IFS="x" read width height <<< $(
-        tmux_get_custom_session_option "${session}" "geometry" 2>/dev/null
-        )
+    local value
+    IFS=x value=( $(
+        _tmux_get_custom_session_option "${session}" "geometry"
+        ) )
+    local width="${value[0]}"
+    local height="${value[1]}"
     if [[ -z ${width} ]] || [[ -z ${height} ]] ; then
         echo "error: cannot find the default geometry for '${session}'"
         return 1
     fi
-    command tmux new-session -d -s "${session}" -x "${width}" -y "${height}"
+    command tmux new-session -d -s "${session}" -n "${session}" \
+        -x "${width}" -y "${height}"
     if (( $? != 0 )) ; then
         echo "error: failed to create new session '${session}'" >&2
     fi
@@ -174,6 +187,14 @@ tmux_create_session()
 tmux_start_or_attach()
 {
     local session="$1"
+    if [[ -z ${session} ]] ; then
+        session=$(_tmux_get_default_custom_session)
+        if [[ -z ${session} ]] ; then
+            echo "error: no session specified, and no default in tmux.conf" >&2
+            echo "usage: tmux go [target-session]" >&2
+            return 2
+        fi
+    fi
     set_title "${session}"
     if tmux_reattach "${session}" ; then
         return 0
@@ -190,10 +211,6 @@ tmux()
     case "${command}" in
         go)
             shift
-            if [[ $# -lt 1 ]] ; then
-                echo "usage: tmux go <target-session>" >&2
-                return 2
-            fi
             tmux_start_or_attach "$@"
             return $?
             ;;

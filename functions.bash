@@ -38,9 +38,11 @@ _sc_prompt_command()
 {
     printf "\033]0;%s\007" "${TERMINAL_TITLE}"
     if [[ -z $TERMINAL_TITLE ]] ; then
-        if [[ -n ${ORIG_PROMPT_COMMAND} ]] ; then
-            eval "${ORIG_PROMPT_COMMAND}"
-        fi
+        # borrowed from __vte_prompt_command() as supplied with gnome-terminal
+        printf "\033]0;%s@%s:%s\007" \
+            "${USER}" \
+            "${HOSTNAME%%.*}" \
+            "${PWD/#$HOME/~}"
     fi
     tmux_update_environment
     return 0
@@ -50,11 +52,6 @@ _sc_prompt_command()
 set_title()
 {
     TERMINAL_TITLE="$1"
-    if ! declare -p ORIG_PROMPT_COMMAND >/dev/null 2>&1 ; then
-        ORIG_PROMPT_COMMAND="${PROMPT_COMMAND}"
-    fi
-    PROMPT_COMMAND="_sc_prompt_command"
-    _sc_prompt_command
     return 0
 }
 
@@ -62,7 +59,7 @@ set_title()
 #   "PS1 is set and $- includes i if bash is interactive, allowing a
 #    shell script or a startup file to test this state."
 if [[ -n $PS1 ]] ; then
-    set_title
+    PROMPT_COMMAND="_sc_prompt_command"
 fi
 
 # ----- tmux helpers -----

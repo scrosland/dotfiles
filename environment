@@ -16,7 +16,18 @@ add_to_path_var()
     if [ ! -d "${dir}" ] ; then
         return 1
     fi
-    eval `ruby -e 'var = ARGV.shift() ; value = ARGV.shift() ; current = ENV[var] || "" ; parts = current.split(":") ; unless parts.include?(value) ; parts.insert(0, value) ; end ; puts("#{var}=#{parts.join(":").inspect()}")' "${var}" "${dir}"`
+    eval local current=\$${var}
+    eval $( ruby -e '
+        var = ARGV.shift()
+        current = ARGV.shift()
+        value = ARGV.shift()
+        parts = current.split(":")
+        unless parts.include?(value)
+            parts.insert(0, value)
+        end
+        puts("#{var}=\"#{parts.join(":").inspect()}\"")
+        ' "${var}" "${current}" "${dir}"
+        )
     return 0
 }
 
@@ -29,8 +40,8 @@ add_to_path_var_and_export()
 }
 
 if [[ -z ${CDPATH} ]] ; then
-  add_to_path_var CDPATH "/Users/Shared"
-  add_to_path_var CDPATH "${HOME}"
+    add_to_path_var CDPATH "/Users/Shared"
+    add_to_path_var CDPATH "${HOME}"
 fi
 
 add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"

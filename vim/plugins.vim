@@ -112,20 +112,20 @@ call plug#end()
 
 function! s:fixHighlights(yellow)
   highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
+  " PuTTY has broken highlighting with 'Yellow', so force 'LightYellow'
+  let l:local_session = (g:is_osx || g:is_windows || strlen($DISPLAY))
+  let l:yellow = l:local_session ? a:yellow : "LightYellow"
   let l:command = "highlight Search term=reverse cterm=reverse ctermfg=" 
-    \. a:yellow . " ctermbg=Black"
+    \. l:yellow . " ctermbg=Black"
   exec l:command
 endfunction
 
 " Solarized
-function! s:setSolarized()
+function! s:initSolarized()
   let g:solarized_termcolors = 256
   let g:solarized_termtrans = 1
   colorscheme solarized
   call s:fixHighlights("Yellow")
-endfunction
-function! s:initSolarized()
-  call s:setSolarized()
 endfunction
 
 function! s:initSolarized8()

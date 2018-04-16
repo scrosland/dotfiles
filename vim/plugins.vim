@@ -214,26 +214,18 @@ set completeopt=""
 set completeopt+=menuone
 set completeopt+=longest
 if has('patch-7.4.775')
-  " Configure completion auto-popup
   set completeopt+=noinsert
-  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
-  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
-  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
-  " The auto complete is broken under MacVim.
-  " Disable everywhere as the popup can be distracting: it's easy to enable.
-  let g:mucomplete#enable_auto_at_startup = 0
+"  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
+"  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
+"  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
 end
-" The mucomplete 'path' completion requires the four argument glob() that
-" arrived in patch-7.4.654, so it doesn't work on Debian Jessie
-let s:file_or_path = has('patch-7.4.654') ? 'path' : 'file'
+let g:mucomplete#enable_auto_at_startup = 0
 let g:mucomplete#chains = {
-    \ 'default' : [s:file_or_path, 'omni', 'keyn', 'tags', 'uspl'],
-    \ 'vim'     : [s:file_or_path, 'cmd', 'keyn']
+    \ 'default' : ['path', 'omni', 'keyn', 'tags', 'dict', 'uspl'],
+    \ 'vim'     : ['path', 'cmd', 'keyn']
     \ }
 " Disable completion messages
 "set shortmess+=c
-" map <CR> to accept the current completion in the menu, or insert <CR>
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u<CR>"
 let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_buffer_loading = 1
 

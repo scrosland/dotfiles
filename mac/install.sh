@@ -79,6 +79,6 @@ if [ ! -r /Applications/SCM.app ] ; then
 fi
 
 echo ""
-echo "# Go to http://dejavu-fonts.org and install the latest ttf files."
+echo "# Go to https://dejavu-fonts.github.io and install the latest ttf files."
 
 exit 0

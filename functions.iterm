@@ -1,0 +1,33 @@
+#
+# vim: set filetype=sh:
+#
+# Bash functions iTerm integration
+#
+
+_iterm_2x2()
+{
+    osascript -e '
+	tell application "iTerm"
+	    tell current session of current window
+		set columns to 162
+		set rows to 44
+		split vertically with same profile
+	    end tell
+	end tell'
+}
+
+iterm()
+{
+    local command="$1"
+    shift
+    case "${command}" in
+        2x2|conf|layout|split)
+            _iterm_2x2
+            ;;
+        *)
+            echo "unknown command: '${command}'" >&2
+            return 1
+            ;;
+    esac
+    return 0
+}

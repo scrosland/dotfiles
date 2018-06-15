@@ -44,6 +44,8 @@ if [[ -z ${CDPATH} ]] ; then
     add_to_path_var CDPATH "${HOME}"
 fi
 
+add_to_path_var MANPATH "$HOME/.local/share/man"
+
 add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"

@@ -112,9 +112,15 @@ call plug#end()
 
 function! s:fixHighlights(yellow)
   highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
-  " PuTTY has broken highlighting with 'Yellow', so force 'LightYellow'
-  let l:local_session = (g:is_osx || g:is_windows || strlen($DISPLAY))
-  let l:yellow = l:local_session ? a:yellow : "LightYellow"
+  " PuTTY and Gnome Terminator treat 'Yellow' higlighting differently
+  " so force 'LightYellow' for them irrespective of the argument
+  let l:force_light_yellow = 0
+  if !g:is_osx && !g:is_windows
+    if strlen($DISPLAY) == 0 || strlen($TERMINATOR_UUID)
+      let l:force_light_yellow = 1
+    end
+  end
+  let l:yellow = l:force_light_yellow ? "LightYellow" : a:yellow
   let l:command = "highlight Search term=reverse cterm=reverse ctermfg=" 
     \. l:yellow . " ctermbg=Black"
   exec l:command

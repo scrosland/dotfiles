@@ -101,6 +101,8 @@ Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
 Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby'
+
+Plug 'scrosland/gitignore'
 Plug 'scrosland/nvsimple.vim'
 
 call plug#end()

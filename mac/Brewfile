@@ -10,9 +10,7 @@ brew "flac"
 brew "jq"
 brew "python@2"
 brew "python"
-brew "reattach-to-user-namespace"   # for tmux-yank
 brew "rsync"
-brew "tmux"
 brew "vim", args: ["with-override-system-vi"]
 
 # cask_args appdir: "/Applications"

@@ -48,10 +48,6 @@ hi statusline_z_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
 
 hi statusline_inactive  ctermfg=244 ctermbg=251 guifg=#777777 guibg=#c7c7c7
 
-" Dynamic colours for e.g. modified buffers can only be done by dynamically
-" creating new highlight groups for each buffer, e.g. statusline_c_(bufnr).
-" That's a job for another day.
-
 function! statusline#fenc()
   return &fileencoding == 'utf-8' ? '' : &fileencoding
 endfunction
@@ -61,7 +57,45 @@ function! statusline#ff()
 endfunction
 
 function! statusline#hi(name, active)
-  return a:active ? '%#statusline_' . a:name . '#' : '%#statusline_inactive#'
+  let l:token = '%#statusline_'
+  let l:token .= a:active ? a:name : 'inactive'
+  let l:token .= '#'
+  return l:token
+endfunction
+
+function! statusline#section_c_hi_grp(active)
+  let l:grp = 'statusline_c_bufnr_' . winbufnr(winnr())
+  let l:grp .= a:active ? '' : '_inactive'
+  return l:grp
+endfunction
+
+function! statusline#section_c_hi(active)
+  return '%#' . statusline#section_c_hi_grp(a:active) . '#'
+endfunction
+
+function! statusline#section_c_clear_hi_grp()
+  execute 'hi! link ' . statusline#section_c_hi_grp(0) . ' NONE'
+  execute 'hi! link ' . statusline#section_c_hi_grp(1) . ' NONE'
+  unlet! b:statusline_modified
+endfunction
+
+let s:section_c_highlight = [
+    \ { 'active' : 'statusline_c',
+        \ 'inactive' : 'statusline_inactive' },
+    \ { 'active' : 'statusline_c_mod', 
+        \ 'inactive' : 'statusline_c_mod_inactive' },
+    \ ]
+
+function! statusline#section_c_patch_hl()
+  if get(b:, 'statusline_modified', -1) != &modified
+    let l:modified = &modified
+    let b:statusline_modified = l:modified
+    let l:active = s:section_c_highlight[l:modified]['active']
+    let l:inactive = s:section_c_highlight[l:modified]['inactive']
+    execute 'hi! link ' . statusline#section_c_hi_grp(0) . ' ' . l:inactive
+    execute 'hi! link ' . statusline#section_c_hi_grp(1) . ' ' . l:active
+  endif
+  return ''
 endfunction
 
 function! statusline#section_b()
@@ -71,12 +105,12 @@ function! statusline#section_b()
   if exists('*LocalPartsForStatusLine')
     let l:parts += LocalPartsForStatusLine()
   endif
-  let l:value = join(filter(l:parts, 'len(v:val)'), ' > ')
-  return l:value
+  return join(filter(l:parts, 'len(v:val)'), ' > ')
 endfunction
 
 function! StatusLine(active)
   let l:statusline = ''
+  let l:statusline .= '%{statusline#section_c_patch_hl()}'
   "
   " Section A (mode, paste, spell)
   if a:active
@@ -95,7 +129,7 @@ function! StatusLine(active)
   let l:statusline .= '%( %{statusline#section_b()} %)'
   "
   " Section C (filename)
-  let l:statusline .= statusline#hi('c', a:active)
+  let l:statusline .= statusline#section_c_hi(a:active)
   let l:statusline .= '%( '
   let l:statusline .=   '%<%f'
   " Gutter (readonly, modified) -- nested inside Section C for grouping
@@ -133,4 +167,5 @@ augroup statusline_commands
   autocmd!
   autocmd WinEnter * setlocal statusline=%!StatusLine(1)
   autocmd WinLeave * setlocal statusline=%!StatusLine(0)
+  autocmd BufDelete,BufUnload * call statusline#section_c_clear_hi_grp()
 augroup END

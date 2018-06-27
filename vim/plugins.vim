@@ -88,8 +88,6 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 
 " plugins
 
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'chikamichi/mediawiki.vim'
 if g:is_osx
   Plug 'itspriddle/vim-marked'
@@ -165,36 +163,6 @@ else
 end
 
 " Other plugins
-
-" Airline
-function! AirlineSectionB()
-  let l:parts = []
-  call add(l:parts, WrapDescribeForAirline())
-  " Hook for .vimrc.local
-  if exists('*LocalPartsForAirline')
-    let l:parts += LocalPartsForAirline()
-  endif
-  " This should use airline#util#append() but that seems to insert a two
-  " space prefix instead of a single space prefix which is annoying.
-  let l:value = join(
-                    \ map(
-                        \ filter(l:parts, 'len(v:val)'),
-                        \ 'airline#util#wrap(v:val, 0)'
-                        \ ),
-                    \ ' > '
-                    \ )
-  return l:value
-endfunction
-
-let g:airline_theme = 'sol'
-" Disable trailing whitespace checks (too noisy). The default is:
-"   let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
-let g:airline#extensions#whitespace#checks = [ 'indent' ]
-" Define a part for section 'b' and use it
-call airline#parts#define_function('section-b', 'AirlineSectionB')
-let g:airline_section_b = airline#section#create(['section-b'])
-" Turn on the status bar everywhere.
-set laststatus=2
 
 " Simple BufExplorer alternative
 nnoremap <Leader>be :ls<CR>:b

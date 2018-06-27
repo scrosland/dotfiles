@@ -249,7 +249,7 @@ function! s:wrap_default()
 endfunction
 command! -nargs=0 WrapDefault call s:wrap_default()
 
-function! WrapDescribeForAirline()
+function! WrapDescribeForStatusLine()
   return (&wrap && &linebreak) ? "soft"
       \ : (&wrap && &fo =~ "t" && &tw != 0) ? "tw=" . &textwidth
       \ : ""

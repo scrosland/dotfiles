@@ -82,7 +82,19 @@ let s:section_c_hi = [
     \ ]
 
 function! statusline#section_c()
-  let l:content = ' ' . bufname(winbufnr(winnr())) . ' '
+  let l:name = bufname(winbufnr(winnr()))
+  if empty(l:name)
+    if &buftype == 'quickfix'
+      let l:name = '[Quickfix]'
+    elseif &buftype == 'nofile'
+      let l:name = '[Scratch]'
+    else
+      let l:name = '[No Name]'
+    endif
+  else
+    let l:name = fnamemodify(l:name, ':~:.')
+  endif
+  let l:content = ' ' . l:name . ' '
   " Gutter (readonly, modified) -- nested inside Section C for grouping
   let l:content .= (&readonly || &modifiable == 0) ? '[RO] ' : ''
   let l:content .= &modified ? '+++ ' : ''

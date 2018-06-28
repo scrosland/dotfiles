@@ -63,41 +63,6 @@ function! statusline#hi(name, active)
   return l:token
 endfunction
 
-function! statusline#section_c_hi_grp(active)
-  let l:grp = 'statusline_c_bufnr_' . winbufnr(winnr())
-  let l:grp .= a:active ? '' : '_inactive'
-  return l:grp
-endfunction
-
-function! statusline#section_c_hi(active)
-  return '%#' . statusline#section_c_hi_grp(a:active) . '#'
-endfunction
-
-function! statusline#section_c_clear_hi_grp()
-  execute 'hi! link ' . statusline#section_c_hi_grp(0) . ' NONE'
-  execute 'hi! link ' . statusline#section_c_hi_grp(1) . ' NONE'
-  unlet! b:statusline_modified
-endfunction
-
-let s:section_c_highlight = [
-    \ { 'active' : 'statusline_c',
-        \ 'inactive' : 'statusline_inactive' },
-    \ { 'active' : 'statusline_c_mod', 
-        \ 'inactive' : 'statusline_c_mod_inactive' },
-    \ ]
-
-function! statusline#section_c_patch_hl()
-  if get(b:, 'statusline_modified', -1) != &modified
-    let l:modified = &modified
-    let b:statusline_modified = l:modified
-    let l:active = s:section_c_highlight[l:modified]['active']
-    let l:inactive = s:section_c_highlight[l:modified]['inactive']
-    execute 'hi! link ' . statusline#section_c_hi_grp(0) . ' ' . l:inactive
-    execute 'hi! link ' . statusline#section_c_hi_grp(1) . ' ' . l:active
-  endif
-  return ''
-endfunction
-
 function! statusline#section_b()
   let l:parts = []
   call add(l:parts, WrapDescribeForStatusLine())
@@ -108,9 +73,24 @@ function! statusline#section_b()
   return join(filter(l:parts, 'len(v:val)'), ' > ')
 endfunction
 
+" indexed by a:active (0: inactive, 1: active)
+let s:section_c_hi = [
+    \ { 'mod'   : '%#statusline_c_mod_inactive#',
+      \ 'nomod' : '%#statusline_inactive#' },
+    \ { 'mod'   : '%#statusline_c_mod#',
+      \ 'nomod' : '%#statusline_c#' },
+    \ ]
+
+function! statusline#section_c()
+  let l:content = ' ' . bufname(winbufnr(winnr())) . ' '
+  " Gutter (readonly, modified) -- nested inside Section C for grouping
+  let l:content .= (&readonly || &modifiable == 0) ? '[RO] ' : ''
+  let l:content .= &modified ? '+++ ' : ''
+  return l:content
+endfunction
+
 function! StatusLine(active)
   let l:statusline = ''
-  let l:statusline .= '%{statusline#section_c_patch_hl()}'
   "
   " Section A (mode, paste, spell)
   if a:active
@@ -129,13 +109,15 @@ function! StatusLine(active)
   let l:statusline .= '%( %{statusline#section_b()} %)'
   "
   " Section C (filename)
-  let l:statusline .= statusline#section_c_hi(a:active)
-  let l:statusline .= '%( '
-  let l:statusline .=   '%<%f'
-  " Gutter (readonly, modified) -- nested inside Section C for grouping
-  let l:statusline .=   '%( %r%)%( %{&modified ? "+++" : ""}%)'
-  let l:statusline .= ' %)'
-  
+  " Using the pattern from
+  " https://github.com/vim/vim/issues/1697#issuecomment-380216189
+  let l:statusline .= '%('
+  let l:statusline .= '%<'
+  let l:statusline .= s:section_c_hi[a:active].mod
+  let l:statusline .= '%{ &modified ? statusline#section_c() : "" }'
+  let l:statusline .= s:section_c_hi[a:active].nomod
+  let l:statusline .= '%{ &modified ? "" : statusline#section_c() }'
+  let l:statusline .= '%)'
 
   " Divider between left and right
   let l:statusline .= '%='
@@ -167,5 +149,4 @@ augroup statusline_commands
   autocmd!
   autocmd WinEnter * setlocal statusline=%!StatusLine(1)
   autocmd WinLeave * setlocal statusline=%!StatusLine(0)
-  autocmd BufDelete,BufUnload * call statusline#section_c_clear_hi_grp()
 augroup END

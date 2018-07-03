@@ -66,14 +66,24 @@ function! statusline#hi(name, active)
   return l:token
 endfunction
 
-function! statusline#section_b()
-  let l:parts = []
-  call add(l:parts, WrapDescribeForStatusLine())
-  " Hook for .vimrc.local
-  if exists('*LocalPartsForStatusLine')
-    let l:parts += LocalPartsForStatusLine()
+let s:callbacks_for_b = []
+
+" Hook for .vimrc.local or other vim scripts or plugins.
+function! statusline#register_section_b_callback(callback)
+  if type(a:callback) != type(function('printf'))
+    throw 'a:callback should be a Funcref, is type ' . type(a:callback)
   endif
-  return join(filter(l:parts, 'len(v:val)'), ' > ')
+  call add(s:callbacks_for_b, a:callback)
+  call sort(s:callbacks_for_b)
+endfunction
+
+" Add the wrap status function from ../vimrc.
+call statusline#register_section_b_callback(function('WrapDescribeForStatusLine'))
+
+function! statusline#section_b()
+  let l:separator = &fileencoding == 'utf-8' ? "\u00b7" : ','
+  let l:components = map(copy(s:callbacks_for_b), 'call(v:val, [])')
+  return join(filter(l:components, 'len(v:val)'), l:separator)
 endfunction
 
 " indexed by a:active (0: inactive, 1: active)

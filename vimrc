@@ -45,6 +45,11 @@ if &t_Co == 16
     set t_Co=256
   endif
 endif
+if &term == "xterm" && exists("$TERMINATOR_UUID")
+  " gnome terminator is also sometimes broken
+  set term=xterm-256color
+  set t_Co=256
+endif
 
 if has("multi_byte")
   " UI encoding

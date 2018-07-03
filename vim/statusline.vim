@@ -162,8 +162,8 @@ function! StatusLine(active)
   let l:statusline .=   statusline#hi('z_bold', a:active)
   let l:statusline .=   '%4l'
   let l:statusline .=   statusline#hi('z', a:active) 
-  let l:statusline .=   ':%3c'
-  let l:statusline .= '%)'
+  let l:statusline .=   ':%2c'
+  let l:statusline .= ' %)'
   return l:statusline
 endfunction
 

@@ -97,6 +97,7 @@ endif
 Plug 'lifepillar/vim-mucomplete'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby'
 

@@ -332,16 +332,12 @@ endif " has autocmd
 let s:vimrc = resolve(expand("<sfile>:p"))
 
 function! s:load_vimrc_extras()
-  let l:pattern = resolve(fnamemodify(s:vimrc, ":h")) . '/vim/*.vim'
-  let l:files = sort(split(glob(l:pattern), "\n"))
-  " load plugins.vim first
-  let l:matches = filter(copy(l:files), 'v:val =~? "plugins\.vim"')
-  let l:plugins_vim = get(l:matches, 0, '')
-  call s:source_if_readable(l:plugins_vim)
-  " then load the rest
-  " this is lazy and relies on the fact that plugins.vim will not let itself
-  " be reloaded, so we can just load every file in the list
-  call map(l:files, 's:source_if_readable(v:val)')
+  let l:scripts = resolve(fnamemodify(s:vimrc, ":h")) . '/vim'
+  let l:after = l:scripts . '/after'
+  execute 'set rtp+=' . l:scripts
+  runtime! startup/plugins.vim
+  runtime! startup/*.vim
+  execute 'set rtp+=' . l:after
 endfunction
 call s:load_vimrc_extras()
 

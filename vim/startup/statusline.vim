@@ -77,9 +77,6 @@ function! statusline#register_section_b_callback(callback)
   call sort(s:callbacks_for_b)
 endfunction
 
-" Add the wrap status function from ../vimrc.
-call statusline#register_section_b_callback(function('WrapDescribeForStatusLine'))
-
 function! statusline#section_b()
   let l:separator = &fileencoding == 'utf-8' ? "\u00b7" : ','
   let l:components = map(copy(s:callbacks_for_b), 'call(v:val, [])')

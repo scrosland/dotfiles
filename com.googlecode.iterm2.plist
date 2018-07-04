@@ -182,9 +182,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>484 238 606 469 0 0 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>368 498 937 464 0 0 2560 1417 </string>
+	<string>368 498 796 473 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>739 50 1314 731 0 0 2560 1417 </string>
+	<string>623 42 1314 731 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>483 199 650 699 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -844,6 +844,8 @@
 	<false/>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
 	<real>528478576.57036602</real>
+	<key>OnlyWhenMoreTabs</key>
+	<false/>
 	<key>PointerActions</key>
 	<dict>
 		<key>Button,1,1,,</key>
@@ -892,7 +894,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-06-28T19:19:06Z</date>
+	<date>2018-07-04T21:39:23Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SmartPlacement</key>

@@ -22,12 +22,12 @@ if has("autocmd")
   endfunction
 
   " The public interface
-  function! openat#open()
+  function! OpenAtLine()
     call s:open_file_at_line()
   endfunction
 
-  augroup openat#augroup
+  augroup open_at_line
     autocmd!
-    autocmd BufNewFile *:*:* call openat#open()
+    autocmd BufNewFile *:*:* call OpenAtLine()
   augroup END
 endif

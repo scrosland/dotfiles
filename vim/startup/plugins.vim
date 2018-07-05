@@ -8,10 +8,6 @@
 "
 "  See :help vim-plug for more details.
 "
-if exists('*vundle#begin')
-  " old-style with Vundle
-  finish
-endif
 
 if exists('g:vimrc_plugins')
   finish
@@ -22,61 +18,29 @@ if strlen($USERPROFILE)
   " On Windows force the plugins to be in C:\Users\<user>\vimfiles
   " to ensure that the directory is writable without needing to deal
   " with UAC, and to cope with work where $HOME is off on the network.
-  let s:basedir = expand("$USERPROFILE/vimfiles")
+  let g:plugins_basedir = expand("$USERPROFILE/vimfiles")
   " deal with the non-standard location of vim-plug
-  execute 'set runtimepath+='.s:basedir
+  execute 'set runtimepath+=' . g:plugins_basedir
 else
   " Elsewhere the plugins can live in ~/.vim as normal
-  let s:basedir = expand(has('nvim') ? '~/.local/share/nvim/site' : '~/.vim')
+  let g:plugins_basedir = expand(has('nvim') ?
+                                  \ '~/.local/share/nvim/site' :
+                                  \ '~/.vim')
 endif
 " where the plugins live
-let s:bundledir = finddir('bundle', s:basedir)
-
-" --- Plugin bootstrap ---
-
-function! plugins#bootstrap()
-  if exists('*plug#begin')
-    echom "Plugin bootstrap skipped: vim-plug is already installed."
-    echom "Run ':PlugStatus to determine plugin status."
-    return
-  endif
-  let vimplug = expand(s:basedir.'/autoload/plug.vim')
-  if g:is_windows
-    let url = 'https://github.com/junegunn/vim-plug'
-    echom "See instructions at ".url." and save as '".vimplug."'"
-    return
-  endif
-  let url = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  echo "Downloading vim-plug to ".vimplug." ..."
-  redraw
-  try
-    let out = system(printf('curl -fLo %s --create-dirs %s', vimplug, url))
-    if v:shell_error
-      echoerr "Error downloading vim-plug: ".out
-      return
-    endif
-  endtry
-  try
-    let out = system(printf('mkdir -p %s', s:bundledir))
-    if v:shell_error
-      echoerr "Error creating bundle directory: ".out
-      return
-    endif
-  endtry
-  echom "vim-plug installed. Restart vim and run :PlugStatus and :PlugInstall"
-endfunction
+let g:plugins_bundledir = finddir('bundle', g:plugins_basedir)
 
 " --- Plugin loader ---
 
 try
-  call plug#begin(s:bundledir)
+  call plug#begin(g:plugins_bundledir)
   let s:error = 0
 catch /E117/
   let s:error = 1
 endtry
 if s:error
-  " vim-plug should be in an autoload directory below s:basedir
-  echoerr "Unable to find 'vim-plug' in ".s:basedir."/autoload. "
+  " vim-plug should be in an autoload directory below g:plugins_basedir
+  echoerr "Unable to find 'vim-plug' in " . g:plugins_basedir . "/autoload. "
     \. "Consider running vim -c 'call plugins#bootstrap()'"
   finish
 endif

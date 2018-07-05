@@ -20,7 +20,7 @@ for fn in [
       \ 'WrapDescribeForStatusLine',
       \ ]
   if exists('*'.fn)
-    call statusline#register_section_b_callback(function(fn))
+    call StatusLineRegisterSectionBCallback(function(fn))
   else
     echomsg 'No such callback: ' . string(fn)
   endif

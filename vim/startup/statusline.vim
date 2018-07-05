@@ -34,32 +34,21 @@ let g:statusline_mode_map = {
     \ '!'  : 'SHELL',
     \ }
 
-function! statusline#init_highlights()
-  hi! statusline_a        ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
-  hi! statusline_a_bold   term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
-  hi! statusline_b        ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
-  hi! statusline_c        ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
-  hi! statusline_c_mod    ctermfg=237 ctermbg=216 guifg=#343434 guibg=#ffdbc7
-  hi! statusline_c_mod_inactive
-                        \ ctermfg=203 ctermbg=251 guifg=#ff3535 guibg=#c7c7c7
-  hi! statusline_x        ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
-  hi! statusline_y        ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
-  hi! statusline_z        ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
-  hi! statusline_z_bold   term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
+hi statusline_a         ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
+hi statusline_a_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
+hi statusline_b         ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
+hi statusline_c         ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
+hi statusline_c_mod     ctermfg=237 ctermbg=216 guifg=#343434 guibg=#ffdbc7
+hi statusline_c_mod_inactive
+                      \ ctermfg=203 ctermbg=251 guifg=#ff3535 guibg=#c7c7c7
+hi statusline_x         ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
+hi statusline_y         ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
+hi statusline_z         ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
+hi statusline_z_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
 
-  hi! statusline_inactive ctermfg=244 ctermbg=251 guifg=#777777 guibg=#c7c7c7
-endfunction
-call statusline#init_highlights()
+hi statusline_inactive ctermfg=244 ctermbg=251 guifg=#777777 guibg=#c7c7c7
 
-function! statusline#fenc()
-  return &fileencoding == 'utf-8' ? '' : &fileencoding
-endfunction
-
-function! statusline#ff()
-  return &fileformat == 'unix' ? '' : '[' . &fileformat . ']'
-endfunction
-
-function! statusline#hi(name, active)
+function! s:hi(name, active)
   let l:token = '%#statusline_'
   let l:token .= a:active ? a:name : 'inactive'
   let l:token .= '#'
@@ -69,7 +58,7 @@ endfunction
 let s:callbacks_for_b = []
 
 " Hook for .vimrc.local or other vim scripts or plugins.
-function! statusline#register_section_b_callback(callback)
+function! StatusLineRegisterSectionBCallback(callback)
   if type(a:callback) != type(function('printf'))
     throw 'a:callback should be a Funcref, is type ' . type(a:callback)
   endif
@@ -77,7 +66,8 @@ function! statusline#register_section_b_callback(callback)
   call sort(s:callbacks_for_b)
 endfunction
 
-function! statusline#section_b()
+function! StatusLineSectionB()
+  " U+00B7 == Middle Dot
   let l:separator = &fileencoding == 'utf-8' ? "\u00b7" : ','
   let l:components = map(copy(s:callbacks_for_b), 'call(v:val, [])')
   return join(filter(l:components, 'len(v:val)'), l:separator)
@@ -91,7 +81,7 @@ let s:section_c_hi = [
       \ 'nomod' : '%#statusline_c#' },
     \ ]
 
-function! statusline#section_c()
+function! StatusLineSectionC()
   let l:name = bufname(winbufnr(winnr()))
   if empty(l:name)
     if &buftype == 'quickfix'
@@ -116,19 +106,19 @@ function! StatusLine(active)
   "
   " Section A (mode, paste, spell)
   if a:active
-    let l:statusline .= statusline#hi('a', a:active)
+    let l:statusline .= s:hi('a', a:active)
     let l:statusline .= '%( '
-    let l:statusline .=   statusline#hi('a_bold', a:active)
+    let l:statusline .=   s:hi('a_bold', a:active)
     let l:statusline .=   '%{get(g:statusline_mode_map, mode(), "UNKNOWN")}'
-    let l:statusline .=   statusline#hi('a', a:active)
+    let l:statusline .=   s:hi('a', a:active)
     let l:statusline .=   '%( %{&paste ? "PASTE" : ""}%)'
     let l:statusline .=   '%( %{&spell ? "SPELL" : ""}%)'
     let l:statusline .= ' %)'
   endif
   "
   " Section B (wrap mode, local hook)
-  let l:statusline .= statusline#hi('b', a:active)
-  let l:statusline .= '%( %{statusline#section_b()} %)'
+  let l:statusline .= s:hi('b', a:active)
+  let l:statusline .= '%( %{StatusLineSectionB()} %)'
   "
   " Section C (filename)
   " Using the pattern from
@@ -136,29 +126,32 @@ function! StatusLine(active)
   let l:statusline .= '%('
   let l:statusline .= '%<'
   let l:statusline .= s:section_c_hi[a:active].mod
-  let l:statusline .= '%{ &modified ? statusline#section_c() : "" }'
+  let l:statusline .= '%{ &modified ? StatusLineSectionC() : "" }'
   let l:statusline .= s:section_c_hi[a:active].nomod
-  let l:statusline .= '%{ &modified ? "" : statusline#section_c() }'
+  let l:statusline .= '%{ &modified ? "" : StatusLineSectionC() }'
   let l:statusline .= '%)'
 
   " Divider between left and right
   let l:statusline .= '%='
   "
   " Section X (filetype)
-  let l:statusline .= statusline#hi('x', a:active)
+  let l:statusline .= s:hi('x', a:active)
   let l:statusline .= '%( %{&filetype} %)'
   "
   " Section Y (fileencoding, fileformat)
-  let l:statusline .= statusline#hi('y', a:active)
-  let l:statusline .= '%( %{statusline#fenc()}%{statusline#ff()} %)'
+  let l:statusline .= s:hi('y', a:active)
+  let l:statusline .= '%( '
+  let l:statusline .=   '%{&fenc == "utf-8" ? "" : &fenc}'
+  let l:statusline .=   '%{&ff == "unix" ? "" : "[" . &ff . "]"}'
+  let l:statusline .= ' %)'
   "
   " Section Z (percentage, line number, column number)
-  let l:statusline .= statusline#hi('z', a:active)
+  let l:statusline .= s:hi('z', a:active)
   let l:statusline .= '%( '
   let l:statusline .=   '%3p%% ' 
-  let l:statusline .=   statusline#hi('z_bold', a:active)
+  let l:statusline .=   s:hi('z_bold', a:active)
   let l:statusline .=   '%4l'
-  let l:statusline .=   statusline#hi('z', a:active) 
+  let l:statusline .=   s:hi('z', a:active) 
   let l:statusline .=   ':%2c'
   let l:statusline .= ' %)'
   return l:statusline

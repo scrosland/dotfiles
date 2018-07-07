@@ -7,7 +7,7 @@
 BROWSER='google-chrome' ; export BROWSER
 EDITOR='vim' ; export EDITOR
 LESS='Xm' ; export LESS
-VISUAL="viterm" ; export VISUAL
+SCM_EDITOR='viterm' ; export SCM_EDITOR
 
 add_to_path_var()
 {

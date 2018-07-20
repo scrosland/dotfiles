@@ -228,11 +228,11 @@ function! s:soft_wrap_enable()
 endfunction
 command! -nargs=0 WrapSoft call s:soft_wrap_enable()
 
-function! s:hard_wrap_enable()
+function! s:hard_wrap_enable(column)
   call s:wrap_default()
-  setlocal textwidth=74
+  execute 'setlocal textwidth=' . (a:column > 0 ? a:column : 74)
 endfunction
-command! -nargs=0 WrapHard call s:hard_wrap_enable()
+command! -count WrapHard call s:hard_wrap_enable(<count>)
 
 function! s:wrap_default()
   setlocal wrap< linebreak<

@@ -18,7 +18,7 @@ function! plugins#bootstrap()
   echo "Downloading vim-plug to " . l:vimplug . " ..."
   redraw
   try
-    let l:out = system(printf('curl -fLo %s --create-dirs %s', l:vimplug, l:url))
+    silent let l:out = system(printf('curl -fLo %s --create-dirs %s', l:vimplug, l:url))
     if v:shell_error
       echoerr "Error downloading vim-plug: " . l:out
       return

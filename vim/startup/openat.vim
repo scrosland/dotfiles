@@ -17,8 +17,10 @@ if has("autocmd")
     let l:arg = expand("%:p") . "junk"
     " See ':help list' and the section on 'List unpack'
     let [l:file, l:line; rest] = split(l:arg, ":")
+    let l:initial_buffer = winbufnr(0)
     execute "edit! +" . l:line . " " . l:file
     execute "doautocmd BufNewFile " . l:file
+    execute "bdelete " . l:initial_buffer
   endfunction
 
   " The public interface

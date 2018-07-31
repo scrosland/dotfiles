@@ -33,7 +33,7 @@ function! plugins#bootstrap()
   catch
     echoerr "Exception while creating bundle directory: " . v:exception
     return
-  endif
+  endtry
 
   echom "vim-plug installed. Restart vim and run :PlugStatus and :PlugInstall"
 endfunction

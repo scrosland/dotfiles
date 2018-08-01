@@ -4,9 +4,14 @@
 # Environment
 #
 
+if uname -a | grep -q -s Microsoft ; then
+    WSL=$(uname -r) ; export WSL
+fi
+
 BROWSER='google-chrome' ; export BROWSER
 EDITOR='vim' ; export EDITOR
-LESS='Xm' ; export LESS
+LESS='-Xm' ; export LESS
+[ -n "${WSL}" ] && LESS='-m'
 SCM_EDITOR='viterm' ; export SCM_EDITOR
 
 add_to_path_var()

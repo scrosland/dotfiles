@@ -83,14 +83,14 @@ function! s:fixHighlights(yellow)
   " PuTTY and Gnome Terminator treat 'Yellow' higlighting differently
   " so force 'LightYellow' for them irrespective of the argument
   let l:force_light_yellow = 0
-  if !g:is_osx && !g:is_windows && !g:is_wsl
+  if !g:is_osx && !g:is_windows
     if strlen($DISPLAY) == 0 || strlen($TERMINATOR_UUID)
       let l:force_light_yellow = 1
     end
   end
   let l:yellow = l:force_light_yellow ? "LightYellow" : a:yellow
   let l:command = "highlight Search term=reverse cterm=reverse ctermfg=" 
-    \. l:yellow . " ctermbg=Black"
+    \. l:yellow . " ctermbg=Black guifg=#ffed6b guibg=#000000"
   exec l:command
 endfunction
 
@@ -119,6 +119,10 @@ function! s:terminalSupportsTrueColor()
   end
   " Not checking for Terminal.app as it seems broken.
   if $COLORTERM == "truecolor"
+    return 1
+  end
+  " Windows conhost.exe now supports 24-bit colour.
+  if strlen($WSL)
     return 1
   end
   return 0

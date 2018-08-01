@@ -35,7 +35,8 @@ let g:statusline_mode_map = {
     \ }
 
 hi statusline_a         ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
-hi statusline_a_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
+hi statusline_a_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 
+                      \ gui=bold guifg=#202020 guibg=#a0a0a0
 hi statusline_b         ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
 hi statusline_c         ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
 hi statusline_c_mod     ctermfg=237 ctermbg=216 guifg=#343434 guibg=#ffdbc7
@@ -44,7 +45,8 @@ hi statusline_c_mod_inactive
 hi statusline_x         ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
 hi statusline_y         ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
 hi statusline_z         ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
-hi statusline_z_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 gui=bold
+hi statusline_z_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 
+                      \ gui=bold guifg=#202020 guibg=#a0a0a0
 
 hi statusline_inactive ctermfg=244 ctermbg=251 guifg=#777777 guibg=#c7c7c7
 

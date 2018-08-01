@@ -27,7 +27,7 @@ lsb_release -a
 
 if [[ ! -d $HOME/.ssh ]] ; then
     echo "Setting up ssh"
-    chmod g+S $HOME/.ssh
+    mkdir $HOME/.ssh
     chmod 2700 $HOME/.ssh
     ls -ld $HOME/.ssh
     ssh-keygen -t rsa
@@ -48,15 +48,17 @@ if [[ ! -r $HOME/.git/config ]] ; then
     git config --global --list
 fi
 
-if [[ ! -d $HOME/dotfiles ]] ; then
+if [[ ! -r $HOME/.inputrc ]] ; then
     echo "Setting up dotfiles"
-    git clone https://github.com/scrosland/dotfiles.git $HOME/dotfiles
 
     echo ". \$HOME/dotfiles/startup" >$HOME/.bashrc
     echo ". \$HOME/dotfiles/startup" >$HOME/.profile
     echo "\$include $HOME/dotfiles/inputrc" >$HOME/.inputrc
     echo "source \$HOME/dotfiles/vim/vimrc" > $HOME/.vimrc
     echo "source \$HOME/dotfiles/vim/gvimrc" > $HOME/.gvimrc
+fi
 
+if [[ ! -d $HOME/.vim/bundle ]] ; then
     vim -c 'call plugins#bootstrap()'
+    vim -c 'PlugInstall'
 fi

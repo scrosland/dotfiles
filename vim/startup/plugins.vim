@@ -27,8 +27,12 @@ else
                                   \ '~/.local/share/nvim/site' :
                                   \ '~/.vim')
 endif
+
 " where the plugins live
-let g:plugins_bundledir = finddir('bundle', g:plugins_basedir)
+let g:plugins_bundledir = g:plugins_basedir . "/bundle"
+if !isdirectory(g:plugins_bundledir)
+  echoerr "Vim plugins directory is missing: " . g:plugins_bundledir
+endif
 
 " --- Plugin loader ---
 
@@ -79,7 +83,7 @@ function! s:fixHighlights(yellow)
   " PuTTY and Gnome Terminator treat 'Yellow' higlighting differently
   " so force 'LightYellow' for them irrespective of the argument
   let l:force_light_yellow = 0
-  if !g:is_osx && !g:is_windows
+  if !g:is_osx && !g:is_windows && !g:is_wsl
     if strlen($DISPLAY) == 0 || strlen($TERMINATOR_UUID)
       let l:force_light_yellow = 1
     end

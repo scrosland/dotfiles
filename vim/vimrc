@@ -87,8 +87,11 @@ function! s:getSystemType()
   endif
   if has("unix")
     " case insensitive regex comparison
-    if system('uname') =~? 'Darwin'
+    let l:uname = system("uname -a")
+    if l:uname =~? "Darwin"
       return "osx"
+    elseif l:uname =~? "Microsoft" || isdirectory("/mnt/c/Windows")
+      return "wsl"
     else
       return "unix"
     endif
@@ -98,9 +101,10 @@ endfunction
 
 let g:system_type = s:getSystemType()
 let g:is_osx      = (g:system_type == "osx")
-let g:is_unix     = (g:system_type == "unix")
+let g:is_unix     = (g:system_type == "unix" || g:system_type == "wsl")
 let g:is_windows  = (g:system_type == "windows")
-lockvar g:system_type g:is_osx g:is_unix g:is_windows
+let g:is_wsl      = (g:system_type == "wsl")
+lockvar g:system_type g:is_osx g:is_unix g:is_windows g:is_wsl
 
 function! s:find_directories(choices)
   return filter(copy(a:choices), 'isdirectory(expand(v:val))')

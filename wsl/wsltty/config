@@ -1,0 +1,14 @@
+# To use common configuration in %APPDATA%\mintty, simply remove this file
+Font=DejaVu Sans Mono
+FontHeight=10
+BoldAsFont=yes
+AllowBlinking=yes
+Locale=en_GB
+BoldAsColour=yes
+Columns=120
+Rows=42
+Term=xterm-256color
+BellType=0
+ThemeFile=SolarizedLight
+CursorType=block
+CtrlShiftShortcuts=yes

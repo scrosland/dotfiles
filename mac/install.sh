@@ -12,6 +12,9 @@ echo "# Checking for Xcode command line tools"
 if ! xcode-select --print-path ; then
   run xcode-select --install
 fi
+if ! clang --version >/dev/null 2>&1 ; then
+  run xcode-select --install
+fi
 
 # Install brew if needed
 if [[ ! -e /usr/local/bin/brew ]] ; then

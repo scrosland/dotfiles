@@ -104,7 +104,7 @@ endfunction
 
 function! s:initSolarized8()
   set termguicolors
-  colorscheme solarized8_light_high
+  colorscheme solarized8_high
   call s:fixHighlights("Yellow")
 endfunction
 

@@ -12,6 +12,7 @@ sudo apt-get upgrade
 
 sudo apt-get install aptitude
 
+sudo aptitude install bind9-host
 sudo aptitude install curl
 sudo aptitude install git
 sudo aptitude install ipcalc

@@ -69,7 +69,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby'
 
-Plug 'scrosland/gitignore'
 Plug 'scrosland/nvsimple.vim'
 
 call plug#end()

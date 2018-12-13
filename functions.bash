@@ -8,31 +8,43 @@
     [ -f /usr/local/etc/profile.d/bash_completion.sh ] &&
         source /usr/local/etc/profile.d/bash_completion.sh
 
-# echo the abs path of this file (expanding one level of symlink)
-this_file()
+_sc_prompt_path()
 {
-    local source="${BASH_SOURCE[1]}"  # 1 == caller
-    local file=$(test -L "$source" && readlink "$source" || echo "$source")
-    abs_file "$file" ;
+    local tilde="~"
+    local cwd="${PWD/#$HOME/${tilde}}"
+    if (( "${#cwd}" <= 35 )) ; then
+        echo "${cwd}"
+        return 0
+    fi
+    local prefix="~/"
+    if [[ "${cwd}" != "${prefix}*" ]] ; then
+        prefix="${cwd:0:5}"
+    fi
+    local headtail="${prefix}...${cwd: -20}"
+    echo "${headtail}"
+    return 0
 }
 
-# echo the abs path of the running script $0 (no symlink expansion)
-this_script()
+_sc_prompt_string()
 {
-    local source="${BASH_SOURCE[1]}"  # 1 == caller
-    abs_file "$source" ;
+    # based on __vte_prompt_command() as supplied with gnome-terminal
+    printf "%s%s@%s:%s" \
+        "${debian_chroot:+($debian_chroot)}" \
+        "${USER}" \
+        "${HOSTNAME%%.*}" \
+        "$(_sc_prompt_path)"
 }
 
 _sc_prompt_command()
 {
-    printf "\033]0;%s\007" "${TERMINAL_TITLE}"
-    if [[ -z $TERMINAL_TITLE ]] ; then
-        # borrowed from __vte_prompt_command() as supplied with gnome-terminal
-        printf "\033]0;%s@%s:%s\007" \
-            "${USER}" \
-            "${HOSTNAME%%.*}" \
-            "${PWD/#$HOME/~}"
+    local prompt="$(_sc_prompt_string)$ "
+    local level=""
+    if (( ${IS_LOGIN_SHELL} == 0 && ${SHLVL} > 1 )) ; then
+        level="<${SHLVL}> "
     fi
+    printf -v PS1 "${prompt}${level}"
+
+    printf "\033]0;%s\007" "${TERMINAL_TITLE:-${prompt}}"
     return 0
 }
 

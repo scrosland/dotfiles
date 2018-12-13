@@ -11,6 +11,19 @@ case "$-" in
     *i*)  INTERACTIVE=1 ; export INTERACTIVE ;;
 esac
 
+_sc_is_login_shell()
+{
+    bshell=$(basename "${SHELL}")
+    cmd=$(ps -o 'command=' -p $$)
+    arg=$(echo "${cmd}" | egrep -w -- "-l|--login")
+    if [ "${cmd}" = "-${SHELL}" ] ||
+       [ "${cmd}" = "-${bshell}" ] ||
+       [ -n "${arg}" ] ; then
+        return 0
+    fi
+    return 1
+}
+
 # 
 # Setup for running interactively.
 #
@@ -26,8 +39,11 @@ if [ -n "$INTERACTIVE" ] ; then
         # tab completion - this works around the annoying \$ escape bug
         # see http://askubuntu.com/questions/41891/bash-auto-complete-for-environment-variables/
         # and http://lists.gnu.org/archive/html/bug-bash/2011-02/msg00274.html
-        if [ -n "`shopt | grep direxpand`" ] ; then
-          shopt -s direxpand
+        majmin=$(echo ${BASH_VERSION} | cut -c1-3)
+        if expr ${majmin} '<' 4.4 >/dev/null 2>&1 ; then
+            if shopt | grep -s -q direxpand ; then
+              shopt -s direxpand
+            fi
         fi
     fi
 
@@ -58,32 +74,17 @@ if [ -n "$INTERACTIVE" ] ; then
     alias la='ls -aCF'
     alias r='fc -s'
 
-    # save prompt set during login
-    if [ -z "$PROMPT_LOGIN" ] ; then
-        if [ "`uname -s 2>/dev/null`" = "Darwin" ] ; then
-            PS1='\u@\h:\w\$ '
-        fi
-        PROMPT_LOGIN="$PS1" ; export PROMPT_LOGIN
-        readonly PROMPT_LOGIN
+    IS_LOGIN_SHELL=0
+    if _sc_is_login_shell ; then
+        IS_LOGIN_SHELL=1
     fi
 
-    # change the prompt if this is a sub-shell of something else
-    if [ -n "$PROMPT_LOGIN" ] ; then
-        islogin=''
-        bshell=$(basename "${SHELL}")
-        cmd=$(ps -o 'command=' -p $$)
-        arg=$(echo "${cmd}" | egrep -w -- "-l|--login")
-        if [ "${cmd}" = "-${SHELL}" ] ||
-           [ "${cmd}" = "-${bshell}" ] ||
-           [ -n "${arg}" ] ; then
-            islogin='true'
-        fi
-        if [ -n "$islogin" -o "$SHLVL" -eq 1 ] ; then
-            PS1="$PROMPT_LOGIN"
-        else
-            PS1="${PROMPT_LOGIN}<${SHLVL}> "
-        fi
-        unset islogin cmd arg bshell
+    if [ -z "$BASH_VERSION" ] ; then
+        PS1=""
+        PS1="${PS1}${debian_chroot:+($debian_chroot)}"
+        PS1="${PS1}${USER}@${HOSTNAME:-$(hostname)}"
+        PS1="${PS1}($(basename $(ps -o comm= -p $$)))"
+        PS1="${PS1}:\$ "
     fi
 
 fi # endif interactive

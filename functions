@@ -10,8 +10,12 @@
 abs_file()
 {
     local file="$1"
-    file=$(cd $(dirname "$file") && pwd)/$(basename "$file")
-    echo "$file" ;
+    if [ -n "$(which ruby)" ] ; then
+        ruby -we 'require "pathname" ; puts Pathname.new(ARGV.shift).realpath' "${file}"
+        return
+    fi
+    file=$(cd $(dirname "${file}") && pwd)/$(basename "${file}")
+    echo "${file}"
 }
 
 if [ "$(uname -s)" = "Darwin" ] ; then

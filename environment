@@ -43,7 +43,7 @@ add_to_path_var_and_export()
     fi
 }
 
-if [[ -z ${CDPATH} ]] ; then
+if [ -z "${CDPATH}" ] ; then
     add_to_path_var CDPATH "/Users/Shared"
     add_to_path_var CDPATH "${HOME}"
     add_to_path_var CDPATH "${HOME}/repos"

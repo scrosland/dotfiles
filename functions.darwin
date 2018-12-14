@@ -1,0 +1,14 @@
+# syntax: bash
+# vim: set filetype=sh:
+#
+# Shell functions for Darwin systems
+#
+
+man()
+{
+    if [ ! -t 1 ] ; then
+      MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
+      return
+    fi
+    command man "$@"
+}

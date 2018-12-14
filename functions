@@ -18,18 +18,6 @@ abs_file()
     echo "${file}"
 }
 
-if [ "$(uname -s)" = "Darwin" ] ; then
-    man()
-    {
-        if [ ! -t 1 ] ; then
-          MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
-          return
-        fi
-        command man "$@"
-        return
-    }
-fi
-
 resize_terminal()
 {
     local width="$1"
@@ -37,6 +25,15 @@ resize_terminal()
     local command="\033[8;${height};${width}t"
     printf "${command}"
 }
+
+# ----- platform specific functions -----
+
+_system=$(uname -s | tr '[:upper:]' '[:lower:]')
+_script="${HOME}/dotfiles/functions.${system}"
+if [ -r "${_script}" ] ; then
+    . "${_script}"
+fi
+unset _script _system
 
 # ----- bash specific functions -----
 

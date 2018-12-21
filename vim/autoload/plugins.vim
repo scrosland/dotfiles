@@ -29,7 +29,7 @@ function! plugins#bootstrap()
   endtry
 
   try
-    mkdir(g:plugins_bundledir, 'p')
+    call mkdir(g:plugins_bundledir, 'p')
   catch
     echoerr "Exception while creating bundle directory: " . v:exception
     return

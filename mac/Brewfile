@@ -1,5 +1,6 @@
-tap "caskroom/cask"
 tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
 tap "homebrew/core"
 
 brew "bash-completion"
@@ -13,8 +14,10 @@ brew "python"
 brew "rsync"
 brew "vim", args: ["with-override-system-vi"]
 
-# cask_args appdir: "/Applications"
-# 
+cask_args appdir: "/Applications"
+
+cask "font-dejavu-sans"
+
 # cask "1password"
 # cask "appcleaner"
 # cask "carbon-copy-cloner"

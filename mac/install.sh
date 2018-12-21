@@ -51,12 +51,12 @@ hash -r
 # Create aliases in /Applications
 # This is not using "brew linkapps" because that creates symlinks into /usr
 # which Spotlight will refuse to index.
-mkalias="$(dirname $0)/mkalias"
+installer="$(dirname $0)/install_app_or_service.sh"
 echo ""
 echo "# Creating application aliases in /Applications"
 find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
   while read app ; do
-    run ${mkalias} --force "${app}" /Applications
+    run ${installer} "${app}" /Applications
   done
 
 # python2 packages

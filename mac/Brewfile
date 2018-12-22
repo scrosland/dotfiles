@@ -11,6 +11,7 @@ brew "flac"
 brew "jq"
 brew "python@2"
 brew "python"
+brew "ripgrep"
 brew "rsync"
 brew "vim", args: ["with-override-system-vi"]
 

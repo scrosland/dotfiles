@@ -40,7 +40,7 @@ if [[ ! -r ${BREWFILE} ]] ; then
   echo "Cannot find the brewfile, '${BREWFILE}'" >&2
   exit 1
 fi
-run brew bundle --file=${BREWFILE} --verbose
+run brew bundle --file=${BREWFILE}
 # ... and then a manual upgrade just to be sure
 run brew upgrade
 # Cleanup temporary brew files
@@ -80,8 +80,5 @@ if [ ! -r /Applications/SCM.app ] ; then
   echo ""
   echo "# Go to https://github.com/software-jessies-org/jessies/wiki/Downloads and get the latest version of SCM.app."
 fi
-
-echo ""
-echo "# Go to https://dejavu-fonts.github.io and install the latest ttf files."
 
 exit 0

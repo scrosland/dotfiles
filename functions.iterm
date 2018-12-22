@@ -4,7 +4,7 @@
 # Bash functions iTerm integration
 #
 
-_iterm_2x2()
+_iterm_x2()
 {
     osascript -e '
 	tell application "iTerm"
@@ -21,8 +21,8 @@ iterm()
     local command="$1"
     shift
     case "${command}" in
-        2x2|conf|layout|split)
-            _iterm_2x2
+        2x2|2w|x2|split)
+            _iterm_x2
             ;;
         *)
             echo "unknown command: '${command}'" >&2

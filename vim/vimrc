@@ -151,7 +151,11 @@ behave xterm
 
 " Clipboard, select mode and mouse settings need to be after sourcing mswin.vim
 set clipboard+=unnamed
-set clipboard+=autoselect
+if !has("mac")
+  " On macOS autoselect usually results in me pasting the wrong thing.
+  " Instead use Option-click to cut/paste from/to the system clipboard.
+  set clipboard+=autoselect
+endif
 " Disable the awful Select mode
 set selectmode=""
 " Mouse in normal, visual, command and prompts.

@@ -74,7 +74,10 @@ echo "# Checking for JDK."
 if ! /usr/libexec/java_home --failfast ; then
   echo "Cannot find Java."
 fi
+echo "# Default java version."
 java -version
+echo "# All installed JDKs."
+ls -1 /Library/Java/JavaVirtualMachines
 
 if [ ! -r /Applications/SCM.app ] ; then
   echo ""

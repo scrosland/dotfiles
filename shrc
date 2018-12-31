@@ -74,7 +74,7 @@ if [ -n "$INTERACTIVE" ] ; then
     alias la='ls -aCF'
     alias r='fc -s'
 
-    alias rg='rg -no-heading --with-filename -n'
+    alias rg='rg --no-heading --with-filename -n'
     if [ -z "$(which sgrep)" ] ; then
         alias sgrep=rg
     fi

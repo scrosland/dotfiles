@@ -149,6 +149,12 @@ set mousehide
 " behaviour is overridden in gvimrc
 behave xterm
 
+if executable("sgrep")
+  set grepprg=sgrep\ $*
+elseif executable("rg")
+  set grepprg=rg\ --no-heading\ --with-filename\ -n\ $*
+endif
+
 " Clipboard, select mode and mouse settings need to be after sourcing mswin.vim
 set clipboard+=unnamed
 if !has("mac")

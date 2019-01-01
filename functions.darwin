@@ -7,8 +7,8 @@
 man()
 {
     if [ ! -t 1 ] ; then
-      MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
-      return
+        MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
+        return
     fi
     command man "$@"
 }

@@ -29,7 +29,7 @@ resize_terminal()
 # ----- platform specific functions -----
 
 _system=$(uname -s | tr '[:upper:]' '[:lower:]')
-_script="${HOME}/dotfiles/functions.${system}"
+_script="${HOME}/dotfiles/functions.${_system}"
 if [ -r "${_script}" ] ; then
     . "${_script}"
 fi

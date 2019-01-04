@@ -222,6 +222,11 @@ end
 command! -nargs=+ -complete=shellcmd Shell 
   \ enew | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
 
+if has("terminal")
+  command! -nargs=* -complete=shellcmd Term rightbelow term <args>
+  command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term <args>
+endif
+
 " --- Wrap mode and and file type handling ---
 
 function! s:soft_wrap_enable()

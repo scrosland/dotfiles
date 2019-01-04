@@ -31,6 +31,7 @@ let g:statusline_mode_map = {
     \ 'R'  : 'REPLACE', 'Rv' : 'REPLACE',
     \ 'c'  : 'COMMAND', 'cv' : 'COMMAND', 'ce' : 'COMMAND',
     \ 'r'  : 'PROMPT',  'rm' : 'PROMPT',  'r?' : 'PROMPT',
+    \ 't'  : 'TERM',
     \ '!'  : 'SHELL',
     \ }
 

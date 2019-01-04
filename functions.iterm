@@ -4,25 +4,57 @@
 # Bash functions iTerm integration
 #
 
-_iterm_x2()
+_iterm_configure()
 {
     osascript -e '
 	tell application "iTerm"
 	    tell current session of current window
-		set columns to 162
-		set rows to 44
-		split vertically with same profile
+                '"$(printf "%s\n" "$@")"'
 	    end tell
 	end tell'
+}
+
+_iterm_set_size()
+{
+    local args=()
+    if [[ -n $1 ]] ; then
+        args+=("set columns to $1")
+        shift
+    fi
+    if [[ -n $1 ]] ; then
+        args+=("set rows to $1")
+        shift
+    fi
+    if (( $# != 0 )) ; then
+        echo "usage: _iterm_set_size cols [rows]" >&2
+        return 127
+    fi
+    _iterm_configure "${args[@]}"
+}
+
+_iterm_x2()
+{
+    _iterm_configure \
+        'set columns to 162' \
+        'set rows to 44' \
+        'split vertically with same profile'
 }
 
 iterm()
 {
     local command="$1"
-    shift
     case "${command}" in
         2x2|2w|x2|split)
             _iterm_x2
+            ;;
+        big|checkin|vicheckin)
+            _iterm_set_size 162 54
+            ;;
+        wide)
+            _iterm_set_size 161     # (80 x 2) + 1 for gnu screen separator
+            ;;
+        [0-9]*)
+            _iterm_set_size "$@"
             ;;
         *)
             echo "unknown command: '${command}'" >&2

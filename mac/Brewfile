@@ -15,7 +15,8 @@ brew "ripgrep"
 brew "rsync"
 brew "vim", args: ["with-override-system-vi"]
 
-cask_args appdir: "/Applications"
+# Would need to cope with .install_to_user_applications
+# cask_args appdir: "/Applications"
 
 cask "font-dejavu-sans"
 

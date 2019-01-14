@@ -7,6 +7,12 @@ run()
   "$@"
 }
 
+APPLICATIONS="/Applications"
+if [[ -e $HOME/.install_to_user_applications ]] ; then
+    APPLICATIONS="${HOME}${APPLICATIONS}"
+fi
+echo "Installing applications to ${APPLICATIONS}"
+
 # xcode command line tools
 echo "# Checking for Xcode command line tools"
 if ! xcode-select --print-path ; then
@@ -48,15 +54,15 @@ run brew cleanup
 
 hash -r
 
-# Create aliases in /Applications
+# Copy apps into the applications folder.
 # This is not using "brew linkapps" because that creates symlinks into /usr
 # which Spotlight will refuse to index.
 installer="$(dirname $0)/install_app_or_service.sh"
 echo ""
-echo "# Creating application aliases in /Applications"
+echo "# Copying apps into ${APPLICATIONS}"
 find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
   while read app ; do
-    run ${installer} "${app}" /Applications
+    run ${installer} "${app}" "${APPLICATIONS}"
   done
 
 # python2 packages
@@ -79,7 +85,8 @@ java -version
 echo "# All installed JDKs."
 ls -1 /Library/Java/JavaVirtualMachines
 
-if [ ! -r /Applications/SCM.app ] ; then
+if [[ ! -r /Applications/SCM.app ]] &&
+   [[ ! -r "${HOME}/Applications/SCM.app" ]] ; then
   echo ""
   echo "# Go to https://github.com/software-jessies-org/jessies/wiki/Downloads and get the latest version of SCM.app."
 fi

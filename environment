@@ -52,8 +52,8 @@ fi
 add_to_path_var MANPATH "$HOME/.local/share/man"
 
 add_to_path_var PATH "/usr/local/opt/ruby/bin"
-add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
+add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
 add_to_path_var PATH "${HOME}/bin"
 

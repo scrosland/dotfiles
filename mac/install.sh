@@ -11,7 +11,7 @@ APPLICATIONS="/Applications"
 if [[ -e $HOME/.install_to_user_applications ]] ; then
     APPLICATIONS="${HOME}${APPLICATIONS}"
 fi
-echo "Installing applications to ${APPLICATIONS}"
+echo "# Installing applications into ${APPLICATIONS}"
 
 # xcode command line tools
 echo "# Checking for Xcode command line tools"

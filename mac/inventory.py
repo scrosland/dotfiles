@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
+import argparse
 from collections import OrderedDict
 import json
 import plistlib
 import os.path
 import subprocess
 import sys
-
-options = {
-        "json": False,
-        }
 
 class Groups(object):
     def __init__(self):
@@ -19,7 +16,7 @@ class Groups(object):
         self.groups.append(OrderedDict(sorted(_dict.items())))
 
     def dump(self):
-        if options["json"]:
+        if args.json:
             print(json.dumps(self.groups))
             return
         for grp in self.groups:
@@ -58,18 +55,11 @@ def list_hardware():
     groups.append(items[0])
 
 def parse_options():
-    if len(sys.argv) == 1:
-        return 0
-    if len(sys.argv) != 2:
-        usage()
-    if sys.argv[1] == "--json":
-        options["json"] = True
-    else:
-        usage()
-
-def usage():
-    print(f"usage: {os.path.basename(sys.argv[0])} [--json]")
-    sys.exit(127)
+    parser = argparse.ArgumentParser(
+        description="Inventory applications and hardware.")
+    parser.add_argument("--json", action="store_true", help="output in JSON")
+    global args
+    args = parser.parse_args()
 
 if __name__ == "__main__":
     parse_options()

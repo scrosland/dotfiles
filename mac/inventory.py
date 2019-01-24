@@ -10,17 +10,19 @@ import sys
 
 class Groups(object):
     def __init__(self):
-        self.groups = []
+        self.groups = OrderedDict()
 
-    def append(self, _dict):
-        self.groups.append(OrderedDict(sorted(_dict.items())))
+    def append(self, title, _dict):
+        self.groups[title] = OrderedDict(sorted(_dict.items()))
 
     def dump(self):
         if args.json:
-            print(json.dumps(self.groups))
+            print(json.dumps([self.groups]))
             return
-        for grp in self.groups:
-            for name, value in grp.items():
+        for title,group in self.groups.items():
+            print(f"{title}")
+            print("-" * len(title))
+            for name,value in group.items():
                 print(f"{name!r}: {value!r}")
             print("")
 
@@ -48,11 +50,14 @@ def interesting(app):
 def list_applications():
     items = get_items("SPApplicationsDataType")
     apps = { app["_name"]: app["path"] for app in filter(interesting, items) }
-    groups.append(apps)
+    groups.append("Applications", apps)
 
 def list_hardware():
     items = get_items("SPHardwareDataType")
-    groups.append(items[0])
+    title = items[0]["_name"]
+    title = " ".join(title.split("_"))
+    del items[0]["_name"]
+    groups.append(title.title(), items[0])
 
 def parse_options():
     parser = argparse.ArgumentParser(

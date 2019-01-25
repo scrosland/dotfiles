@@ -13,7 +13,8 @@ class Groups(object):
         self.groups = OrderedDict()
 
     def append(self, title, iterable):
-        self.groups[title] = OrderedDict(sorted(iterable))
+        # iterable is assumed to produce key,value pairs
+        self.groups[title] = OrderedDict(sorted(iterable, key=lambda x: x[0]))
 
     def dump(self):
         if args.json:
@@ -45,9 +46,10 @@ def get_items(data_type):
     items = plist[0]["_items"]
     # "items" is a list of dicts. Convert this into a dict of dicts, extracting
     # the "_name" value from the inner dicts to be the key in the outer dict.
-    return { ii["_name"]:dict(filter(not_name, ii.items())) for ii in items }
+    for ii in items:
+        yield ii["_name"],dict(filter(not_name, ii.items()))
 
-def filter_app(pair):
+def interesting_apps(pair):
     """Select interesting applications."""
     _,app = pair
     if app["obtained_from"].lower() == "apple".lower():
@@ -58,7 +60,7 @@ def filter_app(pair):
         return False
     return True
 
-def filter_details(pair):
+def interesting_details(pair):
     """Select which application details to include."""
     name,_ = pair
     return name.lower() == "version" or name.lower() == "path"
@@ -72,9 +74,10 @@ def pretty_keys(pairs):
 
 def select_applications(apps):
     """Select interesting applications and their details."""
-    for name,details in filter(filter_app, apps.items()): 
+    for name,details in filter(interesting_apps, apps): 
+        filtered_details = filter(interesting_details, details.items())
         # The keys of the details are prettified, but not the application name!
-        yield name,dict(pretty_keys(filter(filter_details, details.items())))
+        yield name,dict(pretty_keys(filtered_details))
 
 def list_applications():
     apps = select_applications(get_items("SPApplicationsDataType"))
@@ -82,7 +85,7 @@ def list_applications():
 
 def list_hardware():
     items = get_items("SPHardwareDataType")
-    title,details = items.popitem()
+    title,details = next(items)
     groups.append(pretty(title), pretty_keys(details.items()))
 
 def parse_options():

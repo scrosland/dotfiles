@@ -12,8 +12,8 @@ class Groups(object):
     def __init__(self):
         self.groups = OrderedDict()
 
-    def append(self, title, _dict):
-        self.groups[title] = OrderedDict(sorted(_dict.items()))
+    def append(self, title, iterable):
+        self.groups[title] = OrderedDict(sorted(iterable))
 
     def dump(self):
         if args.json:
@@ -23,10 +23,14 @@ class Groups(object):
             print(f"{title}")
             print("-" * len(title))
             for name,value in group.items():
-                print(f"{name!r}: {value!r}")
+                print(f"{name}: {value}")
             print("")
 
 groups = Groups()
+
+def not_name(pair):
+    name,_ = pair
+    return name != "_name"
 
 def get_items(data_type):
     command = [ "system_profiler", "-xml", data_type ]
@@ -38,26 +42,48 @@ def get_items(data_type):
         print(f"Error: failed to get {data_type} items from system_profiler")
         raise e
     plist = plistlib.loads(child.stdout, fmt=plistlib.FMT_XML)
-    return plist[0]["_items"]
+    items = plist[0]["_items"]
+    # "items" is a list of dicts. Convert this into a dict of dicts, extracting
+    # the "_name" value from the inner dicts to be the key in the outer dict.
+    return { ii["_name"]:dict(filter(not_name, ii.items())) for ii in items }
 
-def interesting(app):
+def filter_app(pair):
+    """Select interesting applications."""
+    _,app = pair
     if app["obtained_from"].lower() == "apple".lower():
         return False
     if app["path"].find("/Applications/") == -1:
         return False
+    if "Apple Mac OS Application Signing" in app.get("signed_by", []):
+        return False
     return True
 
+def filter_details(pair):
+    """Select which application details to include."""
+    name,_ = pair
+    return name.lower() == "version" or name.lower() == "path"
+
+def pretty(name):
+    return " ".join(name.split("_")).title()
+
+def pretty_keys(pairs):
+    for k,v in pairs:
+        yield pretty(k),v
+
+def select_applications(apps):
+    """Select interesting applications and their details."""
+    for name,details in filter(filter_app, apps.items()): 
+        # The keys of the details are prettified, but not the application name!
+        yield name,dict(pretty_keys(filter(filter_details, details.items())))
+
 def list_applications():
-    items = get_items("SPApplicationsDataType")
-    apps = { app["_name"]: app["path"] for app in filter(interesting, items) }
+    apps = select_applications(get_items("SPApplicationsDataType"))
     groups.append("Applications", apps)
 
 def list_hardware():
     items = get_items("SPHardwareDataType")
-    title = items[0]["_name"]
-    title = " ".join(title.split("_"))
-    del items[0]["_name"]
-    groups.append(title.title(), items[0])
+    title,details = items.popitem()
+    groups.append(pretty(title), pretty_keys(details.items()))
 
 def parse_options():
     parser = argparse.ArgumentParser(

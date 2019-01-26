@@ -63,6 +63,7 @@ else
   Plug 'iamcco/markdown-preview.vim'
 endif
 Plug 'lifepillar/vim-mucomplete'
+Plug 'peterhoeg/vim-qml'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
 Plug 'tpope/vim-fugitive'

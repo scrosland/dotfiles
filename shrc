@@ -64,9 +64,9 @@ if [ -n "$INTERACTIVE" ] ; then
         unset info
     fi
 
-    if [ -z "$TMUX" -a "$TERM" = "screen-256color" ] ; then
-        stty erase ^h kill ^u
-    fi
+#    if [ -z "$TMUX" -a "$TERM" = "screen-256color" ] ; then
+#        stty erase ^h kill ^u
+#    fi
 
     # general aliases
     alias cls='clear'

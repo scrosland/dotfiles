@@ -37,7 +37,7 @@ endif
 " --- Plugin loader ---
 
 try
-  call plug#begin(g:plugins_bundledir)
+  silent! call plug#begin(g:plugins_bundledir)
   let s:error = 0
 catch /E117/
   let s:error = 1
@@ -66,7 +66,9 @@ Plug 'lifepillar/vim-mucomplete'
 Plug 'peterhoeg/vim-qml'
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1'
-Plug 'tpope/vim-fugitive'
+if executable('git')
+  Plug 'tpope/vim-fugitive'
+endif
 Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby'
 

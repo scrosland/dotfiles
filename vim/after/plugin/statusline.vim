@@ -1,4 +1,4 @@
-function! s:gitroot()
+function! StatusLineGitRoot()
   if !executable('git')
     return ''
   endif
@@ -15,7 +15,7 @@ endfunction
 
 " Add external callbacks
 for fn in [
-      \ 's:gitroot',
+      \ 'StatusLineGitRoot',
       \ 'WrapDescribeForStatusLine',
       \ ]
   if exists('*'.fn)

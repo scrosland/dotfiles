@@ -20,8 +20,8 @@ set showmode
 set autoindent
 set smartindent
 
-set shiftwidth=2
-set softtabstop=2
+set shiftwidth=4
+set softtabstop=4
 
 set notextmode
 set expandtab
@@ -217,6 +217,9 @@ if has('path_extra')
 else
   set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 end
+
+command! -nargs=0 ReformatFile normal gg=G
+command! -nargs=0 ReindentFile ReformatFile
 
 " Add a :Shell command to run a command and read the stdout into a new buffer
 command! -nargs=+ -complete=shellcmd Shell 

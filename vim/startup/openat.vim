@@ -8,28 +8,28 @@
 "
 
 if exists('g:vimrc_openat')
-  finish
+    finish
 endif
 let g:vimrc_openat = 1
 
 if has("autocmd")
-  function! s:open_file_at_line()
-    let l:arg = expand("%:p") . "junk"
-    " See ':help list' and the section on 'List unpack'
-    let [l:file, l:line; rest] = split(l:arg, ":")
-    let l:initial_buffer = winbufnr(0)
-    execute "edit! +" . l:line . " " . l:file
-    execute "doautocmd BufNewFile " . l:file
-    execute "bdelete " . l:initial_buffer
-  endfunction
+    function! s:open_file_at_line()
+        let l:arg = expand("%:p") . "junk"
+        " See ':help list' and the section on 'List unpack'
+        let [l:file, l:line; rest] = split(l:arg, ":")
+        let l:initial_buffer = winbufnr(0)
+        execute "edit! +" . l:line . " " . l:file
+        execute "doautocmd BufNewFile " . l:file
+        execute "bdelete " . l:initial_buffer
+    endfunction
 
-  " The public interface
-  function! OpenAtLine()
-    call s:open_file_at_line()
-  endfunction
+    " The public interface
+    function! OpenAtLine()
+        call s:open_file_at_line()
+    endfunction
 
-  augroup open_at_line
-    autocmd!
-    autocmd BufNewFile *:*:* call OpenAtLine()
-  augroup END
+    augroup open_at_line
+        autocmd!
+        autocmd BufNewFile *:*:* call OpenAtLine()
+    augroup END
 endif

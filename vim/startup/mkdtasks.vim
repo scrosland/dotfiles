@@ -4,19 +4,19 @@
 "
 
 if exists('g:vimrc_mkdtasks')
-  finish
+    finish
 endif
 let g:vimrc_mkdtasks = 1
 
 function! s:mkdtasks_setup()
-  nnoremap <LocalLeader>d :call mkdtasks#toggle()<CR>
+    nnoremap <LocalLeader>d :call mkdtasks#toggle()<CR>
 endfunction
 
 if has("autocmd")
-  augroup mkdtasks
-    autocmd!
-    autocmd FileType markdown call s:mkdtasks_setup()
-    autocmd FileType mkd      call s:mkdtasks_setup()
-  augroup end
+    augroup mkdtasks
+        autocmd!
+        autocmd FileType markdown call s:mkdtasks_setup()
+        autocmd FileType mkd      call s:mkdtasks_setup()
+    augroup end
 endif
 

@@ -88,8 +88,8 @@ function! s:fixHighlights(yellow)
     if !g:is_osx && !g:is_windows
         if strlen($DISPLAY) == 0 || strlen($TERMINATOR_UUID)
             let l:force_light_yellow = 1
-        end
-    end
+        endif
+    endif
     let l:yellow = l:force_light_yellow ? "LightYellow" : a:yellow
     let l:command = "highlight Search term=reverse cterm=reverse ctermfg=" 
                 \. l:yellow . " ctermbg=Black guifg=#ffed6b guibg=#000000"
@@ -115,18 +115,23 @@ endfunction
 function! s:terminalSupportsTrueColor()
     if has("gui_running")
         return 0
-    end
+    endif
     if !has("termguicolors")
         return 0
-    end
+    endif
     " Not checking for Terminal.app as it seems broken.
     if $COLORTERM == "truecolor"
         return 1
-    end
+    endif
     " Windows conhost.exe now supports 24-bit colour.
     if strlen($WSL)
         return 1
-    end
+    endif
+    " Assume ssh connections without DISPLAY forwarded have come from something
+    " modern, probably a macOS client
+    if strlen($SSH_CLIENT . $SSH_CONNECTION) && strlen($DISPLAY) == 0
+        return 1
+    endif
     return 0
 endfunction
 
@@ -135,7 +140,7 @@ if s:terminalSupportsTrueColor()
     call s:initSolarized8()
 else
     call s:initSolarized()
-end
+endif
 
 " Other plugins
 
@@ -168,7 +173,7 @@ if has('patch-7.4.775')
     "  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
     "  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
     "  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
-end
+endif
 let g:mucomplete#enable_auto_at_startup = 0
 let g:mucomplete#chains = {
             \ 'default' : ['path', 'omni', 'keyn', 'tags', 'dict', 'uspl'],

@@ -2,15 +2,17 @@ function! StatusLineGitRoot()
     if !executable('git')
         return ''
     endif
+    let l:parts = []
     " fugitive should have already detected a git dir
     let l:root = substitute(FugitiveGitDir(), '/.git$', '', '')
-    let l:branch = FugitiveHead()
-    if l:branch == 'master'
-        let l:branch = ''
-    else
-        let l:branch = '[' . l:branch . ']'
+    call add(l:parts, fnamemodify(l:root, ':t'))
+    " get commit and branch from fugitive
+    let l:info = FugitiveStatusline()[4:-2]     " remove '[Git' and ']'
+    let l:info = substitute(l:info, '\v\C\(master\)$', '', '')
+    if strlen(l:info) > 0
+        call add(l:parts, l:info)
     endif
-    return fnamemodify(l:root, ':t') . l:branch
+    return join(l:parts, '')
 endfunction
 
 " Add external callbacks

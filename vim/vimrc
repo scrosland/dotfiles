@@ -229,8 +229,8 @@ command! -nargs=+ -complete=shellcmd Shell
             \ r !<args>
 
 if has("terminal")
-    command! -nargs=* -complete=shellcmd Term rightbelow term <args>
-    command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term <args>
+    command! -nargs=* -complete=shellcmd Term rightbelow term ++noclose<args>
+    command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term ++noclose<args>
 endif
 
 " --- Wrap mode and and file type handling ---

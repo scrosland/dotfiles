@@ -69,7 +69,6 @@ find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
 run pip2 install mutagen
 
 # python3 packages
-run pip3 install jedi
 run pip3 install PySide2
 
 # ruby gems

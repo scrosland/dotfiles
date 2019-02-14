@@ -56,22 +56,22 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 
 " plugins
 
-Plug 'chikamichi/mediawiki.vim'
-Plug 'davidhalter/jedi-vim'
+Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 if g:is_osx
-    Plug 'itspriddle/vim-marked'
+    Plug 'itspriddle/vim-marked', { 'for': ['markdown', 'mkd'] }
 else
-    Plug 'iamcco/markdown-preview.vim'
+    Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
 endif
 Plug 'lifepillar/vim-mucomplete'
-Plug 'peterhoeg/vim-qml'
+Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
-Plug 'PProvost/vim-ps1'
+Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
 if executable('git')
     Plug 'tpope/vim-fugitive'
 endif
 Plug 'tpope/vim-sensible'
-Plug 'vim-ruby/vim-ruby'
+Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 
 Plug 'scrosland/nvsimple.vim'
 
@@ -176,6 +176,8 @@ if has('patch-7.4.775')
     "  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
 endif
 let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 2     " signatures in command line not popup
+let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
 let g:mucomplete#enable_auto_at_startup = 0
 let g:mucomplete#chains = {

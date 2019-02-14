@@ -29,7 +29,7 @@ let maplocalleader="'"
 
 set visualbell
 set noerrorbells
-set showmode
+set noshowmode
 
 set autoindent
 set smartindent

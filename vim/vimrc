@@ -3,6 +3,20 @@
 set nocompatible
 set redraw        " vi only
 
+" Debugging
+"
+" Run the folowing to enable debug messages.
+"
+" vim --cmd 'let g:vimrc_debug=1' ...
+let g:vimrc_debug = get(g:, 'vimrc_debug', 0)
+function! VimrcDebug(...)
+    if g:vimrc_debug
+        execute "echo '" . join(a:000, ' ') . "'"
+    endif
+endfunction
+command! -nargs=* -bar VimrcDebug call VimrcDebug(<args>)
+VimrcDebug 'vimrc debugging enabled'
+
 " Debugging on Windows: uncomment the next line to preserve cmd.exe windows
 " after commands finish in order to see what the output was. Useful for
 " diagnosing git errors.

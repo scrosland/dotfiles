@@ -37,12 +37,13 @@ _sc_prompt_string()
 
 _sc_prompt_command()
 {
-    local prompt="$(_sc_prompt_string)$ "
     local level=""
     if (( ${IS_LOGIN_SHELL} == 0 && ${SHLVL} > 1 )) ; then
         level="<${SHLVL}> "
     fi
-    printf -v PS1 "${prompt}${level}"
+    local vim="${VIM_TERMINAL:+ [vim]}"
+    local prompt="$(_sc_prompt_string)"
+    printf -v PS1 "${prompt}${vim}\$ ${level}"
 
     printf "\033]0;%s\007" "${TERMINAL_TITLE:-${prompt}}"
     return 0

@@ -243,8 +243,8 @@ command! -nargs=+ -complete=shellcmd Shell
             \ r !<args>
 
 if has("terminal")
-    command! -nargs=* -complete=shellcmd Term rightbelow term ++noclose<args>
-    command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term ++noclose<args>
+    command! -nargs=* -complete=shellcmd Term rightbelow term ++noclose <args>
+    command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term ++noclose <args>
 endif
 
 if has("pythonx")

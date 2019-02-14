@@ -57,6 +57,7 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 " plugins
 
 Plug 'chikamichi/mediawiki.vim'
+Plug 'davidhalter/jedi-vim'
 if g:is_osx
     Plug 'itspriddle/vim-marked'
 else
@@ -174,10 +175,11 @@ if has('patch-7.4.775')
     "  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
     "  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
 endif
+let g:jedi#popup_on_dot = 0
+let g:jedi#use_splits_not_buffers = "bottom"
 let g:mucomplete#enable_auto_at_startup = 0
 let g:mucomplete#chains = {
             \ 'default' : ['path', 'omni', 'keyn', 'tags', 'dict', 'uspl'],
-            \ 'vim'     : ['path', 'cmd', 'keyn']
             \ }
 " Disable completion messages
 "set shortmess+=c

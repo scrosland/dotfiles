@@ -247,7 +247,27 @@ if has("terminal")
     command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term ++noclose<args>
 endif
 
-" --- Wrap mode and and file type handling ---
+if has("pythonx")
+    " Set a preferred python version
+    if &pyxversion == 0
+        if has("python3")
+            set pyxversion=3
+        elseif has("python")
+            set pyxversion=2
+        endif
+    endif
+    let s:pyinterp = "python" . &pyxversion
+    if &pyxversion > 0 && executable(s:pyinterp)
+        " vim on Windows and Mac have broken sys.executable values which point
+        " to vim itself not the python interpreter.
+        " See https://github.com/davidhalter/jedi-vim/issues/870.
+        pythonx sys.executable = vim.eval("exepath(s:pyinterp)")
+        pythonx vim.command("VimrcDebug 'sys.executable=%s'" % (sys.executable))
+    endif
+    unlet s:pyinterp
+endif
+
+" --- Wrap mode and file type handling ---
 
 function! s:soft_wrap_enable()
     setlocal wrap linebreak

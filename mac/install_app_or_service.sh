@@ -37,6 +37,10 @@ install_one()
     if [[ -r "${dest}" ]] ; then
         cmd rm -r -f "${dest}"
     fi
+    # Use of -r here causes cp to indirect through symlinks and copy their
+    # target which is what is required for e.g. homebrew apps which originate
+    # in /usr/local/Cellar and which often include relative symlinks that would
+    # break if retained after a copy into $HOME/Applications.
     cmd cp -r -f "${src}" "${dest}"
     return 0
 }

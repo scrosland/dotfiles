@@ -4,11 +4,35 @@
 # Shell functions for Darwin systems
 #
 
+# ----- common to sh and bash -----
+
 man()
 {
     if [ ! -t 1 ] ; then
-        MANWIDTH=80 MANPAGER='col -bx' /usr/bin/man "$@"
+        MANWIDTH=80 MANPAGER='col -bx' command man "$@"
         return
     fi
     command man "$@"
 }
+
+# ----- bash specific functions -----
+
+if [ -z "$BASH_VERSION" ] ; then
+    return
+fi
+
+COMPLETIONS=( \
+    /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
+    /usr/local/etc/profile.d/bash_completion.sh \
+)
+for comp in "${COMPLETIONS[@]}" ; do
+    [ -r "${comp}" ] &&
+        source "${comp}"
+done
+
+# ----- iterm helpers -----
+
+if [[ "${TERM_PROGRAM}" = "iTerm.app" ]] ; then
+    . "${BASH_SOURCE[0]/%darwin/iterm}"
+fi
+

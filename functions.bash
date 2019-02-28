@@ -4,10 +4,6 @@
 # Bash functions
 #
 
-[ "$(uname)" = "Darwin" ] &&
-    [ -f /usr/local/etc/profile.d/bash_completion.sh ] &&
-        source /usr/local/etc/profile.d/bash_completion.sh
-
 _sc_prompt_path()
 {
     local tilde="~"
@@ -62,12 +58,5 @@ set_title()
 if [[ -n $PS1 ]] ; then
     PROMPT_COMMAND="_sc_prompt_command"
 fi
-
-# ----- iterm helpers -----
-
-if [[ "${TERM_PROGRAM}" = "iTerm.app" ]] ; then
-    . "${BASH_SOURCE[0]/%bash/iterm}"
-fi
-
 
 # ----- END -----

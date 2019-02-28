@@ -10,7 +10,7 @@ fi
 
 BROWSER='google-chrome' ; export BROWSER
 EDITOR='vim' ; export EDITOR
-LESS='-Xm' ; export LESS
+LESS='-RXm' ; export LESS
 SCM_EDITOR='viterm' ; export SCM_EDITOR
 
 add_to_path_var()

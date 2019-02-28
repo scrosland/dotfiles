@@ -36,13 +36,12 @@ if [[ ! -d $HOME/.ssh ]] ; then
     ls -l $HOME/.ssh
 fi
 
-if [[ ! -r $HOME/.git/config ]] ; then
+if [[ ! -r $HOME/.git/config ]] && [[ ! -r $HOME/.gitconfig ]] ; then
     echo "Setting up git"
     read -p"Enter email for git: " INPUT
     git config --global user.email "${INPUT}"
     read -p"Enter username for git: " INPUT
     git config --global user.name "${INPUT}"
-    git config --global color.pager false
     git config --global core.excludesfile $HOME/dotfiles/gitignore.global
     git config --global credential.helper store
     git config --global web.browser sensible-browser

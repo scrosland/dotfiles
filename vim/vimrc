@@ -257,7 +257,7 @@ if has("pythonx")
         endif
     endif
     let s:pyinterp = "python" . &pyxversion
-    if &pyxversion > 0 && executable(s:pyinterp)
+    if 0 && &pyxversion > 0 && executable(s:pyinterp)
         " vim on Windows and Mac have broken sys.executable values which point
         " to vim itself not the python interpreter.
         " See https://github.com/davidhalter/jedi-vim/issues/870.

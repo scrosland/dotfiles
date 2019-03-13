@@ -9,6 +9,12 @@ function! s:stripLeadingSlashes(path, levels)
     return join(l:parts[a:levels:], '/')
 endfunction
 
+function! s:saveFilePath(container, strip, file)
+    if a:file !~# '/dev/null'
+        let a:container[s:stripLeadingSlashes(trim(a:file), a:strip)] = ''
+    endif
+endfunction
+
 " options - a dict of options with possible keys:
 "
 "   'strip': N      strip N leading directories like patch -pN
@@ -27,8 +33,13 @@ function! s:getFilesFromDiff(options)
             "   set 'start of match' (\zs)
             "   match (return) anything else
             let l:match = matchstr(l:line, '^\([-]\{3}\|[+]\{3}\) \zs.*')
-            if strlen(l:match) > 0 && l:match !~# '/dev/null'
-                let l:files[s:stripLeadingSlashes(l:match, l:strip)] = ''
+            if strlen(l:match) > 0
+                call s:saveFilePath(l:files, l:strip, l:match)
+            endif
+            if strlen(matchstr(l:line, '^diff --git')) > 0
+                for l:match in split(l:line)[2:]
+                    call s:saveFilePath(l:files, l:strip, l:match)
+                endfor
             endif
         endfor
         let l:idx += 1000

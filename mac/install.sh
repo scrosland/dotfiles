@@ -72,8 +72,8 @@ run pip2 install mutagen
 run pip3 install PySide2
 
 # ruby gems
+run gem install commonmarker
 run gem install nokogiri
-run gem install redcarpet
 run gem install wolfram
 
 echo ""

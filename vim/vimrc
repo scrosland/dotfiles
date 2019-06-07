@@ -165,9 +165,9 @@ set mousehide
 behave xterm
 
 if executable("sgrep")
-    set grepprg=sgrep\ $*
+    set grepprg=sgrep
 elseif executable("rg")
-    set grepprg=rg\ --no-heading\ --with-filename\ -n\ $*
+    set grepprg=rg\ --no-heading\ --with-filename\ -n
 endif
 
 " Clipboard, select mode and mouse settings need to be after sourcing mswin.vim

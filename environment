@@ -8,7 +8,22 @@ if uname -a | grep -q -s Microsoft ; then
     WSL=$(uname -r) ; export WSL
 fi
 
-BROWSER='google-chrome' ; export BROWSER
+_sc_select_browser()
+{
+    if [ -x /usr/bin/open ] ; then
+        echo /usr/bin/open
+    elif [ -n "${DISPLAY}" ] ; then
+        if [ -n "${GNOME_DESKTOP_SESSION_ID}" -a -x /usr/bin/gnome-open ] ; then
+            echo /usr/bin/gnome-open
+        elif [ -x /usr/bin/x-www-browser ] ; then
+            echo /usr/bin/x-www-browser
+        elif [ -x /usr/bin/xdg-open ] ; then
+            echo /usr/bin/xdg-open
+        fi
+    fi
+}
+
+BROWSER=$(_sc_select_browser) ; export BROWSER
 EDITOR='vim' ; export EDITOR
 LESS='-RXm' ; export LESS
 SCM_EDITOR='viterm' ; export SCM_EDITOR

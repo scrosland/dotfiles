@@ -82,10 +82,10 @@ find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
   done
 
 # python2 packages
-run pip2 install mutagen
+run pip2 install --upgrade mutagen
 
 # python3 packages
-run pip3 install PySide2
+run pip3 install --upgrade PySide2
 
 # ruby gems
 run gem install commonmarker

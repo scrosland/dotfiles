@@ -81,17 +81,6 @@ find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
     run ${installer} "${app}" "${APPLICATIONS}"
   done
 
-# python2 packages
-run pip2 install --upgrade mutagen
-
-# python3 packages
-run pip3 install --upgrade PySide2
-
-# ruby gems
-run gem install commonmarker
-run gem install nokogiri
-run gem install wolfram
-
 echo ""
 echo "# Checking for JDK."
 if ! /usr/libexec/java_home --failfast ; then

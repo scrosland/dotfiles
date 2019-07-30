@@ -82,6 +82,10 @@ find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
   done
 
 echo ""
+if ls -1 /Library/Java/JavaVirtualMachines | grep -qs ^jdk ; then
+    echo "# *** Removing old Oracle JDKs ***"
+    sudo rm -rf /Library/Java/JavaVirtualMachines/jdk*
+fi
 echo "# Checking for JDK."
 if ! /usr/libexec/java_home --failfast ; then
   echo "Cannot find Java."
@@ -90,6 +94,7 @@ echo "# Default java version."
 java -version
 echo "# All installed JDKs."
 ls -1 /Library/Java/JavaVirtualMachines
+echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"
 
 if [[ ! -r /Applications/SCM.app ]] &&
    [[ ! -r "${HOME}/Applications/SCM.app" ]] ; then

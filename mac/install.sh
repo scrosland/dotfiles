@@ -2,9 +2,9 @@
 
 run()
 {
-  echo ""
-  echo "# $@"
-  "$@"
+    echo ""
+    echo "# $@"
+    "$@"
 }
 
 APPLICATIONS="/Applications"
@@ -16,25 +16,25 @@ echo "# Installing applications into ${APPLICATIONS}"
 # xcode command line tools
 echo "# Checking for Xcode command line tools"
 if ! xcode-select --print-path ; then
-  run xcode-select --install
+    run xcode-select --install
 fi
 if ! clang --version >/dev/null 2>&1 ; then
-  run xcode-select --install
+    run xcode-select --install
 fi
 
 # Install brew if needed
 if [[ ! -e /usr/local/bin/brew ]] ; then
-  SCRIPT=/tmp/brew.$$
-  URL="https://raw.githubusercontent.com/Homebrew/install/master/install"
-  echo "Getting brew install script."
-  run curl -fsSL "${URL}" > ${SCRIPT}
-  echo "Check the script before running."
-  sleep 5
-  less ${SCRIPT}
-  echo "Interrupt now or the script will be run"
-  sleep 5
-  run /usr/bin/ruby ${SCRIPT}
-  rm -f ${SCRIPT}
+    SCRIPT=/tmp/brew.$$
+    URL="https://raw.githubusercontent.com/Homebrew/install/master/install"
+    echo "Getting brew install script."
+    run curl -fsSL "${URL}" > ${SCRIPT}
+    echo "Check the script before running."
+    sleep 5
+    less ${SCRIPT}
+    echo "Interrupt now or the script will be run"
+    sleep 5
+    run /usr/bin/ruby ${SCRIPT}
+    rm -f ${SCRIPT}
 fi
 
 # Update brew
@@ -43,8 +43,8 @@ run brew update
 # Install and upgrade packages using bundle ...
 BREWFILE="$HOME/dotfiles/mac/Brewfile"
 if [[ ! -r ${BREWFILE} ]] ; then
-  echo "Cannot find the brewfile, '${BREWFILE}'" >&2
-  exit 1
+    echo "Cannot find the brewfile, '${BREWFILE}'" >&2
+    exit 1
 fi
 run brew bundle --file=${BREWFILE}
 # ... and then a manual upgrade just to be sure
@@ -77,9 +77,9 @@ installer="$(dirname $0)/install_app_or_service.sh"
 echo ""
 echo "# Copying apps into ${APPLICATIONS}"
 find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
-  while read app ; do
+while read app ; do
     run ${installer} "${app}" "${APPLICATIONS}"
-  done
+done
 
 echo ""
 if ls -1 /Library/Java/JavaVirtualMachines | grep -qs ^jdk ; then
@@ -88,7 +88,7 @@ if ls -1 /Library/Java/JavaVirtualMachines | grep -qs ^jdk ; then
 fi
 echo "# Checking for JDK."
 if ! /usr/libexec/java_home --failfast ; then
-  echo "Cannot find Java."
+    echo "Cannot find Java."
 fi
 echo "# Default java version."
 java -version
@@ -98,8 +98,8 @@ echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"
 
 if [[ ! -r /Applications/SCM.app ]] &&
    [[ ! -r "${HOME}/Applications/SCM.app" ]] ; then
-  echo ""
-  echo "# Go to https://github.com/software-jessies-org/jessies/wiki/Downloads and get the latest version of SCM.app."
+    echo ""
+    echo "# Go to https://github.com/software-jessies-org/jessies/wiki/Downloads and get the latest version of SCM.app."
 fi
 
 exit 0

@@ -138,7 +138,7 @@
 	<key>NSNavLastRootDirectory</key>
 	<string>~/Documents</string>
 	<key>NSNavLastUserSetHideExtensionButtonState</key>
-	<true/>
+	<false/>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{712, 448}</string>
 	<key>NSNavPanelExpandedSizeForSaveMode</key>
@@ -182,17 +182,17 @@
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>2085 516 620 392 1920 0 1920 1177 </string>
+	<string>2570 588 620 392 1920 0 1920 1177 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>342 168 918 494 0 0 1920 1177 </string>
+	<string>2262 140 937 514 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>2150 0 650 699 1920 0 1920 1177 </string>
+	<string>0 24 650 699 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>2802 0 650 699 1920 0 1920 1177 </string>
+	<string>651 0 650 699 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>356 0 650 699 0 0 1920 1177 </string>
+	<string>2031 97 1627 1027 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
-	<string>254 55 650 699 0 0 1680 1027 </string>
+	<string>2114 0 1298 699 1920 0 1920 1177 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -775,7 +775,7 @@
 			<key>Screen</key>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
-			<integer>1000</integer>
+			<integer>0</integer>
 			<key>Selected Text Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -903,9 +903,11 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-03-04T08:47:40Z</date>
+	<date>2019-07-24T09:44:51Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
+	<key>ShowFullScreenTabBar</key>
+	<true/>
 	<key>SmartPlacement</key>
 	<false/>
 	<key>Window Arrangements</key>
@@ -2380,9 +2382,11 @@
 			</dict>
 		</array>
 	</dict>
+	<key>WordCharacters</key>
+	<string>/-+\~_.</string>
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.2.7</string>
+	<string>3.2.9</string>
 </dict>
 </plist>

@@ -182,17 +182,19 @@
 		<integer>1</integer>
 	</dict>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>2570 588 620 392 1920 0 1920 1177 </string>
+	<string>558 308 620 392 0 0 1920 1177 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>2262 140 937 514 1920 0 1920 1177 </string>
+	<string>2262 197 770 429 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 24 650 699 0 0 1680 1027 </string>
+	<string>1930 23 650 699 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>651 0 650 699 0 0 1920 1177 </string>
+	<string>1270 23 650 676 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>2031 97 1627 1027 1920 0 1920 1177 </string>
+	<string>2200 0 1306 891 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
-	<string>2114 0 1298 699 1920 0 1920 1177 </string>
+	<string>53 0 1867 1177 0 0 1920 1177 </string>
+	<key>NSWindow Frame iTerm Window 4</key>
+	<string>53 0 1867 1177 0 0 1920 1177 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -903,13 +905,15 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-07-24T09:44:51Z</date>
+	<date>2019-08-02T13:33:09Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
 	<true/>
 	<key>SmartPlacement</key>
 	<false/>
+	<key>StretchTabsToFillBar</key>
+	<true/>
 	<key>Window Arrangements</key>
 	<dict>
 		<key>Wide x2</key>

@@ -30,7 +30,7 @@ downloadURL()
 installedAt()
 {
     local baseversion="$1"
-    stat -f%B "/Library/Java/JavaVirtualMachines/adoptopenjdk-${baseversion}.jdk/Contents/Info.plist"
+    stat -f%B "/Library/Java/JavaVirtualMachines/adoptopenjdk-${baseversion}.jdk/Contents/Info.plist" 2>/dev/null || echo 0
 }
 
 updatedAt()

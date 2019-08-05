@@ -2,10 +2,48 @@
 
 source "$(dirname $0)/functions.shlib"
 
+checkForUpdate()
+{
+    local baseversion="$1"
+
+    local infoJSON=$(infoData $(infoURL "openjdk${baseversion}"))
+    local updated=$(echo "${infoJSON}" | updatedAt "${baseversion}")
+
+    local installed=$(installedAt "${baseversion}")
+
+    # The API update time can be a short while after the birth time of the
+    # Info.plist, so don't suggest an update unless there's a significant delta
+    local delta=$(( ${updated} - ${installed} ))
+    local secondsInDay=86400
+    if (( ${delta} > ${secondsInDay} )) ; then
+        echo "New OpenJDK ${baseversion} available:"
+        echo "${infoJSON}" | downloadURL
+    fi
+}
+
 downloadURL()
 {
+    # infoData will be read from stdin
+    jq '.binaries|.[]|.installer_link' | tail -1 | xargs echo
+}
+
+installedAt()
+{
+    local baseversion="$1"
+    stat -f%B "/Library/Java/JavaVirtualMachines/adoptopenjdk-${baseversion}.jdk/Contents/Info.plist"
+}
+
+updatedAt()
+{
+    # infoData will be read from stdin
+    jq '.timestamp' | tail -1 | xargs echo |
+        ruby -e 'require "time" ; puts Time.parse($stdin.readline()).to_i()'
+}
+
+infoData()
+{
     local infoURL="$1"
-    curl -sSL "${infoURL}" | jq '.binaries|.[]|.installer_link' | tail -1
+    curl -sSL "${infoURL}"
 }
 
 infoURL()
@@ -33,6 +71,5 @@ echo "# All installed JDKs."
 
 echo ""
 echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"
-echo "# Latest releases of interest:"
-downloadURL $(infoURL openjdk8)
-downloadURL $(infoURL openjdk11)
+checkForUpdate 8
+checkForUpdate 11

@@ -16,7 +16,8 @@ checkForUpdate()
     local delta=$(( ${updated} - ${installed} ))
     local secondsInDay=86400
     if (( ${delta} > ${secondsInDay} )) ; then
-        echo "New OpenJDK ${baseversion} available:"
+        version=$(echo "${infoJSON}" | releaseName)
+        echo "New OpenJDK ${baseversion} available (${version}):"
         echo "${infoJSON}" | downloadURL
     fi
 }
@@ -31,6 +32,11 @@ installedAt()
 {
     local baseversion="$1"
     stat -f%B "/Library/Java/JavaVirtualMachines/adoptopenjdk-${baseversion}.jdk/Contents/Info.plist" 2>/dev/null || echo 0
+}
+
+releaseName()
+{
+    jq '.release_name' | tail -1 | xargs echo
 }
 
 updatedAt()

@@ -69,11 +69,11 @@ fi
 
 echo ""
 echo "# Default java version."
-java -version
+java -version || true
 echo ""
 echo "# All installed JDKs."
 #ls -1 /Library/Java/JavaVirtualMachines
-/usr/libexec/java_home --verbose 2>&1 | sed -e '/^$/,$d'
+(/usr/libexec/java_home --verbose 2>&1 || true) | sed -e '/^$/,$d'
 
 echo ""
 echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"

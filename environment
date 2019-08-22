@@ -70,6 +70,7 @@ add_to_path_var PATH "/usr/local/opt/ruby/bin"
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
+add_to_path_var PATH "${HOME}/dotfiles/bin"
 add_to_path_var PATH "${HOME}/bin"
 
 add_to_path_var_and_export PYTHONPATH /Users/Shared/tools/libs/python

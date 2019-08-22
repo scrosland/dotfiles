@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+sfind_list_command()
+{
+    sfind "$@" |
+        sed -e 's/^\"//' -e 's%^\./%%' -e 's/\"$//' |
+        grep -v ^.git/
+}
+
+rg_list_command()
+{
+    rg --files "$@"
+}
+
+func=rg_list_command
+if [[ -n "$(which sfind)" ]] ; then
+    func=sfind_list_command
+fi
+
+${func} "$@"

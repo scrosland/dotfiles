@@ -56,6 +56,7 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 
 " plugins
 
+Plug 'alok/notational-fzf-vim'
 Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 if g:is_osx
@@ -63,6 +64,7 @@ if g:is_osx
 else
     Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
 endif
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'lifepillar/vim-mucomplete'
 Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
@@ -72,8 +74,6 @@ if executable('git')
 endif
 Plug 'tpope/vim-sensible'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-
-Plug 'scrosland/nvsimple.vim'
 
 call plug#end()
 
@@ -156,14 +156,35 @@ let g:netrw_liststyle = 1
 " files/directories by name alone
 let g:netrw_sort_sequence = '[\/]$,*'
 
-" nvSimple notes directory
-if exists('$USERPROFILE/Dropbox/notes')
-    let g:nvsimple_notes_directory = '$USERPROFILE/Dropbox/notes'
-elseif exists('$HOME/Dropbox/notes')
-    let g:nvsimple_notes_directory = '$HOME/Dropbox/notes'
-endif
-nnoremap <Leader>nv :Nv<CR>
-nnoremap <Leader>no :Nvopen<CR>
+" Fuzzy finding with fzf
+"
+" :Find [PATTERN [STARTING DIRECTORY]]
+" Like :find but with added fuzziness
+function! s:fzf_find(bang, ...)
+    let l:opts = {}
+    let l:opts.options = []
+    if len(a:000) > 0
+        call extend(l:opts.options, ['--query', a:1])
+    endif
+    if len(a:000) > 1
+        let l:opts.dir = a:2
+    endif
+    call fzf#run(fzf#wrap('find', l:opts, a:bang))
+endfunction
+command! -nargs=* -bang Find :call s:fzf_find(<bang>0, <f-args>)
+
+" notational-fzf-vim
+let g:nv_search_paths = []
+function! AddToNVSearchPath(dir)
+    " expand(pattern, nosuffix, return-list)
+    for l:dir in expand(a:dir, 0, 1)
+        if isdirectory(l:dir)
+            call add(g:nv_search_paths, l:dir)
+        endif
+    endfor
+endfunction
+call AddToNVSearchPath('$USERPROFILE/Dropbox/notes')
+call AddToNVSearchPath('$HOME/Dropbox/notes')
 
 " Completion
 set completeopt=""

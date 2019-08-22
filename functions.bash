@@ -57,6 +57,26 @@ set_title()
 #    shell script or a startup file to test this state."
 if [[ -n $PS1 ]] ; then
     PROMPT_COMMAND="_sc_prompt_command"
+
+    if [[ -r $HOME/.fzf.bash ]] ; then
+        if [ -n "$(which sfind)" ] ; then
+            __FZF_FINDER="sfind"
+            __FZF_FILTER="sed -e 's/^\"//' -e 's%^\\./%%' -e 's/\"$//'"
+        else
+            __FZF_FINDER="rg --files"
+            __FZF_FILTER="cat"
+            sfind() {
+                ${__FZF_FINDER} "$@" | sed -e 's/^/"/' -e 's/$/"/'
+            }
+        fi
+        _fzf_compgen_path() {
+            ${__FZF_FINDER} "$1" | ${__FZF_FILTER}
+        }
+        FZF_DEFAULT_COMMAND="${__FZF_FINDER} | ${__FZF_FILTER}"
+        export FZF_DEFAULT_COMMAND
+        FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND" ; export FZF_CTRL_T_COMMAND
+        source $HOME/.fzf.bash
+    fi
 fi
 
 # ----- END -----

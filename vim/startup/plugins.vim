@@ -183,8 +183,17 @@ function! AddToNVSearchPath(dir)
         endif
     endfor
 endfunction
+function! RemoveFromNVSearchPath(dir)
+    " expand(pattern, nosuffix, return-list)
+    for l:dir in expand(a:dir, 0, 1)
+        if isdirectory(l:dir)
+            call filter(g:nv_search_paths, {idx,val -> val !~ l:dir})
+        endif
+    endfor
+endfunction
 call AddToNVSearchPath('$USERPROFILE/Dropbox/notes')
 call AddToNVSearchPath('$HOME/Dropbox/notes')
+call AddToNVSearchPath('$HOME/Desktop')
 
 " Completion
 set completeopt=""

@@ -61,7 +61,8 @@ if [[ -n $PS1 ]] ; then
     if [[ -r $HOME/.fzf.bash ]] ; then
         if [ -n "$(which sfind)" ] ; then
             __FZF_FINDER="sfind"
-            __FZF_FILTER="sed -e 's/^\"//' -e 's%^\\./%%' -e 's/\"$//'"
+            __FZF_FILTER="sed -e 's/^\"//' -e 's%^\\./%%' -e 's/\"$//' |
+                grep -v ^.git/"
         else
             __FZF_FINDER="rg --files"
             __FZF_FILTER="cat"
@@ -70,7 +71,7 @@ if [[ -n $PS1 ]] ; then
             }
         fi
         _fzf_compgen_path() {
-            ${__FZF_FINDER} "$1" | ${__FZF_FILTER}
+            ${__FZF_FINDER} "$1" | eval ${__FZF_FILTER}
         }
         FZF_DEFAULT_COMMAND="${__FZF_FINDER} | ${__FZF_FILTER}"
         export FZF_DEFAULT_COMMAND

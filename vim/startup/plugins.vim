@@ -56,7 +56,7 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 
 " plugins
 
-Plug 'alok/notational-fzf-vim'
+Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
 Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 if g:is_osx

@@ -5,6 +5,7 @@ tap "homebrew/core"
 
 brew "bash"
 brew "bash-completion"
+brew "ctags"        # May want to switch to universal-ctags in the future
 brew "exiftool"
 brew "lame"
 brew "ffmpeg"

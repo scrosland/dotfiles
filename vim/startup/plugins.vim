@@ -66,6 +66,7 @@ else
 endif
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'lifepillar/vim-mucomplete'
+Plug 'majutsushi/tagbar'
 Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1', { 'for': 'ps1' }

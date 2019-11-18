@@ -3,29 +3,33 @@
 set nocompatible
 set redraw        " vi only
 
-" Debugging
-"
-" Run the folowing to enable debug messages.
-"
-" vim --cmd 'let g:vimrc_debug=1' ...
-let g:vimrc_debug = get(g:, 'vimrc_debug', 0)
-function! VimrcDebug(...)
-    if g:vimrc_debug
-        execute "echo '" . join(a:000, ' ') . "'"
-    endif
-endfunction
-command! -nargs=* -bar VimrcDebug call VimrcDebug(<args>)
-VimrcDebug 'vimrc debugging enabled'
+if has("eval")
+    " Debugging
+    "
+    " Run the folowing to enable debug messages.
+    "
+    " vim --cmd 'let g:vimrc_debug=1' ...
+    let g:vimrc_debug = get(g:, 'vimrc_debug', 0)
+    function! VimrcDebug(...)
+        if g:vimrc_debug
+            execute "echo '" . join(a:000, ' ') . "'"
+        endif
+    endfunction
+    command! -nargs=* -bar VimrcDebug call VimrcDebug(<args>)
+    VimrcDebug 'vimrc debugging enabled'
 
-" Debugging on Windows: uncomment the next line to preserve cmd.exe windows
-" after commands finish in order to see what the output was. Useful for
-" diagnosing git errors.
-"
-" set shellcmdflag=/k
+    " Debugging on Windows: uncomment the next line to preserve cmd.exe windows
+    " after commands finish in order to see what the output was. Useful for
+    " diagnosing git errors.
+    "
+    " set shellcmdflag=/k
+endif
 
-" Move leader to something I can type
-let mapleader="'"
-let maplocalleader="'"
+if has("eval")
+    " Move leader to something I can type
+    let mapleader="'"
+    let maplocalleader="'"
+endif
 
 set visualbell
 set noerrorbells
@@ -84,6 +88,12 @@ nnoremap <Leader>q :silent nohlsearch<CR>
 
 " disable :X encryption
 nnoremap :X :echo "Encryption disabled"<CR>
+
+" Only include the rest of startup if this looks like a reasonable version.
+" Otherwise this is likely to be Debian's vim-tiny or an ancient version
+" either way trying anything 'clever' would be pointless.
+" {{{
+if has("eval")
 
 syntax on
 filetype on
@@ -405,3 +415,6 @@ let s:vimrc_local = g:is_windows ?
             \ "$USERPROFILE/vimfiles/vimrc.local" :
             \ "$HOME/.vimrc.local"
 call s:source_if_readable(s:vimrc_local)
+
+endif " has('eval')
+" }}}

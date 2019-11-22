@@ -344,6 +344,12 @@ if has("autocmd")
         autocmd FileType mkd      call s:init_markdown()
     augroup end
 
+    " reStructuredText should start unfolded
+    augroup filetype_rst
+        autocmd!
+        autocmd FileType rst setlocal nofoldenable
+    augroup END
+
     " vim files should support folding based on markers, but start unfolded
     augroup filetype_vim
         autocmd!
@@ -368,6 +374,7 @@ if has("autocmd")
         autocmd FileType markdown  call s:init_textlike()
         autocmd FileType mkd       call s:init_textlike()
         autocmd FileType mediawiki call s:init_textlike()
+        autocmd FileType rst       call s:init_textlike()
         autocmd FileType text      call s:init_textlike()
     augroup end
 

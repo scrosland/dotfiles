@@ -2,7 +2,7 @@
 set -e
 
 cd $(dirname $0)
-./brew-list-all-dependencies |
+./brew-list-reverse-dependencies |
     sed -ne '/:$/s/://p' |
     while read cask ; do
         echo -n "${cask}"

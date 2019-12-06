@@ -30,31 +30,29 @@ SCM_EDITOR='viterm' ; export SCM_EDITOR
 
 add_to_path_var()
 {
-    local var="$1"
-    local dir="$2"
-    if [ ! -d "${dir}" ] ; then
+    local varname="$1"
+    local dirToAdd="$2"
+    if [ ! -d "${dirToAdd}" ] ; then
         return 1
     fi
-    eval local current=\$${var}
-    eval $( ruby -e '
-        var = ARGV.shift()
-        current = ARGV.shift()
-        value = ARGV.shift()
-        parts = current.split(":")
-        unless parts.include?(value)
-            parts.insert(0, value)
-        end
-        puts("#{var}=\"#{parts.join(":").inspect()}\"")
-        ' "${var}" "${current}" "${dir}"
-        )
+    eval local current=\$${varname}
+    local newvalue=""
+    if echo ":${current}:" | grep -q -s ":${dirToAdd}:" ; then
+        return 0
+    elif [ -n "${current}" ] ; then
+        newvalue="${dirToAdd}:${current}"
+    else
+        newvalue="${dirToAdd}"
+    fi
+    eval ${varname}=\"${newvalue}\"
     return 0
 }
 
 add_to_path_var_and_export()
 {
-    local var="$1"
+    local varname="$1"
     if add_to_path_var "$@" ; then
-        export "${var}"
+        export "${varname}"
     fi
 }
 

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+cd $(dirname $0)
+./brew-list-all-dependencies |
+    sed -ne '/:$/s/://p' |
+    while read cask ; do
+        echo -n "${cask}"
+        if ! grep -q -s "${cask}" Brewfile ; then
+            echo -n " (not in Brewfile)"
+        fi
+        echo ""
+    done

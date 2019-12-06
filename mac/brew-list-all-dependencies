@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+brew list -1 |
+while read cask ; do
+    echo -n "${cask}:"
+    brew uses "${cask}" --installed | awk '{ printf(" %s", $0) }' -
+    echo ""
+done

@@ -22,6 +22,8 @@ brew "vim", args: ["with-override-system-vi"]
 # cask_args appdir: "/Applications"
 
 cask "font-dejavu-sans"
+cask "font-hack"
+cask "font-input"
 
 # cask "1password"
 # cask "appcleaner"

@@ -201,9 +201,9 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>2262 197 770 429 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>2205 0 650 699 1920 0 1920 1177 </string>
+	<string>2108 0 650 722 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>369 0 650 699 0 0 1680 1027 </string>
+	<string>2375 0 650 699 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>1933 320 650 699 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
@@ -773,6 +773,8 @@
 				<key>Red Component</key>
 				<real>0.0</real>
 			</dict>
+			<key>Minimum Contrast</key>
+			<real>0.34401633522727271</real>
 			<key>Mouse Reporting</key>
 			<true/>
 			<key>Name</key>
@@ -782,7 +784,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>DejaVuSansMono 13</string>
+			<string>InputMono-Regular 13</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -854,12 +856,18 @@
 	<key>NoSyncAllAppVersions</key>
 	<array>
 		<string>3.3.6</string>
-		<string>3.3.2</string>
+		<string>3.3.4</string>
 		<string>3.3.1</string>
 		<string>3.3.7</string>
-		<string>3.2.9</string>
 		<string>3.3.0</string>
-		<string>3.3.4</string>
+		<string>3.2.9</string>
+		<string>3.3.2</string>
+	</array>
+	<key>NoSyncBFPRecents</key>
+	<array>
+		<string>Hack</string>
+		<string>Input Mono</string>
+		<string>DejaVu Sans Mono</string>
 	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
@@ -877,7 +885,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>F66DBBA9-7120-4A38-A68A-AA3C6D4E50A8</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>68</integer>
+	<integer>71</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>

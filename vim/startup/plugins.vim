@@ -57,6 +57,10 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 " plugins
 
 Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 if g:is_osx
@@ -80,7 +84,7 @@ call plug#end()
 
 " --- Plugin options ---
 
-" Color schemes
+" ---- Color schemes ----
 
 function! s:fixHighlights(yellow)
     highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
@@ -144,7 +148,7 @@ else
     call s:initSolarized()
 endif
 
-" Other plugins
+" ---- Other plugins ----
 
 " Simple BufExplorer alternative
 nnoremap <Leader>be :ls<CR>:b
@@ -174,7 +178,8 @@ function! s:fzf_find(bang, ...)
 endfunction
 command! -nargs=* -bang Find :call s:fzf_find(<bang>0, <f-args>)
 
-" notational-fzf-vim
+" ---- Notes with notational-fzf-vim ----
+
 let g:nv_search_paths = []
 function! AddToNVSearchPath(dir)
     " expand(pattern, nosuffix, return-list)
@@ -196,7 +201,8 @@ call AddToNVSearchPath('$USERPROFILE/Dropbox/notes')
 call AddToNVSearchPath('$HOME/Dropbox/notes')
 call AddToNVSearchPath('$HOME/Desktop')
 
-" Completion
+" ---- Autocompletion ----
+
 set completeopt=""
 set completeopt+=menuone
 set completeopt+=longest
@@ -206,16 +212,34 @@ if has('patch-7.4.775')
     "  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
     "  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
 endif
+let g:mucomplete#enable_auto_at_startup = 0
+" This adds 'tags' into upstream's default chain
+let g:mucomplete#chains = {
+            \ 'default' : ['path', 'omni', 'keyn', 'tags', 'dict', 'uspl'],
+            \ }
+" Enable short completion messages so MUcomplete can report the method
+set shortmess+=c
+call mucomplete#msg#set_notifications(1)    " equivalent to: MUcompleteNotify 1
+
+" ---- Jedi for python intelligence ----
+
 let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 2     " signatures in command line not popup
 let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
-let g:mucomplete#enable_auto_at_startup = 0
-let g:mucomplete#chains = {
-            \ 'default' : ['path', 'omni', 'keyn', 'tags', 'dict', 'uspl'],
-            \ }
-" Disable completion messages
-"set shortmess+=c
-let g:rubycomplete_classes_in_global = 1
-let g:rubycomplete_buffer_loading = 1
 
+" ---- LanguageClient - Language Server Protocol client ----
+
+" Using solargraph for ruby completion etc. which requires a gem:
+"   gem install solargraph
+let g:LanguageClient_serverCommands = {
+    \ 'ruby' : [exepath("solargraph"), 'stdio']
+    \ }
+
+" LanguageClient docs say ...
+" Required for operations modifying multiple buffers like rename.
+"set hidden     " not sure I want to try this yet...
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>

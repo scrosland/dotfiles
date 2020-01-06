@@ -65,6 +65,9 @@ fi
 add_to_path_var MANPATH "$HOME/.local/share/man"
 
 add_to_path_var PATH "/usr/local/opt/ruby/bin"
+if [ -n "$(which ruby)" ] ; then
+    add_to_path_var PATH "$(ruby -e 'puts Gem.bindir()')"
+fi
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"

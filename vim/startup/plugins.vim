@@ -229,3 +229,8 @@ let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 2     " signatures in command line not popup
 let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
+
+" ---- ruby completion ----
+
+let g:rubycomplete_classes_in_global = 1
+let g:rubycomplete_buffer_loading = 1

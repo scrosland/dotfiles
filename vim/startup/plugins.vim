@@ -57,10 +57,6 @@ Plug 'icymind/NeoSolarized'               " also with truecolor support
 " plugins
 
 Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
 Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 if g:is_osx
@@ -208,10 +204,16 @@ set completeopt+=menuone
 set completeopt+=longest
 if has('patch-7.4.775')
     set completeopt+=noselect
+    set completeopt+=noinsert
     "  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
     "  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
     "  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")
 endif
+set previewheight=5
+if has('timers')
+    let g:mucomplete#completion_delay = 100     " ms
+    let g:mucomplete#reopen_immediately = 0
+end
 let g:mucomplete#enable_auto_at_startup = 0
 " This adds 'tags' into upstream's default chain
 let g:mucomplete#chains = {
@@ -227,19 +229,3 @@ let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 2     " signatures in command line not popup
 let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
-
-" ---- LanguageClient - Language Server Protocol client ----
-
-" Using solargraph for ruby completion etc. which requires a gem:
-"   gem install solargraph
-let g:LanguageClient_serverCommands = {
-    \ 'ruby' : [exepath("solargraph"), 'stdio']
-    \ }
-
-" LanguageClient docs say ...
-" Required for operations modifying multiple buffers like rename.
-"set hidden     " not sure I want to try this yet...
-
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>

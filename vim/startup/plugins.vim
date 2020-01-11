@@ -204,7 +204,6 @@ set completeopt+=menuone
 set completeopt+=longest
 if has('patch-7.4.775')
     set completeopt+=noselect
-    set completeopt+=noinsert
     "  inoremap <expr> <c-e> mucomplete#popup_exit("\<c-e>")
     "  inoremap <expr> <c-y> mucomplete#popup_exit("\<c-y>")
     "  inoremap <expr>  <cr> mucomplete#popup_exit("\<cr>")

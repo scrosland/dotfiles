@@ -49,32 +49,38 @@ if s:error
     finish
 endif
 
+" basics
+"
+Plug 'tpope/vim-sensible'
+
 " color schemes
+"
 Plug 'altercation/vim-colors-solarized'   " the original
 Plug 'lifepillar/vim-solarized8'          " with truecolor support
-Plug 'icymind/NeoSolarized'               " also with truecolor support
 
-" plugins
-
-Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
+" language and file format support
+"
 Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
-if g:is_osx
-    Plug 'itspriddle/vim-marked', { 'for': ['markdown', 'mkd'] }
-else
-    Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
-endif
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
-Plug 'lifepillar/vim-mucomplete'
-Plug 'majutsushi/tagbar'
 Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
+Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+Plug (g:is_osx ? 'itspriddle/vim-marked' : 'iamcco/markdown-preview.vim'),
+    \ { 'for': ['markdown', 'mkd'] }
+
+" utilities
+"
+Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
+Plug 'majutsushi/tagbar'
 if executable('git')
     Plug 'tpope/vim-fugitive'
 endif
-Plug 'tpope/vim-sensible'
-Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+
+" Autocompletion
+"
+Plug 'lifepillar/vim-mucomplete'
 
 call plug#end()
 

@@ -4,6 +4,8 @@
 <dict>
 	<key>AllowClipboardAccess</key>
 	<true/>
+	<key>AlternateMouseScroll</key>
+	<true/>
 	<key>AppleAntiAliasingThreshold</key>
 	<integer>1</integer>
 	<key>AppleScrollAnimationEnabled</key>
@@ -859,9 +861,9 @@
 		<string>3.3.4</string>
 		<string>3.3.1</string>
 		<string>3.3.7</string>
-		<string>3.3.0</string>
 		<string>3.2.9</string>
 		<string>3.3.2</string>
+		<string>3.3.0</string>
 	</array>
 	<key>NoSyncBFPRecents</key>
 	<array>
@@ -885,7 +887,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>F66DBBA9-7120-4A38-A68A-AA3C6D4E50A8</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>71</integer>
+	<integer>101</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1669,13 +1671,13 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-12-09T08:57:04Z</date>
+	<date>2020-02-11T14:43:41Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>SmartPlacement</key>
 	<false/>
 	<key>SoundForEsc</key>

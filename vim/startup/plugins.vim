@@ -74,6 +74,7 @@ Plug (g:is_osx ? 'itspriddle/vim-marked' : 'iamcco/markdown-preview.vim'),
 Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'majutsushi/tagbar'
+Plug 'kassio/neoterm'
 if executable('git')
     Plug 'tpope/vim-fugitive'
 endif
@@ -150,7 +151,7 @@ else
     call s:initSolarized()
 endif
 
-" ---- Other plugins ----
+" ---- Buffers and files ----
 
 " Simple BufExplorer alternative
 nnoremap <Leader>be :ls<CR>:b
@@ -239,3 +240,25 @@ let g:jedi#use_splits_not_buffers = "bottom"
 
 let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_buffer_loading = 1
+
+" ---- Terminal management via neoterm ----
+
+if executable("python3")
+    let g:neoterm_repl_python = 'python3'
+endif
+
+let g:neoterm_autoscroll = 1
+let g:neoterm_default_mod = 'belowright'
+let g:neoterm_size = 15
+
+" :TT <shell command>
+" Open a new terminal if none, or reuse an existing one, and send the command.
+" See https://github.com/kassio/neoterm/issues/148.
+command! -nargs=+ -complete=shellcmd TT Topen | T <args>
+" :TT is a better :Shell command so replace it
+delcommand Shell
+
+" <F5> sends the |text-objects| in normal mode
+" <F5> sends the selection in visual mode
+nnoremap <F5> <Plug>(neoterm-repl-send)
+vnoremap <F5> <Plug>(neoterm-repl-send)

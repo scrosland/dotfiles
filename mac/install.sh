@@ -6,4 +6,5 @@ install/xcode.sh
 install/brew.sh
 install/bash.sh
 install/java.sh
+install/ruby.sh
 install/scm.sh

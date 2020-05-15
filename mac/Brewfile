@@ -16,6 +16,7 @@ brew "python"
 brew "ripgrep"
 brew "rsync"
 brew "vim", args: ["with-override-system-vi"]
+brew "watch"
 
 # Would need to cope with .install_to_user_applications
 # cask_args appdir: "/Applications"

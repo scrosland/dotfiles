@@ -54,9 +54,9 @@ def interesting_apps(pair):
     _,app = pair
     if app["obtained_from"].lower() == "apple".lower():
         return False
-    if app["path"].find("/Applications/") == -1:
+    if "/Applications/" not in app["path"]:
         return False
-    if "Apple Mac OS Application Signing" in app.get("signed_by", []):
+    if "Apple Inc." in app.get("info", ""):
         return False
     return True
 

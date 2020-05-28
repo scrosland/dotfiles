@@ -98,6 +98,10 @@ function! StatusLineSectionC()
         let l:name = fnamemodify(l:name, ':~:.')
     endif
     let l:content = ' ' . l:name . ' '
+    if &diff
+        " diff mode marker plus buffer number for simple :diffget/:diffput
+        let l:content .= '§' . winbufnr(winnr()) . ' '
+    endif
     " Gutter (readonly, modified) -- nested inside Section C for grouping
     let l:content .= (&readonly || &modifiable == 0) ? '[RO] ' : ''
     let l:content .= &modified ? '+++ ' : ''

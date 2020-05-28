@@ -128,6 +128,9 @@ function! s:terminalSupportsTrueColor()
     if !has("termguicolors")
         return 0
     endif
+    if $TERM =~ '^screen'
+        return 0
+    endif
     " Not checking for Terminal.app as it seems broken.
     if $COLORTERM == "truecolor"
         return 1
@@ -249,14 +252,23 @@ endif
 
 let g:neoterm_autoscroll = 1
 let g:neoterm_default_mod = 'belowright'
-let g:neoterm_size = 15
 
 " :TT <shell command>
 " Open a new terminal if none, or reuse an existing one, and send the command.
 " See https://github.com/kassio/neoterm/issues/148.
-command! -nargs=+ -complete=shellcmd TT Topen | T <args>
+command! -range=0 -nargs=+ -complete=shellcmd TT
+    \ Topen | T <args>
 " :TT is a better :Shell command so replace it
 delcommand Shell
+
+" :Tvopen
+" Open a new terminal in a vertical split.
+command! -bar -range=0 Tvopen
+    \ execute 'vertical ' . g:neoterm_default_mod . ' Topen'
+" :TTV <shell command>
+" Like :TT with a vertical split
+command! -range=0 -nargs=+ -complete=shellcmd TTV
+    \ Tvopen | T <args>
 
 " <F5> sends the |text-objects| in normal mode
 " <F5> sends the selection in visual mode

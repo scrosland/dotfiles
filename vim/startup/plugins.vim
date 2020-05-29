@@ -252,6 +252,7 @@ endif
 
 let g:neoterm_autoscroll = 1
 let g:neoterm_default_mod = 'belowright'
+let g:neoterm_shell = &shell . ' --login'
 
 " :TT <shell command>
 " Open a new terminal if none, or reuse an existing one, and send the command.

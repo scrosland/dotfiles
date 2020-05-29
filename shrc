@@ -81,6 +81,7 @@ if [ -n "$INTERACTIVE" ] ; then
     IS_LOGIN_SHELL=0
     if _sc_is_login_shell ; then
         IS_LOGIN_SHELL=1
+        SHLVL=1
     fi
 
     if [ -z "$BASH_VERSION" ] ; then

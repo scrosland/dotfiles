@@ -73,8 +73,9 @@ Plug (g:is_osx ? 'itspriddle/vim-marked' : 'iamcco/markdown-preview.vim'),
 "
 Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
-Plug 'majutsushi/tagbar'
 Plug 'kassio/neoterm'
+Plug 'majutsushi/tagbar'
+Plug 'severin-lemaignan/vim-minimap'
 if executable('git')
     Plug 'tpope/vim-fugitive'
 endif

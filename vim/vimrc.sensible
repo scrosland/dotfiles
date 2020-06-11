@@ -140,6 +140,11 @@ endif
 
 " Spell checking
 set spelllang=en_gb
+if exists('+spelloptions')
+    " patch-8.2.0953 adds spelloptions with support for CamelCase words
+    " https://github.com/vim/vim/commit/362b44bd4aa87a2aef0f8fd5a28d68dd09a7d909
+    set spelloptions+=camel
+end
 set spellsuggest=5
 if g:is_windows
     set spellfile=~/vimfiles/spellfile.utf-8.add

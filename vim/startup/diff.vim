@@ -7,7 +7,7 @@ function! s:CheckInTool()
         call FugitiveDetect(getcwd())
     endif
     if strlen(FugitiveGitDir()) > 0
-        Gstatus | resize
+        Git | resize
     elseif exists('*CheckInTool')
         call CheckInTool()
     else

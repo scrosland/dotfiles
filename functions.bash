@@ -35,11 +35,12 @@ _sc_prompt_command()
 {
     local level=""
     if (( ${IS_LOGIN_SHELL} == 0 && ${SHLVL} > 1 )) ; then
-        level="<${SHLVL}> "
+        declare -i count=$(( (${SHLVL} - 1) * 2 ))
+        printf -v level "%.*s" ${count} '\$\$\$\$\$\$\$\$\$'
     fi
-    local vim="${VIM_TERMINAL:+[vim] }"
+    local options="${VIM_TERMINAL:+ (v)}"
     local prompt="$(_sc_prompt_string)"
-    printf -v PS1 "${prompt}\$ ${vim}${level}"
+    printf -v PS1 "${prompt}${options}${level}\$ "
 
     printf "\033]0;%s\007" "${TERMINAL_TITLE:-${prompt}}"
     return 0

@@ -1,8 +1,16 @@
-#
+# syntax: bash
 # vim: set filetype=sh:
 #
 # Bash functions iTerm integration
 #
+
+if [ -z "${BASH_VERSION}" ] ; then
+    return
+fi
+
+if [[ "${TERM_PROGRAM}" != "iTerm.app" ]] ; then
+    return
+fi
 
 _iterm_configure()
 {

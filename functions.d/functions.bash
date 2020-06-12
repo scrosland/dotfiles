@@ -1,8 +1,12 @@
-#
+# syntax: bash
 # vim: set filetype=sh:
 #
 # Bash functions
 #
+
+if [ -z "${BASH_VERSION}" ] ; then
+    return
+fi
 
 _sc_prompt_path()
 {

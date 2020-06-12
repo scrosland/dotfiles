@@ -1,0 +1,32 @@
+# syntax: bash
+# vim: set filetype=sh:
+#
+# Bash functions for 3mux
+#
+
+if [ -z "${BASH_VERSION}" ] ; then
+    return
+fi
+
+_3mux_complete()
+{
+    COMPREPLY=()
+    local nwords="${#COMP_WORDS[@]}"
+    local cur="${COMP_WORDS[${COMP_CWORD}]}"
+    if [[ "${nwords}" -le 2 ]] ; then
+        local subcommands="ls new attach detach"
+        COMPREPLY=( $(compgen -W "${subcommands}" -- "${cur}") )
+        return 0
+    fi
+    case "${COMP_WORDS[1]}" in
+        detach|ls|new)
+            ;;
+        attach)
+            local sessions=$(3mux ls | awk '/^-/ { print $NF; }' -)
+            COMPREPLY=( $(compgen -W "${sessions}" -- "${cur}") )
+            ;;
+    esac
+    return 0
+}
+
+complete -F _3mux_complete 3mux

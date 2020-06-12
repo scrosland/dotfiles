@@ -4,6 +4,10 @@
 # Shell functions for Darwin systems
 #
 
+if [ "$(uname -s)" != "Darwin" ] ; then
+    return
+fi
+
 # ----- common to sh and bash -----
 
 man()
@@ -29,10 +33,3 @@ for comp in "${COMPLETIONS[@]}" ; do
     [ -r "${comp}" ] &&
         source "${comp}"
 done
-
-# ----- iterm helpers -----
-
-if [[ "${TERM_PROGRAM}" = "iTerm.app" ]] ; then
-    . "${BASH_SOURCE[0]/%darwin/iterm}"
-fi
-

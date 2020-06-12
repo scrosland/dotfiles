@@ -32,27 +32,21 @@ resize_terminal()
 }
 alias resize-terminal=resize_terminal
 
-# ----- platform specific functions -----
+# ----- other functions -----
 
-_system=$(uname -s | tr '[:upper:]' '[:lower:]')
-_script="${HOME}/dotfiles/functions.${_system}"
-if [ -r "${_script}" ] ; then
-    . "${_script}"
-fi
-unset _script _system
-
-# ----- bash specific functions -----
-
-if [ -n "${BASH_VERSION}" ] ; then
-    . "${BASH_SOURCE[0]}.bash"
-    return
-fi
+for script in ${HOME}/dotfiles/functions.d/functions.* ; do
+    if [ -r "${script}" ] ; then
+        . "${script}"
+    fi
+done
 
 # ----- Fallback functions for non-bash shells -----
 
-# set terminal title
-set_title()
-{
-    local ansititle="\033]0;${1}\007"
-    echo -n "${ansititle}"
-}
+if ! type set_title >/dev/null 2>&1 ; then
+    # set terminal title
+    set_title()
+    {
+        local ansititle="\033]0;${1}\007"
+        echo -n "${ansititle}"
+    }
+fi

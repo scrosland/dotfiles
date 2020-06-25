@@ -77,8 +77,11 @@ if has("multi_byte")
     " default for new files
     setglobal fileencoding=utf-8
     "set listchars=eol:¶
-    "set listchars=eol:◆
-    set listchars=eol:←
+    "set listchars=eol:⟸
+    "set listchars=eol:⤆
+    "set listchars=eol:§
+    "set listchars=eol:←
+    set listchars=eol:↵
 endif
 
 " highlight search and a mapping to hide the highlight

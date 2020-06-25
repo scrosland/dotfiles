@@ -25,6 +25,28 @@ _sc_prompt_path()
     return 0
 }
 
+# This moves the prompt back to the start of a line even if the proceding
+# command failed to output a trailing newline. To show that the command output
+# was missing the newline it outputs a descriptive end mark.
+#
+# See https://www.vidarholen.net/contents/blog/?p=878, and
+# https://news.ycombinator.com/item?id=23520240 and
+# PROMPTSP in the Zsh source code at
+# https://github.com/zsh-users/zsh/blob/master/Src/utils.c.
+#
+# Decent looking end marks
+#   §  U+00A7
+#   ↵  U+21B5
+#   ⟸  U+27F8
+#   ⤆  U+2906
+#   ←  U+2190
+#   ¶  U+00B6
+_sc_prompt_reset()
+{
+    # bold helps the end mark stand out
+    printf "\e[1m\u21B5\e[m%$((COLUMNS-1))s\r" ""
+}
+
 _sc_prompt_string()
 {
     # based on __vte_prompt_command() as supplied with gnome-terminal
@@ -37,6 +59,8 @@ _sc_prompt_string()
 
 _sc_prompt_command()
 {
+    _sc_prompt_reset
+
     local level=""
     if (( ${IS_LOGIN_SHELL} == 0 && ${SHLVL} > 1 )) ; then
         declare -i count=$(( (${SHLVL} - 1) * 2 ))

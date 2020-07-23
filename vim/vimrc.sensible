@@ -297,13 +297,11 @@ if has("autocmd")
         autocmd FileType text      call s:init_textlike()
     augroup end
 
-    " Open the quickfix window after any grep command
-    " add mappings to the quickfix window
-    "   <S-O> : jump to the location and close the QuickFix window
+    " Open the quickfix or location line window after any grep command
     augroup quickfix_mapping
         autocmd!
-        autocmd QuickFixCmdPost *grep* copen | redraw!
-        autocmd BufReadPost quickfix nnoremap <buffer> <S-O> <CR><BAR>:ccl<CR>
+        autocmd QuickFixCmdPost grep*,*[^l]grep* copen | redraw!
+        autocmd QuickFixCmdPost *lgrep* lopen | redraw!
     augroup end
 
     " Reset path as the ruby ftplugin will change it to the ruby load path

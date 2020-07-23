@@ -76,6 +76,12 @@ function! StatusLineSectionB()
     return join(filter(l:components, 'len(v:val)'), l:separator)
 endfunction
 
+function! s:LocationListOrQuickFix()
+    let l:winfolist = getwininfo(win_getid())
+    let l:loclist = filter(l:winfolist, 'v:val.loclist')
+    return empty(l:loclist) ? '[Quickfix]' : '[Location List]'
+endfunction
+
 " indexed by a:active (0: inactive, 1: active)
 let s:section_c_hi = [
             \ { 'mod'   : '%#statusline_c_mod_inactive#',
@@ -88,7 +94,7 @@ function! StatusLineSectionC()
     let l:name = bufname(winbufnr(winnr()))
     if empty(l:name)
         if &buftype == 'quickfix'
-            let l:name = '[Quickfix]'
+            let l:name = s:LocationListOrQuickFix()
         elseif &buftype == 'nofile'
             let l:name = '[Scratch]'
         else
@@ -169,6 +175,8 @@ set statusline=%!StatusLine(1)
 
 augroup statusline_commands
     autocmd!
+    " $VIMRUNTIME/ftplugin/qf.vim unconditionally changes &statusline
+    autocmd FileType qf setlocal statusline=%!StatusLine(1)
     autocmd WinEnter * setlocal statusline=%!StatusLine(1)
     autocmd WinLeave * setlocal statusline=%!StatusLine(0)
 augroup END

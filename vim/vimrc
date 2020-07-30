@@ -93,7 +93,7 @@ nnoremap <Leader>q :silent nohlsearch<CR>
 nnoremap :X :echo "Encryption disabled"<CR>
 
 " Only include the rest of startup if this looks like a reasonable version.
-if has("eval")
+if has("eval") && v:version > 703
     let s:sensible = resolve(expand("<sfile>:p").".sensible")
     if filereadable(s:sensible)
         execute "source " . s:sensible

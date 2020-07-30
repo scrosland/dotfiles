@@ -44,7 +44,7 @@ _sc_prompt_path()
 _sc_prompt_reset()
 {
     # bold helps the end mark stand out
-    printf "\e[1m\u21B5\e[m%$((COLUMNS-1))s\r" ""
+    printf "\e[1m↵\e[m%$((COLUMNS-1))s\r" ""
 }
 
 _sc_prompt_string()

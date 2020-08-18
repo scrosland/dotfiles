@@ -25,7 +25,7 @@ _sc_select_browser()
 
 BROWSER=$(_sc_select_browser) ; export BROWSER
 EDITOR='vim' ; export EDITOR
-LESS='-RXm' ; export LESS
+LESS='-RSXm' ; export LESS
 SCM_EDITOR='viterm' ; export SCM_EDITOR
 
 add_to_path_var()
@@ -56,6 +56,32 @@ add_to_path_var_and_export()
     fi
 }
 
+_extract_base_path()
+{
+    case "$PATH" in
+        ${HOME}/*)
+            return
+            ;;
+    esac
+    # Split the path into elements, keep everything up to but not including
+    # $HOME/bin and then rejoin the path. This is the basic macOS path.
+    echo "$PATH" | tr : '\n' | sed -ne "\:${HOME}/bin:q;p" | paste -s -d: -
+}
+
+fix_degenerate_macos_path()
+{
+    # Somehow iTerm can end up with a degenerate path when started from Finder
+    # by a workflow or Automator action. This is despite the script calling
+    # osascript to start iTerm having already set up the correct path.
+    if [ "$(uname -s)" != "Darwin" ] ; then
+        return
+    fi
+    basepath="$(_extract_base_path)"
+    if [ -n "${basepath}" ] ; then
+        PATH="${basepath}"
+    fi
+}
+
 if [ -z "${CDPATH}" ] ; then
     add_to_path_var CDPATH "/Users/Shared"
     add_to_path_var CDPATH "${HOME}"
@@ -63,6 +89,8 @@ if [ -z "${CDPATH}" ] ; then
 fi
 
 add_to_path_var MANPATH "$HOME/.local/share/man"
+
+fix_degenerate_macos_path
 
 add_to_path_var PATH "/usr/local/go/bin"
 add_to_path_var PATH "/usr/local/opt/ruby/bin"

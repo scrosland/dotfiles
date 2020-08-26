@@ -24,6 +24,8 @@
 	<string>EFEF6BDD-F681-405A-AC57-8427471B253B</string>
 	<key>DimBackgroundWindows</key>
 	<true/>
+	<key>EnableAPIServer</key>
+	<true/>
 	<key>GlobalKeyMap</key>
 	<dict>
 		<key>0x19-0x60000</key>
@@ -201,21 +203,21 @@
 	<key>NSWindow Frame NSColorPanel</key>
 	<string>53 83 224 275 0 0 1920 1177 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>556 476 620 392 0 0 1680 1027 </string>
+	<string>676 588 620 392 0 0 1920 1177 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>2262 197 770 429 1920 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>333 0 650 699 0 0 1920 1177 </string>
+	<string>355 0 650 699 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>182 16 650 699 0 0 1920 1177 </string>
+	<string>1006 0 650 699 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>54 782 586 395 0 0 1920 1177 </string>
+	<string>54 0 650 699 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
-	<string>895 0 650 699 0 0 1920 1177 </string>
+	<string>614 478 650 699 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 4</key>
-	<string>1993 6 650 699 1920 0 1920 1177 </string>
+	<string>731 287 650 699 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 5</key>
-	<string>2106 1 650 699 1920 0 1920 1177 </string>
+	<string>186 1 650 699 0 0 1920 1177 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -860,13 +862,16 @@
 	<key>NoSyncAllAppVersions</key>
 	<array>
 		<string>3.3.6</string>
-		<string>3.3.0</string>
+		<string>3.3.10</string>
+		<string>3.3.11</string>
+		<string>3.3.12</string>
 		<string>3.3.1</string>
+		<string>3.3.4</string>
 		<string>3.3.7</string>
 		<string>3.3.9</string>
 		<string>3.2.9</string>
+		<string>3.3.0</string>
 		<string>3.3.2</string>
-		<string>3.3.4</string>
 	</array>
 	<key>NoSyncBFPRecents</key>
 	<array>
@@ -879,7 +884,7 @@
 		<key>screenFrame</key>
 		<string>{{0, 0}, {1920, 1200}}</string>
 		<key>topLeft</key>
-		<string>{419, 892}</string>
+		<string>{566, 912}</string>
 	</dict>
 	<key>NoSyncHaveRequestedFullDiskAccess</key>
 	<true/>
@@ -890,7 +895,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>F66DBBA9-7120-4A38-A68A-AA3C6D4E50A8</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>110</integer>
+	<integer>139</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -1674,11 +1679,15 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-05-28T07:11:55Z</date>
+	<date>2020-08-19T07:01:41Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
+	<key>SUUpdateGroupIdentifier</key>
+	<integer>4154784343</integer>
 	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
+	<key>SetCookie</key>
+	<true/>
 	<key>ShowFullScreenTabBar</key>
 	<false/>
 	<key>SmartPlacement</key>
@@ -3170,6 +3179,6 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.3.9</string>
+	<string>3.3.12</string>
 </dict>
 </plist>

@@ -236,7 +236,7 @@ call mucomplete#msg#set_notifications(1)    " equivalent to: MUcompleteNotify 1
 " ---- Jedi for python intelligence ----
 
 let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 2     " signatures in command line not popup
+let g:jedi#show_call_signatures = 1     " 0: off, 1: popup, 2: command line
 let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
 

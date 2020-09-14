@@ -7,15 +7,16 @@ brew "bash"
 brew "bash-completion"
 brew "ctags"        # May want to switch to universal-ctags in the future
 brew "exiftool"
-brew "lame"
 brew "ffmpeg"
 brew "flac"
 brew "jq"
+brew "lame"
 brew "pstree"
-brew "python"
+brew "python@3.8"
 brew "ripgrep"
 brew "rsync"
-brew "vim", args: ["with-override-system-vi"]
+brew "ruby"
+brew "vim"
 brew "watch"
 
 # Would need to cope with .install_to_user_applications

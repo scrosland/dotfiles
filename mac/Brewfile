@@ -9,6 +9,7 @@ brew "ctags"        # May want to switch to universal-ctags in the future
 brew "exiftool"
 brew "ffmpeg"
 brew "flac"
+brew "ipcalc"
 brew "jq"
 brew "lame"
 brew "pstree"

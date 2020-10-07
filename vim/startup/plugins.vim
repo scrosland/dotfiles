@@ -65,6 +65,7 @@ Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
+Plug 'vim-python/python-syntax'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug (g:is_osx ? 'itspriddle/vim-marked' : 'iamcco/markdown-preview.vim'),
     \ { 'for': ['markdown', 'mkd'] }
@@ -239,6 +240,16 @@ let g:jedi#popup_on_dot = 0
 let g:jedi#show_call_signatures = 2     " 0: off, 1: popup, 2: command line
 let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
+
+" ---- python completion ----
+
+let g:python_highlight_string_formatting = 1
+let g:python_highlight_string_format = 1
+let g:python_highlight_string_templates = 1
+let g:python_highlight_indent_errors = 1
+let g:python_highlight_space_errors = 1
+let g:python_highlight_class_vars = 1
+let g:python_highlight_file_headers_as_comments = 0
 
 " ---- ruby completion ----
 

@@ -275,7 +275,7 @@ if has("autocmd")
         autocmd FileType vim setlocal foldmethod=marker nofoldenable
     augroup end
 
-    " Smart dash to EN DASH and EM DASH converstion
+    " Smart dash to EN DASH and EM DASH conversation
     function! s:smartdashes()
         iab <buffer> -- <c-k>n-
         iab <buffer> ~~ <c-k>m-
@@ -322,16 +322,11 @@ endif " has autocmd
 " This needs to be at file scope, otherwise it returns a pathname ending
 " .../function which isn't helpful.
 let s:vimrc = resolve(expand("<sfile>:p"))
-
-function! s:load_vimrc_extras()
-    let l:scripts = resolve(fnamemodify(s:vimrc, ":h"))
-    let l:after = l:scripts . '/after'
-    execute 'set rtp+=' . l:scripts
-    runtime! startup/plugins.vim
-    runtime! startup/*.vim
-    execute 'set rtp+=' . l:after
-endfunction
-call s:load_vimrc_extras()
+let s:scripts = resolve(fnamemodify(s:vimrc, ":h"))
+execute 'set rtp+=' . s:scripts
+" Force plugins to load now so we can rely on them later e.g. in vimrc.local
+runtime! plugin/plugins.vim
+execute 'set rtp+=' . s:scripts . '/after'
 
 " --- local options ---
 

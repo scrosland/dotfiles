@@ -324,13 +324,15 @@ endif " has autocmd
 let s:vimrc = resolve(expand("<sfile>:p"))
 let s:scripts = resolve(fnamemodify(s:vimrc, ":h"))
 execute 'set rtp+=' . s:scripts
-" Force plugins to load now so we can rely on them later e.g. in vimrc.local
+" Force plugins.vim to load now so we can rely on them in other plugin scripts
 runtime! plugin/plugins.vim
 execute 'set rtp+=' . s:scripts . '/after'
 
 " --- local options ---
 
-let s:vimrc_local = g:is_windows ?
-            \ "$USERPROFILE/vimfiles/vimrc.local" :
-            \ "$HOME/.vimrc.local"
-call s:source_if_readable(s:vimrc_local)
+" Add local options to an after/ plugin called local.vim
+"   Unix: ~/.vim/after/plugin/local.vim
+"   Windows: $HOME/vimfiles/after/plugin/local.vim or $USERPROFILE/...
+if g:is_windows
+    set rtp+=$USERPROFILE/vimfiles/after
+endif

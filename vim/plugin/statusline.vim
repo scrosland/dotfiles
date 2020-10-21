@@ -60,7 +60,7 @@ endfunction
 
 let s:callbacks_for_b = []
 
-" Hook for .vimrc.local or other vim scripts or plugins.
+" Hook for local.vim or other vim scripts or plugins.
 function! StatusLineRegisterSectionBCallback(callback)
     if type(a:callback) != type(function('printf'))
         throw 'a:callback should be a Funcref, is type ' . type(a:callback)

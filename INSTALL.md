@@ -11,7 +11,7 @@
   echo "\$include $HOME/dotfiles/inputrc" >$HOME/.inputrc
   echo "source \$HOME/dotfiles/vim/vimrc" > $HOME/.vimrc
   echo "source \$HOME/dotfiles/vim/gvimrc" > $HOME/.gvimrc
-  # Create $HOME/.vimrc.local if required.
+  # Create $HOME/.vim/after/plugin/local.vim if required.
   vim -c "call plugins#bootstrap()"
   ```
 
@@ -58,7 +58,7 @@
       source $USERPROFILE/dotfiles/vim/gvimrc
       ```
 
-  1. Create `%USERPROFILE%/vimfiles/vimrc.local` if required.
+  1. Create `%USERPROFILE%/vimfiles/after/plugin/local.vim` if required.
 
   1. `gvim -c "plugins#bootstrap()"` and follow the instructions.
 

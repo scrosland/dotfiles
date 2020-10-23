@@ -319,11 +319,9 @@ endif " has autocmd
 
 " --- other vimrc files ---
 
-" This needs to be at file scope, otherwise it returns a pathname ending
-" .../function which isn't helpful.
 let s:vimrc = resolve(expand("<sfile>:p"))
 let s:scripts = resolve(fnamemodify(s:vimrc, ":h"))
-execute 'set rtp+=' . s:scripts
+execute 'set rtp^=' . s:scripts
 " Force plugins.vim to load now so we can rely on them in other plugin scripts
 runtime! plugin/plugins.vim
 execute 'set rtp+=' . s:scripts . '/after'

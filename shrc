@@ -1,4 +1,4 @@
-#
+# tell vim to highlight with posix syntax: dash
 # vim: set filetype=sh:
 #
 # Bash rc
@@ -76,6 +76,10 @@ if [ -n "$INTERACTIVE" ] ; then
 
     if [ -z "$(which sgrep)" ] ; then
         alias sgrep='rg --no-heading --line-number --with-filename'
+    fi
+
+    if [ -z "$(which sha256sum)" -a -n "$(which shasum)" ] ; then
+        alias sha256sum='shasum -a 256'
     fi
 
     IS_LOGIN_SHELL=0

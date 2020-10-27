@@ -28,24 +28,31 @@ else
                 \ '~/.vim')
 endif
 
+let s:error = 0
+
 " where the plugins live
 let g:plugins_bundledir = g:plugins_basedir . "/bundle"
+
 if !isdirectory(g:plugins_bundledir)
     echoerr "Vim plugins directory is missing: " . g:plugins_bundledir
+    let s:error = 1
+elseif glob(g:plugins_bundledir . '/*', 0, 1) == []
+    echoerr "Vim plugins directory is empty: " . g:plugins_bundledir
+    let s:error = 1
 endif
 
 " --- Plugin loader ---
 
 try
     silent! call plug#begin(g:plugins_bundledir)
-    let s:error = 0
 catch /E117/
     let s:error = 1
-endtry
-if s:error
     " vim-plug should be in an autoload directory below g:plugins_basedir
     echoerr "Unable to find 'vim-plug' in " . g:plugins_basedir . "/autoload. "
                 \. "Consider running vim -c 'call plugins#bootstrap()'"
+endtry
+
+if s:error != 0
     finish
 endif
 

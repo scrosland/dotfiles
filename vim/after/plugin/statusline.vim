@@ -2,6 +2,9 @@ function! StatusLineGitRoot()
     if !executable('git')
         return ''
     endif
+    if !exists('*FugitiveGitDir')
+        return ''
+    endif
     let l:parts = []
     " fugitive should have already detected a git dir
     let l:root = substitute(FugitiveGitDir(), '/.git$', '', '')

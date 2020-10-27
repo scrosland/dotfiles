@@ -1,4 +1,4 @@
-#
+# syntax: bash
 # vim: set filetype=sh:
 #
 # Environment
@@ -26,6 +26,7 @@ _sc_select_browser()
 BROWSER=$(_sc_select_browser) ; export BROWSER
 EDITOR='vim' ; export EDITOR
 LESS='-RSXm' ; export LESS
+MACHINE_THAT_GOES_PING=1 # illumos / Solaris — exporting would break scripts
 SCM_EDITOR='viterm' ; export SCM_EDITOR
 
 add_to_path_var()

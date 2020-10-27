@@ -241,7 +241,7 @@ let g:jedi#show_call_signatures = 2     " 0: off, 1: popup, 2: command line
 let g:jedi#smart_auto_mappings = 0      " disable auto-insertion of 'import'
 let g:jedi#use_splits_not_buffers = "bottom"
 
-" ---- python completion ----
+" ---- python syntax ----
 
 let g:python_highlight_string_formatting = 1
 let g:python_highlight_string_format = 1

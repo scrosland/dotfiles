@@ -163,6 +163,13 @@ else
     call s:initSolarized()
 endif
 
+" ---- vim-plug -----
+
+" Open vim-plug commands in a new tab, close with 'q'
+let g:plug_window = 'tabnew'
+" Open the preview window from :PlugDiff in an equal split
+let g:plug_pwindow = 'above new'
+
 " ---- Buffers and files ----
 
 " Simple BufExplorer alternative

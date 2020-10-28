@@ -2,12 +2,19 @@
 command! -nargs=0 GetFilesFromGitDiff :call diff#getFilesFromDiff({'strip': 1})
 command! -nargs=0 GetFilesFromPatch   :call diff#getFilesFromDiff({})
 
-function! s:CheckInTool()
+function! s:in_git_repo()
+    if !exists('*FugitiveGitDir')
+        return 0
+    endif
     if strlen(FugitiveGitDir()) == 0
         call FugitiveDetect(getcwd())
     endif
-    if strlen(FugitiveGitDir()) > 0
-        Git | resize
+    return strlen(FugitiveGitDir()) > 0
+endfunction
+
+function! s:CheckInTool()
+    if s:in_git_repo()
+        tabnew | Git | only
     elseif exists('*CheckInTool')
         call CheckInTool()
     else

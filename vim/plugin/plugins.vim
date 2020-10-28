@@ -170,6 +170,15 @@ let g:plug_window = 'tabnew'
 " Open the preview window from :PlugDiff in an equal split
 let g:plug_pwindow = 'above new'
 
+augroup filetype_vimplug
+    autocmd!
+    autocmd FileType vim-plug nmap <buffer> <F12> <Plug>(plug-preview)
+    " Override vim-plug mappings: open commit and focus the preview window
+    autocmd FileType vim-plug nmap <buffer> <cr>
+                \ :execute "normal \<F12>"<bar>wincmd P<cr>
+    autocmd FileType vim-plug nmap <buffer> o <cr>
+augroup end
+
 " ---- Buffers and files ----
 
 " Simple BufExplorer alternative

@@ -18,7 +18,6 @@ brew "rsync"
 brew "ruby"
 brew "vim"
 brew "watch"
-
 cask "font-dejavu-sans"
 cask "font-hack"
 cask "font-input"

@@ -31,6 +31,8 @@ unset brew
 # Update brew
 run brew update
 
+opython=$(brew info python3 | grep libexec || true)
+
 # Install and upgrade packages using bundle ...
 BREWFILE="$HOME/dotfiles/mac/Brewfile"
 if [[ ! -r ${BREWFILE} ]] ; then
@@ -43,29 +45,13 @@ run brew upgrade
 # Cleanup temporary brew files
 run brew cleanup
 
-checkIfBrewfileModified()
-{
-    local brewfile=$(basename ${BREWFILE})
-    ( cd $(dirname ${BREWFILE}) &&
-        git ls-files --modified ${brewfile} |
-        grep -q -s ${brewfile} )
-}
-
-diffBrewfile()
-{
-    local brewfile=$(basename ${BREWFILE})
-    ( cd $(dirname ${BREWFILE}) &&
-        git diff --color=always ${brewfile} |
-        cat )
-}
-
-run brew bundle dump --no-upgrade --force --file=${BREWFILE}
-if checkIfBrewfileModified ; then
-    echo ""
-    echo "${BREWFILE} is modified and needs to be checked in:"
-    diffBrewfile
+python=$(brew info python3 | grep libexec || true)
+if [[ ${opython} != ${python} ]] ; then
+    echo "Python 3.x has been updated to 3.y"
+    echo "was: ${opython}"
+    echo "is : ${python}"
+    echo "It may be necessary to reinstall pip packages"
 fi
-unset diffs
 
 hash -r
 

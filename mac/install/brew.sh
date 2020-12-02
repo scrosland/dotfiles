@@ -9,7 +9,11 @@ fi
 echo "# Installing applications into ${APPLICATIONS}"
 
 # Install brew if needed
-if [[ ! -e /usr/local/bin/brew ]] ; then
+brew=$(which brew 2>/dev/null)
+if [[ -n ${brew} ]] ; then
+    echo "Brew is ${brew}"
+else
+    echo "Brew not found in \$PATH"
     SCRIPT=/tmp/brew.$$
     URL="https://raw.githubusercontent.com/Homebrew/install/master/install"
     echo "Getting brew install script."
@@ -22,6 +26,7 @@ if [[ ! -e /usr/local/bin/brew ]] ; then
     run /usr/bin/ruby ${SCRIPT}
     rm -f ${SCRIPT}
 fi
+unset brew
 
 # Update brew
 run brew update
@@ -37,6 +42,16 @@ run brew bundle --no-lock --file=${BREWFILE}
 run brew upgrade
 # Cleanup temporary brew files
 run brew cleanup
+
+diffs=$(diff -u -Bw ${BREWFILE} <(brew bundle dump --file=-) || true)
+if [[ -n ${diffs} ]] ; then
+    echo "${diffs}" > ${BREWFILE}.patch
+    echo "${BREWFILE} needs to be updated ["
+    cat ${BREWFILE}.patch
+    echo "]"
+    echo "See ${BREWFILE}.patch"
+fi
+unset diffs
 
 hash -r
 

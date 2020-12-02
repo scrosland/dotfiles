@@ -43,13 +43,27 @@ run brew upgrade
 # Cleanup temporary brew files
 run brew cleanup
 
-diffs=$(diff -u -Bw ${BREWFILE} <(brew bundle dump --file=-) || true)
-if [[ -n ${diffs} ]] ; then
-    echo "${diffs}" > ${BREWFILE}.patch
-    echo "${BREWFILE} needs to be updated ["
-    cat ${BREWFILE}.patch
-    echo "]"
-    echo "See ${BREWFILE}.patch"
+checkIfBrewfileModified()
+{
+    local brewfile=$(basename ${BREWFILE})
+    ( cd $(dirname ${BREWFILE}) &&
+        git ls-files --modified ${brewfile} |
+        grep -q -s ${brewfile} )
+}
+
+diffBrewfile()
+{
+    local brewfile=$(basename ${BREWFILE})
+    ( cd $(dirname ${BREWFILE}) &&
+        git diff --color=always ${brewfile} |
+        cat )
+}
+
+run brew bundle dump --force --file=${BREWFILE}
+if checkIfBrewfileModified ; then
+    echo ""
+    echo "${BREWFILE} is modified and needs to be checked in:"
+    diffBrewfile
 fi
 unset diffs
 

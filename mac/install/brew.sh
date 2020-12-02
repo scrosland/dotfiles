@@ -59,7 +59,7 @@ diffBrewfile()
         cat )
 }
 
-run brew bundle dump --force --file=${BREWFILE}
+run brew bundle dump --no-upgrade --force --file=${BREWFILE}
 if checkIfBrewfileModified ; then
     echo ""
     echo "${BREWFILE} is modified and needs to be checked in:"

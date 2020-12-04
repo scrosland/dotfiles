@@ -196,7 +196,7 @@ if has("pythonx")
     unlet s:pyinterp
 endif
 
-" --- Wrap mode and file type handling ---
+" --- Wrap mode ---
 
 function! s:soft_wrap_enable()
     setlocal wrap linebreak
@@ -249,12 +249,17 @@ endfunction
 
 " --- File type handling ---
 
+function! s:set_shift_width(width)
+    let &l:softtabstop = a:width
+    let &l:shiftwidth = a:width
+endfunction
+command! -nargs=1 SetShiftWidth call s:set_shift_width(<q-args>)
+
 if has("autocmd")
     function! s:init_markdown()
         setlocal nofoldenable
         setlocal conceallevel=2
-        setlocal softtabstop=4
-        setlocal shiftwidth=4
+        call s:set_shift_width(4)
     endfunction
 
     augroup filetype_markdown

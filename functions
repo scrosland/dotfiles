@@ -30,7 +30,20 @@ resize_terminal()
     local command="\033[8;${height};${width}t"
     printf "${command}"
 }
+
 alias resize-terminal=resize_terminal
+
+# general aliases
+alias ls='ls -CF'
+alias r='fc -s'
+
+if [ -z "$(which sgrep)" ] ; then
+    alias sgrep='rg --no-heading --line-number --with-filename'
+fi
+
+if [ -z "$(which sha256sum)" -a -n "$(which shasum)" ] ; then
+    alias sha256sum='shasum -a 256'
+fi
 
 # ----- other functions -----
 

@@ -68,20 +68,6 @@ if [ -n "$INTERACTIVE" ] ; then
 #        stty erase ^h kill ^u
 #    fi
 
-    # general aliases
-    alias cls='clear'
-    alias ls='ls -CF'
-    alias la='ls -aCF'
-    alias r='fc -s'
-
-    if [ -z "$(which sgrep)" ] ; then
-        alias sgrep='rg --no-heading --line-number --with-filename'
-    fi
-
-    if [ -z "$(which sha256sum)" -a -n "$(which shasum)" ] ; then
-        alias sha256sum='shasum -a 256'
-    fi
-
     IS_LOGIN_SHELL=0
     if _sc_is_login_shell ; then
         IS_LOGIN_SHELL=1

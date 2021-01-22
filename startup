@@ -3,5 +3,9 @@
 # Simply source all the individual scripts
 #
 for script in environment functions shrc ; do
-    . $HOME/dotfiles/${script}
+    . "$HOME/dotfiles/${script}"
+    lcl="$HOME/.${script}.local"
+    if [ -r "${lcl}" ] ; then
+        . "${lcl}"
+    fi
 done

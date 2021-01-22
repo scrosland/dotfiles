@@ -51,9 +51,9 @@ fi
 
 # ----- other functions -----
 
-for script in ${HOME}/dotfiles/functions.d/functions.* ; do
-    if [ -r "${script}" ] ; then
-        . "${script}"
+for _function_script in ${HOME}/dotfiles/functions.d/functions.* ; do
+    if [ -r "${_function_script}" ] ; then
+        . "${_function_script}"
     fi
 done
 

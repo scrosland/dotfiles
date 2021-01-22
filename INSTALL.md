@@ -3,7 +3,7 @@
   ```
   git clone https://github.com/scrosland/dotfiles $HOME/dotfiles
   git config --global core.excludesfile $HOME/dotfiles/gitignore.global
-  # Copy profile.sample and bashrc.sample to $HOME/.profile and .bashrc,
+  # Copy skeleton/* the equivalent $HOME/.* files,
   # or otherwise configure the same files.
   # This is one option:
   echo ". \$HOME/dotfiles/startup" >$HOME/.bashrc
@@ -12,6 +12,7 @@
   echo "source \$HOME/dotfiles/vim/vimrc" > $HOME/.vimrc
   echo "source \$HOME/dotfiles/vim/gvimrc" > $HOME/.gvimrc
   # Create $HOME/.vim/after/plugin/local.vim if required.
+  # Create $HOME/.{environment,functions,shrc}.local if required.
   vim -c "call plugins#bootstrap()"
   ```
 

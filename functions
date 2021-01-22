@@ -4,10 +4,14 @@
 # Shell functions
 #
 
-if [ -z "$PS1" ] ; then
-    # not interactive
-    return
-fi
+case "$-" in
+    *i*)    : ;;    # interactive
+    *)      return ;;
+esac
+
+#
+# Must be an interactive shell
+#
 
 # ----- Functions common to sh and bash -----
 

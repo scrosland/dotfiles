@@ -3,7 +3,10 @@
 # Simply source all the individual scripts
 #
 for script in environment functions shrc ; do
+    # source the common file
     . "$HOME/dotfiles/${script}"
+
+    # source the .local file for system-specific settings
     lcl="$HOME/.${script}.local"
     if [ -r "${lcl}" ] ; then
         . "${lcl}"

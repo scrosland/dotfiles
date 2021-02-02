@@ -83,6 +83,7 @@ Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'kassio/neoterm'
 Plug 'majutsushi/tagbar'
+Plug 'qpkorr/vim-bufkill'
 Plug 'severin-lemaignan/vim-minimap'
 if executable('git')
     Plug 'tpope/vim-fugitive'

@@ -1,0 +1,51 @@
+# syntax: bash
+# vim: set filetype=sh:
+#
+# Bash functions for abduco
+#
+
+if [ -z "${BASH_VERSION}" ] ; then
+    return
+fi
+
+_abduco_complete()
+{
+    COMPREPLY=()
+    # collect words of interest (i.e. not the options)
+    local words=()
+    for (( i=1; i < COMP_CWORD; i++ )) ; do
+        case "${COMP_WORDS[$i]}" in
+            -p*|-r*|-q*|-l*|-f*)
+                # ignore the options
+                ;;
+            -e*)
+                # -e takes an argument
+                let i++
+                ;;
+            *)
+                words+=( "${COMP_WORDS[$i]}" )
+                ;;
+        esac
+    done
+    local nwords=${#words[@]}
+    local cur="${COMP_WORDS[${COMP_CWORD}]}"
+    # options
+    if (( ${nwords} < 1 )) || [[ "${cur}" == -* ]] ; then
+        local subcommands="-a -A -c -n -p -r -q -l -f -e"
+        COMPREPLY=( $(compgen -W "${subcommands}" -- "${cur}") )
+        return 0
+    fi
+    # session name, using the fancy '@(pattern-list)' extglob pattern matching
+    if (( ${nwords} < 2 )) && [[ "${words[0]}" == -@(a|A) ]] ; then
+        local sessions=$(abduco -q | awk 'NR==1 {next;} {print $NF;}' -)
+        COMPREPLY=( $(compgen -W "${sessions}" -- "${cur}") )
+        return 0
+    fi
+    # command name
+    if (( ${nwords} == 2 )) && [[ "${words[0]}" != -a ]] ; then
+        COMPREPLY=( $(compgen -A command -- "${cur}") )
+    fi
+    return 0
+}
+
+complete -F _abduco_complete abduco

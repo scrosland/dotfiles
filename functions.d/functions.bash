@@ -66,7 +66,6 @@ _sc_prompt_command()
         declare -i count=$(( (${SHLVL} - 1) * 2 ))
         printf -v level "%.*s" ${count} '\$\$\$\$\$\$\$\$\$'
     fi
-    local options="${VIM_TERMINAL:+ (v)}"
     local prompt="$(_sc_prompt_string)"
     printf -v PS1 "${prompt}${options}${level}\$ "
 

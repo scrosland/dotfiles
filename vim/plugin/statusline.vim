@@ -90,8 +90,8 @@ let s:section_c_hi = [
             \   'nomod' : '%#statusline_c#' },
             \ ]
 
-function! StatusLineSectionC()
-    let l:name = bufname(winbufnr(winnr()))
+function! GetBufferName(id)
+    let l:name = bufname(a:id)
     if empty(l:name)
         if &buftype == 'quickfix'
             let l:name = s:LocationListOrQuickFix()
@@ -103,14 +103,22 @@ function! StatusLineSectionC()
     else
         let l:name = fnamemodify(l:name, ':~:.')
     endif
+    return l:name
+endfunction
+
+function! StatusLineSectionC()
+    let l:name = GetBufferName(winbufnr(winnr()))
     let l:content = ' ' . l:name . ' '
     if &diff
         " diff mode marker plus buffer number for simple :diffget/:diffput
         let l:content .= '§' . winbufnr(winnr()) . ' '
     endif
     " Gutter (readonly, modified) -- nested inside Section C for grouping
-    let l:content .= (&readonly || &modifiable == 0) ? '[RO] ' : ''
-    let l:content .= &modified ? '+++ ' : ''
+    if &modified
+        let l:content .= '+++ '
+    else
+        let l:content .= (&readonly || &modifiable == 0) ? '[RO] ' : ''
+    endif
     return l:content
 endfunction
 

@@ -7,7 +7,7 @@ function! s:in_git_repo()
         return 0
     endif
     if strlen(FugitiveGitDir()) == 0
-        call FugitiveDetect(getcwd())
+        try | call FugitiveDetect(getcwd()) | catch | endtry
     endif
     return strlen(FugitiveGitDir()) > 0
 endfunction
@@ -20,6 +20,22 @@ function! s:CheckInTool()
     else
         echo 'The current directory is not in a source repository'
     endif
+endfunction
+
+function! s:CheckInToolWithRepo(repo)
+    " create a new tab page so that we have an empty buffer in which to lcd
+    " and then later the buffer can be deleted (taking the tab page with it)
+    " and hence the cleaning up the lcd
+    tabnew | redraw
+    let l:bufnr = bufnr("")
+    execute 'lcd '.a:repo
+    call s:CheckInTool()
+    execute 'bdelete '.l:bufnr
+endfunction
+
+function! Tapi_CheckInTool(bufnum, arglist)
+    let repo = a:arglist[0]
+    call s:CheckInToolWithRepo(l:repo)
 endfunction
 
 command! -nargs=0 -bar CheckInTool call s:CheckInTool()

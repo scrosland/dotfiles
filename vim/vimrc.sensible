@@ -100,6 +100,14 @@ if !has("mac")
     " Instead use Option-click to cut/paste from/to the system clipboard.
     set clipboard+=autoselect
 endif
+" Using unnamed allows easy yank into the clipboard.
+" Counterintuitively in iTerm2 this requires _unchecking_
+" the "Applications in terminal may access clipboard" option in
+"   Preferences > General > Selection
+" That setting enables iTerm's special ANSI escape sequences for clipboard
+" integration which isn't what is wanted. See:
+"   https://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
+set clipboard+=unnamed
 " Disable the awful Select mode
 set selectmode=""
 " Mouse in normal, visual, command and prompts.

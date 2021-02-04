@@ -206,6 +206,37 @@ endif
 
 " --- Wrap mode ---
 
+" Horizontal scrolling for nowrap windows
+" See https://stackoverflow.com/a/59950870
+" An alternative would be to define a sidescroll submode with
+" https://github.com/kana/vim-submode
+nnoremap <silent> zh :call HorizontalScrollMode('h')<CR>
+nnoremap <silent> zl :call HorizontalScrollMode('l')<CR>
+nnoremap <silent> zH :call HorizontalScrollMode('H')<CR>
+nnoremap <silent> zL :call HorizontalScrollMode('L')<CR>
+set sidescroll=1
+
+function! HorizontalScrollMode(call_char)
+    if &wrap
+        return
+    endif
+    echohl Title
+    let l:typed_char = a:call_char
+    while index( [ 'h', 'l', 'H', 'L' ], l:typed_char ) != -1
+        execute 'normal! z'.l:typed_char
+        redrawstatus
+        echon '-- Horizontal scrolling mode (h/l/H/L) --'
+        let l:typed_char = nr2char(getchar())
+    endwhile
+    echohl None | echo '' | redrawstatus
+endfunction
+
+function! s:no_wrap()
+    setlocal nowrap nolinebreak
+    setlocal textwidth=0
+endfunction
+command! -nargs=0 WrapNone call s:no_wrap()
+
 function! s:soft_wrap_enable()
     setlocal wrap linebreak
     setlocal textwidth=0

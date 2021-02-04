@@ -83,6 +83,7 @@ if has("multi_byte")
     "set listchars=eol:←
     set listchars=eol:↵
 endif
+set listchars+=extends:>,precedes:<
 
 " highlight search and a mapping to hide the highlight
 set incsearch

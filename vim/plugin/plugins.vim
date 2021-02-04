@@ -88,6 +88,7 @@ Plug 'severin-lemaignan/vim-minimap'
 if executable('git')
     Plug 'tpope/vim-fugitive'
 endif
+Plug 'tpope/vim-eunuch'
 
 " Autocompletion
 "
@@ -183,7 +184,49 @@ augroup end
 " ---- Buffers and files ----
 
 " Simple BufExplorer alternative
-nnoremap <Leader>be :ls<CR>:b
+function! s:BufSelect(command)
+    ls | call feedkeys(':'.a:command.' ', 'n')
+endfunction
+function! BufSelectComplete(partial, cmdline, pos)
+    let l:allowed = [ 'bdelete', 'buffer' ]
+    let l:pattern = '^'.a:partial
+    return filter(l:allowed, 'v:val =~ l:pattern')
+endfunction
+command! -nargs=1 -complete=customlist,BufSelectComplete
+    \ Bselect call s:BufSelect(<q-args>)
+command! -nargs=0 Buffy call s:BufSelect('buffer')
+nnoremap <Leader>be :Buffy<CR>
+
+let g:buf_cleanup_actions = {
+    \ 'invisble' : 'empty(v:val.windows)',
+    \ 'nameless' : 'v:val.name == ""',
+    \ 'other'    : 'v:val.bufnr != bufnr("%")',
+    \ }
+" action : which types of buffers to :bdelete
+function! s:BufCleanup(action)
+    let l:condition = get(g:buf_cleanup_actions, a:action, '')
+    if l:condition == ''
+        echohl WarningMsg | echo 'Unknown action: '.a:action | echohl None
+        return
+    endif
+    let l:bufinfo = filter(filter(getbufinfo(), 'v:val.listed'), l:condition)
+    let l:bufnumbers = map(l:bufinfo, 'v:val.bufnr')
+    if empty(l:bufnumbers)
+        echohl MoreMsg | echo 'No '.a:action.' buffers to cleanup' | echohl None
+    else
+        echo 'Cleaning up buffer numbers: '.join(l:bufnumbers, ', ')
+        execute('bdelete '.join(l:bufnumbers))
+    endif
+endfunction
+function! BufCleanupComplete(partial, cmdline, pos)
+    let l:pattern = '^'.a:partial
+    return filter(keys(g:buf_cleanup_actions), 'v:val =~ l:pattern')
+endfun
+command! -nargs=1 -complete=customlist,BufCleanupComplete
+    \ Bcleanup call s:BufCleanup(<q-args>)
+
+" Do not use BufKill mappings
+let g:BufKillCreateMappings = 0
 
 " Netrw should ignore case in sort
 let g:netrw_sort_options = "i"
@@ -281,6 +324,9 @@ let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_buffer_loading = 1
 
 " ---- Terminal management via neoterm ----
+
+tnoremap <C-W><C-S-Up>      <C-W>:tabprev<CR>
+tnoremap <C-W><C-S-Down>    <C-W>:tabnext<CR>
 
 if executable("python3")
     let g:neoterm_repl_python = 'python3'

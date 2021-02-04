@@ -106,6 +106,18 @@ function! GetBufferName(id)
     return l:name
 endfunction
 
+function! StatusLineIsTerminal()
+    return mode() == 't' || &syntax == 'neoterm'
+endfunction
+
+function! StatusLineModified()
+    return &modified && !StatusLineIsTerminal()
+endfunction
+
+function! StatusLineReadOnly()
+    return (&readonly || &modifiable == 0) && !StatusLineIsTerminal()
+endfunction
+
 function! StatusLineSectionC()
     let l:name = GetBufferName(winbufnr(winnr()))
     let l:content = ' ' . l:name . ' '
@@ -114,11 +126,8 @@ function! StatusLineSectionC()
         let l:content .= '§' . winbufnr(winnr()) . ' '
     endif
     " Gutter (readonly, modified) -- nested inside Section C for grouping
-    if &modified
-        let l:content .= '+++ '
-    else
-        let l:content .= (&readonly || &modifiable == 0) ? '[RO] ' : ''
-    endif
+    let l:content .= StatusLineModified() ? '+++ ' : ''
+    let l:content .= StatusLineReadOnly() ? '[RO] ' : ''
     return l:content
 endfunction
 
@@ -147,9 +156,9 @@ function! StatusLine(active)
     let l:statusline .= '%('
     let l:statusline .= '%<'
     let l:statusline .= s:section_c_hi[a:active].mod
-    let l:statusline .= '%{ &modified ? StatusLineSectionC() : "" }'
+    let l:statusline .= '%{ StatusLineModified() ? StatusLineSectionC() : "" }'
     let l:statusline .= s:section_c_hi[a:active].nomod
-    let l:statusline .= '%{ &modified ? "" : StatusLineSectionC() }'
+    let l:statusline .= '%{ StatusLineModified() ? "" : StatusLineSectionC() }'
     let l:statusline .= '%)'
 
     " Divider between left and right

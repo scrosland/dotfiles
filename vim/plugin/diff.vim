@@ -33,12 +33,20 @@ function! s:CheckInToolWithRepo(repo)
     execute 'bdelete '.l:bufnr
 endfunction
 
+function! s:CheckInToolCommand(...)
+    if len(a:000) > 0
+        call s:CheckInToolWithRepo(a:1)
+    else
+        call s:CheckInTool()
+    endif
+endfunction
+
+command! -nargs=? -bar -complete=dir CheckInTool call s:CheckInToolCommand(<q-args>)
+
 function! Tapi_CheckInTool(bufnum, arglist)
     let repo = a:arglist[0]
     call s:CheckInToolWithRepo(l:repo)
 endfunction
-
-command! -nargs=0 -bar CheckInTool call s:CheckInTool()
 
 function! s:init_gitcommit()
     setlocal spell

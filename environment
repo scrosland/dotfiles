@@ -87,6 +87,8 @@ if [ -z "${CDPATH}" ] ; then
     add_to_path_var CDPATH "/Users/Shared"
     add_to_path_var CDPATH "${HOME}"
     add_to_path_var CDPATH "${HOME}/repos"
+    add_to_path_var CDPATH "."
+    VIM_CDPATH="${CDPATH}" ; export VIM_CDPATH
 fi
 
 add_to_path_var MANPATH "$HOME/.local/share/man"

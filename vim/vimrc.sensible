@@ -170,6 +170,10 @@ else
     set tags=./tags,./../tags,./../../tags,./../../../tags,tags
 end
 
+if strlen($VIM_CDPATH)
+    let &cdpath = substitute(substitute($VIM_CDPATH, ':', ',', 'g'), '^.,', ',', '')
+endif
+
 command! -nargs=0 -bar ReformatFile normal gg=G
 command! -nargs=0 -bar ReindentFile ReformatFile
 

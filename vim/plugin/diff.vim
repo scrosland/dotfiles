@@ -34,7 +34,7 @@ function! s:CheckInToolWithRepo(repo)
 endfunction
 
 function! s:CheckInToolCommand(...)
-    if len(a:000) > 0
+    if len(a:000) > 0 && len(a:1) > 0
         call s:CheckInToolWithRepo(a:1)
     else
         call s:CheckInTool()

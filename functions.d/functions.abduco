@@ -35,11 +35,15 @@ _abduco_complete()
         COMPREPLY=( $(compgen -W "${subcommands}" -- "${cur}") )
         return 0
     fi
-    # session name, using the fancy '@(pattern-list)' extglob pattern matching
-    if (( ${nwords} < 2 )) && [[ "${words[0]}" == -@(a|A) ]] ; then
-        local sessions=$(abduco -q | awk 'NR==1 {next;} {print $NF;}' -)
-        COMPREPLY=( $(compgen -W "${sessions}" -- "${cur}") )
-        return 0
+    # session name
+    if (( ${nwords} < 2 )) ; then
+        case "${words[0]}" in
+            -a|-A)
+                local sessions=$(abduco -q | awk 'NR==1 {next;} {print $NF;}' -)
+                COMPREPLY=( $(compgen -W "${sessions}" -- "${cur}") )
+                return 0
+                ;;
+        esac
     fi
     # command name
     if (( ${nwords} == 2 )) && [[ "${words[0]}" != -a ]] ; then

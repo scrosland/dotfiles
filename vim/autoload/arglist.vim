@@ -8,5 +8,5 @@ endfunction
 
 function! arglist#DecodeAndEdit(...)
     pythonx import base64
-    call arglist#EditArgList(map(a:000, {_,v -> s:decode(v)}))
+    call arglist#EditArgList(map(copy(a:000), {_,v -> s:decode(v)}))
 endfunction

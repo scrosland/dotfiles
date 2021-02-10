@@ -325,8 +325,10 @@ let g:rubycomplete_buffer_loading = 1
 
 " ---- Terminal management via neoterm ----
 
-tnoremap <C-W><C-S-Up>      <C-W>:tabprev<CR>
-tnoremap <C-W><C-S-Down>    <C-W>:tabnext<CR>
+if has('patch-8.0.1108')
+    tnoremap <C-W><C-S-Up>      <C-W>:tabprev<CR>
+    tnoremap <C-W><C-S-Down>    <C-W>:tabnext<CR>
+endif
 
 if executable("python3")
     let g:neoterm_repl_python = 'python3'

@@ -18,7 +18,7 @@ nnoremap <Leader>be :Buffy<CR>
 let g:buf_cleanup_actions = {
     \ 'invisible': 'empty(v:val.windows)',
     \ 'nameless' : 'v:val.name == ""',
-    \ 'other'    : 'v:val.bufnr != bufnr()',
+    \ 'other'    : 'v:val.bufnr != bufnr("%")',
     \ }
 
 " action : which types of buffers to :bdelete
@@ -93,14 +93,14 @@ function! s:Candidate(idx, bufinfo)
 endfunction
 
 function! s:Bdelete(bang)
-    let l:bufnr_to_delete = bufnr()
+    let l:bufnr_to_delete = bufnr('%')
     let l:bufinfo = filter(getbufinfo({'buflisted': 1}), function('s:Candidate'))
     if len(l:bufinfo) > 0
         call s:NextOrPrev(a:bang, 1, map(l:bufinfo, 'v:val.bufnr'))
     endif
     let l:bang = a:bang ? '!' : ''
     " if NextOrPrev() did not change buffer, or wasn't called, create a new one
-    if bufnr() == l:bufnr_to_delete
+    if bufnr('%') == l:bufnr_to_delete
         execute 'enew'.l:bang
     endif
     " only delete the buffer if it's not still visible in a window
@@ -118,7 +118,7 @@ function! s:NextOrPrev(bang, direction, ...)
     if a:direction > 0
         let l:buffers = reverse(l:buffers)
     endif
-    let l:current = bufnr()
+    let l:current = bufnr('%')
     let l:target = l:buffers[-1]
     for l:bufnr in l:buffers
         if l:bufnr == l:current

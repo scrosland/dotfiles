@@ -2,6 +2,10 @@
 command! -nargs=0 GetFilesFromGitDiff :call diff#getFilesFromDiff({'strip': 1})
 command! -nargs=0 GetFilesFromPatch   :call diff#getFilesFromDiff({})
 
+function! s:warning(msg)
+        echohl WarningMsg | echom a:msg | echohl None
+endfunction
+
 function! s:in_git_repo()
     if !exists('*FugitiveGitDir')
         return 0
@@ -18,7 +22,7 @@ function! s:CheckInTool()
     elseif exists('*CheckInTool')
         call CheckInTool()
     else
-        echo 'The current directory is not in a source repository'
+        call s:warning('The current directory is not in a source repository')
     endif
 endfunction
 
@@ -34,11 +38,8 @@ function! s:CheckInToolWithRepo(repo)
 endfunction
 
 function! s:CheckInToolCommand(...)
-    if len(a:000) > 0 && len(a:1) > 0
-        call s:CheckInToolWithRepo(a:1)
-    else
-        call s:CheckInTool()
-    endif
+    let l:repo = len(a:000) > 0 && len(a:1) > 0 ? a:1 : getcwd()
+    call s:CheckInToolWithRepo(l:repo)
 endfunction
 
 command! -nargs=? -bar -complete=dir CheckInTool call s:CheckInToolCommand(<q-args>)

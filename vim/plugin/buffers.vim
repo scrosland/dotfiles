@@ -5,7 +5,8 @@ function! s:BufSelect(command)
 endfunction
 
 function! BufSelectComplete(partial, cmdline, pos)
-    return ['bdelete', 'buffer']
+    return filter(['bdelete', 'buffer'],
+                \ 'strpart(v:val, 0, len(a:partial)) == a:partial')
 endfunction
 
 command! -nargs=1 -complete=customlist,BufSelectComplete
@@ -16,9 +17,9 @@ nnoremap <Leader>be :Buffy<CR>
 " ----- Buffer cleanup -----
 
 let g:buf_cleanup_actions = {
-    \ 'invisible': 'empty(v:val.windows)',
-    \ 'nameless' : 'v:val.name == ""',
-    \ 'other'    : 'v:val.bufnr != bufnr("%")',
+    \ 'invisible' : 'empty(v:val.windows)',
+    \ 'nameless'  : 'v:val.name == ""',
+    \ 'notcurrent': 'v:val.bufnr != bufnr("%")',
     \ }
 
 " action : which types of buffers to :bdelete
@@ -39,7 +40,8 @@ function! s:BufCleanup(action)
 endfunction
 
 function! BufCleanupComplete(partial, cmdline, pos)
-    return keys(g:buf_cleanup_actions)
+    return filter(keys(g:buf_cleanup_actions),
+                \ 'strpart(v:val, 0, len(a:partial)) == a:partial')
 endfun
 
 command! -nargs=1 -complete=customlist,BufCleanupComplete
@@ -96,7 +98,7 @@ function! s:Bdelete(bang)
     let l:bufnr_to_delete = bufnr('%')
     let l:bufinfo = filter(getbufinfo({'buflisted': 1}), function('s:Candidate'))
     if len(l:bufinfo) > 0
-        call s:NextOrPrev(a:bang, 1, map(l:bufinfo, 'v:val.bufnr'))
+        call s:NextOrPrev(a:bang, -1, map(l:bufinfo, 'v:val.bufnr'))
     endif
     let l:bang = a:bang ? '!' : ''
     " if NextOrPrev() did not change buffer, or wasn't called, create a new one

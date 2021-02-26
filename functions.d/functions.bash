@@ -98,6 +98,7 @@ if [[ -n $PS1 ]] ; then
         }
         FZF_DEFAULT_COMMAND="fzf-list-command" ; export FZF_DEFAULT_COMMAND
         FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND" ; export FZF_CTRL_T_COMMAND
+        FZF_DEFAULT_OPTS="--color=light --cycle" ; export FZF_DEFAULT_OPTS
         source $HOME/.fzf.bash
     fi
 fi

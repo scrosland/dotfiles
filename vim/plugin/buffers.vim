@@ -55,17 +55,35 @@ function! s:EventDebug(event)
     echohl Debug | echom ''.a:event.': '.l:bufnr.', '.l:bufname | echohl None
 endfunction
 
+if !exists('g:sc#buffers')
+    " A dict of bufnr -> access time, where access time is the most recent time
+    " the buffer has been visible in a window
+    let g:sc#buffers = {}
+endif
+
+if exists('*reltimefloat')
+    function! s:time()
+        return reltimefloat(reltime())
+    endfunction
+else
+    function! s:time()
+        return localtime()
+    endfunction
+endif
+
 function! s:AddBufferEvt()
+    let l:bufnr = 0+expand('<abuf>')
+    let g:sc#buffers[l:bufnr] = s:time()
     if !exists('t:buffer_list')
         let t:buffer_list = {}
     endif
-    let l:bufnr = 0+expand('<abuf>')
     if getbufvar(l:bufnr, '&buflisted') && getbufvar(l:bufnr, '&modifiable')
         let t:buffer_list[l:bufnr] = bufname(l:bufnr)
     endif
 endfunction
 
 function! s:DelBufferEvt()
+    try | call remove(g:sc#buffers, 0+expand('<abuf>')) | catch | endtry
     try | call remove(t:buffer_list, 0+expand('<abuf>')) | catch | endtry
 endfunction
 
@@ -147,3 +165,56 @@ endfunction
 
 command! -nargs=0 -bang -bar Bprev call s:Bprev(<bang>0)
 command! -nargs=0 -bang -bar BP call s:Bprev(<bang>0)
+
+" ----- Buffer search with added fzf fuzziness -----
+
+" Based on ideas from Junegunn Choi in fzf.vim
+" https://github.com/junegunn/fzf.vim
+"
+" Possible futures: a 'Bselect bdelete' variant with multi-select (--multi).
+
+function! s:sort_buffers(...)
+    " sorts by most recently used based on the time saved in the global dict
+    let [b1, b2] = map(copy(a:000), 'get(g:sc#buffers, v:val, v:val)')
+    return b1 < b2 ? 1 : -1
+endfunction
+
+function! s:format_buffer(bufnr)
+    let l:bwidth = len(string(bufnr('$')))
+    let l:name = bufname(a:bufnr)
+    let l:name = empty(name) ? '[No Name]' : fnamemodify(name, ':p:~:.')
+    let l:flag = a:bufnr == bufnr('') ? '%' : a:bufnr == bufnr('#') ? '#' : ' '
+    return printf("%*s %s %s", l:bwidth, a:bufnr, l:flag, l:name)
+endfunction
+
+function! s:bufopen(lines)
+    if empty(a:lines)
+        return
+    endif
+    " matches the bufnr in the printf() in s:format_buffer()
+    let l:bufnr = matchstr(a:lines[-1], '^\zs[0-9]\{1,}\ze ')
+    if bufnr('') == l:bufnr
+        return
+    endif
+    execute 'buffer' l:bufnr
+endfunction
+
+function! s:fzf_buffers(query, bang)
+    let l:buflist = filter(range(1, bufnr('$')),
+        \ 'buflisted(v:val) && getbufvar(v:val, "&filetype") != "qf"')
+    let l:sorted = sort(l:buflist, 's:sort_buffers')
+    let l:source = map(l:sorted, 's:format_buffer(v:val)')
+    return fzf#run(fzf#wrap('buffers', {
+                \ 'source' : l:source,
+                \ 'sink*'  : function('s:bufopen'),
+                \ 'options': [ '--no-multi',
+                                \ '--prompt', 'Buffer> ',
+                                \ '--query', a:query,
+                                \ '--tiebreak=index',
+                                \ ],
+                \ }, a:bang))
+endfunction
+
+command! -nargs=? -bang -bar -complete=buffer
+            \ Bbuffz call s:fzf_buffers(<q-args>, <bang>0)
+nnoremap <Leader>bb :Bbuffz<CR>

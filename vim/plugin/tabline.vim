@@ -81,4 +81,4 @@ call s:RefreshTabs()
 
 " To set    :TabName 'name'
 " To clear  :TabName!
-command! -bang -nargs=* TabName call s:SetTabName(<bang>0, <args>)
+command! -bang -nargs=* TabName call s:SetTabName(<bang>0, <q-args>)

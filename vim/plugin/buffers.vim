@@ -61,19 +61,9 @@ if !exists('g:sc#buffers')
     let g:sc#buffers = {}
 endif
 
-if exists('*reltimefloat')
-    function! s:time()
-        return reltimefloat(reltime())
-    endfunction
-else
-    function! s:time()
-        return localtime()
-    endfunction
-endif
-
 function! s:AddBufferEvt()
     let l:bufnr = 0+expand('<abuf>')
-    let g:sc#buffers[l:bufnr] = s:time()
+    let g:sc#buffers[l:bufnr] = localtime()
     if !exists('t:buffer_list')
         let t:buffer_list = {}
     endif
@@ -180,19 +170,30 @@ function! s:sort_buffers(...)
 endfunction
 
 function! s:format_buffer(bufnr)
-    let l:bwidth = len(string(bufnr('$')))
+    let l:bwidth = max([3, len(string(bufnr('$')))])
     let l:name = bufname(a:bufnr)
     let l:name = empty(name) ? '[No Name]' : fnamemodify(name, ':p:~:.')
-    let l:flag = a:bufnr == bufnr('') ? '%' : a:bufnr == bufnr('#') ? '#' : ' '
-    return printf("%*s %s %s", l:bwidth, a:bufnr, l:flag, l:name)
+    let l:bufinfo = getbufinfo(a:bufnr)[0]
+    let l:thisthat = a:bufnr == bufnr('') ? '%' : a:bufnr == bufnr('#') ? '#' : ' '
+    let l:flag = l:thisthat
+    let l:flag .= l:bufinfo.loaded && l:bufinfo.hidden ? 'h' :
+                \ l:bufinfo.loaded && len(l:bufinfo.windows) > 0 ? 'a' : ' '
+    let l:flag .= getbufvar(a:bufnr, '&readonly') ? '=' : 
+                \ getbufvar(a:bufnr, '&modifiable') ? ' ' : '-'
+    let l:flag .= l:bufinfo.changed ? '+' : ''
+    let l:lineno = l:bufinfo.lnum
+    " key is the search key for fzf (--nth=1), \t is the field separator,
+    " the rest of the line is the information to be displayed (--with-nth=2..)
+    let l:key = ''.a:bufnr.':'.l:thisthat.':'.l:name
+    return printf("%s\t%*s %-4s %-40s line %s", l:key, l:bwidth, a:bufnr, l:flag, l:name, l:lineno)
 endfunction
 
 function! s:bufopen(lines)
     if empty(a:lines)
         return
     endif
-    " matches the bufnr in the printf() in s:format_buffer()
-    let l:bufnr = matchstr(a:lines[-1], '^\zs[0-9]\{1,}\ze ')
+    " matches the bufnr in the key in the printf() in s:format_buffer()
+    let l:bufnr = matchstr(a:lines[-1], '^\zs[0-9]\{1,}\ze:')
     if bufnr('') == l:bufnr
         return
     endif
@@ -208,6 +209,7 @@ function! s:fzf_buffers(query, bang)
                 \ 'source' : l:source,
                 \ 'sink*'  : function('s:bufopen'),
                 \ 'options': [ '--no-multi',
+                                \ '-d', "\t", '--nth=1', '--with-nth=2..',
                                 \ '--prompt', 'Buffer> ',
                                 \ '--query', a:query,
                                 \ '--tiebreak=index',

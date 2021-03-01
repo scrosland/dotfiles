@@ -1,19 +1,3 @@
-" ----- Simple BufExplorer alternative -----
-
-function! s:BufSelect(command)
-    ls | call feedkeys(':'.a:command.' ', 'n')
-endfunction
-
-function! BufSelectComplete(partial, cmdline, pos)
-    return filter(['bdelete', 'buffer'],
-                \ 'strpart(v:val, 0, len(a:partial)) == a:partial')
-endfunction
-
-command! -nargs=1 -complete=customlist,BufSelectComplete
-    \ Bselect call s:BufSelect(<q-args>)
-command! -nargs=0 Buffy call s:BufSelect('buffer')
-nnoremap <Leader>be :Buffy<CR>
-
 " ----- Buffer cleanup -----
 
 let g:buf_cleanup_actions = {
@@ -193,29 +177,37 @@ function! s:format_buffer(bufnr)
     return printf("%s\t%*s %-4s %-40s line %s", l:key, l:bwidth, a:bufnr, l:flag, l:name, l:lineno)
 endfunction
 
-function! s:bufopen(lines)
+let g:fzf_buffer_actions = {
+            \ 'open'   : { 'multi': 0, 'command': 'buffer' },
+            \ 'delete' : { 'multi': 1, 'command': 'bdelete' },
+            \ }
+
+function! s:bufopen(action, lines)
     if empty(a:lines)
         return
     endif
+    let l:action_opts = g:fzf_buffer_actions[a:action]
     " matches the bufnr in the key in the printf() in s:format_buffer()
-    let l:bufnr = matchstr(a:lines[-1], '^\zs[0-9]\{1,}\ze:')
-    if bufnr('') == l:bufnr
-        return
+    let l:buffers = map(a:lines, 'matchstr(v:val, ''^\zs[0-9]\{1,}\ze:'')')
+    if l:action_opts.multi == 0
+        let l:buffers = l:buffers[-1:]
     endif
-    execute 'buffer' l:bufnr
+    execute l:actions_opts.command join(l:buffers)
 endfunction
 
-function! s:fzf_buffers(query, bang)
+function! s:fzf_buffers(action, query, bang)
+    let l:action_opts = g:fzf_buffer_actions[a:action]
     let l:buflist = filter(range(1, bufnr('$')),
         \ 'buflisted(v:val) && getbufvar(v:val, "&filetype") != "qf"')
     let l:sorted = sort(l:buflist, 's:sort_buffers')
     let l:source = map(l:sorted, 's:format_buffer(v:val)')
     return fzf#run(fzf#wrap('buffers', {
                 \ 'source' : l:source,
-                \ 'sink*'  : function('s:bufopen'),
-                \ 'options': [ '--no-multi',
+                \ 'sink*'  : function('s:bufopen', [a:action]),
+                \ 'options': [ l:action_opts.multi ? '--multi' : '--no-multi',
+                                \ '--bind', 'ctrl-a:select-all,ctrl-t:toggle',
                                 \ '-d', "\t", '--nth=1', '--with-nth=2..',
-                                \ '--prompt', 'Buffer> ',
+                                \ '--prompt', 'Buffer('.a:action.')> ',
                                 \ '--query', a:query,
                                 \ '--tiebreak=index',
                                 \ ],
@@ -223,5 +215,8 @@ function! s:fzf_buffers(query, bang)
 endfunction
 
 command! -nargs=? -bang -bar -complete=buffer
-            \ Bbuffz call s:fzf_buffers(<q-args>, <bang>0)
-nnoremap <Leader>bb :Bbuffz<CR>
+            \ Buffy call s:fzf_buffers('open', <q-args>, <bang>0)
+nnoremap <Leader>bb :Buffy<CR>
+
+command! -nargs=? -bang -bar -complete=buffer
+            \ Bdeletor call s:fzf_buffers('delete', <q-args>, <bang>0)

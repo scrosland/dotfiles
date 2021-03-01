@@ -14,7 +14,7 @@ function TabLine()
         let l:modified = ''
         for bufnr in tabpagebuflist(i+1)
             if getbufvar(bufnr, "&modified")
-                    \ && getbufvar(bufnr, "&syntax") != "neoterm"
+                    \ && getbufvar(bufnr, "&buftype") != "terminal"
                 let l:modified = '+'
                 break
             endif

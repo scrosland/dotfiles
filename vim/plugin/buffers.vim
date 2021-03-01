@@ -171,16 +171,21 @@ endfunction
 
 function! s:format_buffer(bufnr)
     let l:bwidth = max([3, len(string(bufnr('$')))])
-    let l:name = bufname(a:bufnr)
-    let l:name = empty(name) ? '[No Name]' : fnamemodify(name, ':p:~:.')
+    let l:name = GetBufferName(a:bufnr)
     let l:bufinfo = getbufinfo(a:bufnr)[0]
     let l:thisthat = a:bufnr == bufnr('') ? '%' : a:bufnr == bufnr('#') ? '#' : ' '
     let l:flag = l:thisthat
     let l:flag .= l:bufinfo.loaded && l:bufinfo.hidden ? 'h' :
                 \ l:bufinfo.loaded && len(l:bufinfo.windows) > 0 ? 'a' : ' '
-    let l:flag .= getbufvar(a:bufnr, '&readonly') ? '=' : 
-                \ getbufvar(a:bufnr, '&modifiable') ? ' ' : '-'
-    let l:flag .= l:bufinfo.changed ? '+' : ''
+    if getbufvar(a:bufnr, '&buftype') == 'terminal'
+        let l:name .= ' ['.term_gettitle(a:bufnr).']'
+        let l:flag .= term_getjob(a:bufnr) == v:null ? '?' :
+                    \ term_getstatus(a:bufnr) =~ 'running' ? 'R' : 'F'
+    else
+        let l:flag .= getbufvar(a:bufnr, '&modifiable') == 0 ? '-' :
+                    \ getbufvar(a:bufnr, '&readonly') ? '=' : ' '
+        let l:flag .= l:bufinfo.changed ? '+' : ''
+    endif
     let l:lineno = l:bufinfo.lnum
     " key is the search key for fzf (--nth=1), \t is the field separator,
     " the rest of the line is the information to be displayed (--with-nth=2..)

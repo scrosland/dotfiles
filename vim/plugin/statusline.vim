@@ -106,16 +106,12 @@ function! GetBufferName(id)
     return l:name
 endfunction
 
-function! StatusLineIsTerminal()
-    return mode() == 't' || &syntax == 'neoterm'
-endfunction
-
 function! StatusLineModified()
-    return &modified && !StatusLineIsTerminal()
+    return &modified && &buftype != 'terminal'
 endfunction
 
 function! StatusLineReadOnly()
-    return (&readonly || &modifiable == 0) && !StatusLineIsTerminal()
+    return (&readonly || &modifiable == 0) && &buftype != 'terminal'
 endfunction
 
 function! StatusLineSectionC()

@@ -51,8 +51,8 @@ function! s:AddBufferEvt()
     if !exists('t:buffer_list')
         let t:buffer_list = {}
     endif
-    if getbufvar(l:bufnr, '&buflisted') && getbufvar(l:bufnr, '&modifiable')
-        let t:buffer_list[l:bufnr] = bufname(l:bufnr)
+    if getbufvar(l:bufnr, '&buflisted') && getbufvar(l:bufnr, '&buftype') != 'terminal'
+        let t:buffer_list[l:bufnr] = localtime()
     endif
 endfunction
 

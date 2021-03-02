@@ -177,12 +177,27 @@ function! s:format_buffer(bufnr)
     return printf("%s\t%*s %-4s %-40s line %s", l:key, l:bwidth, a:bufnr, l:flag, l:name, l:lineno)
 endfunction
 
+" Open a selection of buffers in a new tab window
+function! s:TabBufOpen(...)
+    if empty(a:000)
+        return
+    end
+    tabnew
+    execute 'buffer' a:000[0]
+    for l:bufnr in a:000[1:]
+        execute 'sbuffer' l:bufnr
+    endfor
+endfunction
+
+command! -nargs=+ -bar -complete=buffer TabBufOpen call s:TabBufOpen(<f-args>)
+
 let g:fzf_buffer_actions = {
             \ 'open'   : { 'multi': 0, 'command': 'buffer' },
             \ 'delete' : { 'multi': 1, 'command': 'bdelete' },
+            \ 'tabopen': { 'multi': 1, 'command': 'TabBufOpen' },
             \ }
 
-function! s:bufopen(action, lines)
+function! s:bufaction(action, lines)
     if empty(a:lines)
         return
     endif
@@ -203,7 +218,7 @@ function! s:fzf_buffers(action, query, bang)
     let l:source = map(l:sorted, 's:format_buffer(v:val)')
     return fzf#run(fzf#wrap('buffers', {
                 \ 'source' : l:source,
-                \ 'sink*'  : function('s:bufopen', [a:action]),
+                \ 'sink*'  : function('s:bufaction', [a:action]),
                 \ 'options': [ l:action_opts.multi ? '--multi' : '--no-multi',
                                 \ '--bind', 'ctrl-a:select-all,ctrl-t:toggle',
                                 \ '-d', "\t", '--nth=1', '--with-nth=2..',
@@ -220,3 +235,6 @@ nnoremap <Leader>bb :Buffy<CR>
 
 command! -nargs=? -bang -bar -complete=buffer
             \ Bdeletor call s:fzf_buffers('delete', <q-args>, <bang>0)
+
+command! -nargs=? -bang -bar -complete=buffer
+            \ TabBufSelect call s:fzf_buffers('tabopen', <q-args>, <bang>0)

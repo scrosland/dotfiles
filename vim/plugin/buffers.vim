@@ -192,7 +192,7 @@ function! s:bufopen(action, lines)
     if l:action_opts.multi == 0
         let l:buffers = l:buffers[-1:]
     endif
-    execute l:actions_opts.command join(l:buffers)
+    execute l:action_opts.command join(l:buffers)
 endfunction
 
 function! s:fzf_buffers(action, query, bang)

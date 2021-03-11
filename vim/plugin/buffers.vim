@@ -174,7 +174,7 @@ function! s:format_buffer(bufnr)
     " key is the search key for fzf (--nth=1), \t is the field separator,
     " the rest of the line is the information to be displayed (--with-nth=2..)
     let l:key = ''.a:bufnr.':'.l:thisthat.':'.l:name
-    return printf("%s\t%*s %-4s %-40s line %s", l:key, l:bwidth, a:bufnr, l:flag, l:name, l:lineno)
+    return printf("%s\t%*s %-4s %-50s line %s", l:key, l:bwidth, a:bufnr, l:flag, l:name, l:lineno)
 endfunction
 
 " Open a selection of buffers in a new tab window

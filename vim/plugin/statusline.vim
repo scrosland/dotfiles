@@ -38,6 +38,8 @@ let g:statusline_mode_map = {
 hi statusline_a         ctermfg=237 ctermbg=248 guifg=#343434 guibg=#a0a0a0
 hi statusline_a_bold    term=bold cterm=bold ctermfg=237 ctermbg=248 
             \ gui=bold guifg=#202020 guibg=#a0a0a0
+hi statusline_a_paste   ctermfg=160 ctermbg=248 guifg=#d70000 guibg=#a0a0a0
+hi statusline_a_spell   ctermfg=199 ctermbg=248 guifg=#ff00af guibg=#a0a0a0
 hi statusline_b         ctermfg=237 ctermbg=250 guifg=#343434 guibg=#b3b3b3
 hi statusline_c         ctermfg=237 ctermbg=252 guifg=#343434 guibg=#c7c7c7
 hi statusline_c_mod     ctermfg=237 ctermbg=216 guifg=#343434 guibg=#ffdbc7
@@ -58,13 +60,28 @@ function! s:hi(name, active)
     return l:token
 endfunction
 
-let s:callbacks_for_b = []
+" Test a setting like &paste and if enabled return a colourised token like
+" 'PASTE' with a preceding space, otherwise return an empty string
+function! s:hi_setting(setting, section, active)
+    if eval('&'.a:setting) == 0
+        return ''
+    endif
+    let l:token = s:hi(a:section.'_'.a:setting, a:active)
+    let l:token .= '%( ' . toupper(a:setting) . '%)'
+    return l:token
+endfunction
+
+if !exists('s:callbacks_for_b')
+    let s:callbacks_for_b = []
+endif
 
 " Hook for local.vim or other vim scripts or plugins.
 function! StatusLineRegisterSectionBCallback(callback)
     if type(a:callback) != type(function('printf'))
         throw 'a:callback should be a Funcref, is type ' . type(a:callback)
     endif
+    " avoid duplicating a:callback in the list
+    call filter(s:callbacks_for_b, 'v:val != a:callback')
     call add(s:callbacks_for_b, a:callback)
     call sort(s:callbacks_for_b)
 endfunction
@@ -136,9 +153,8 @@ function! StatusLine(active)
         let l:statusline .= '%( '
         let l:statusline .=   s:hi('a_bold', a:active)
         let l:statusline .=   '%{get(g:statusline_mode_map, mode(), "UNKNOWN")}'
-        let l:statusline .=   s:hi('a', a:active)
-        let l:statusline .=   '%( %{&paste ? "PASTE" : ""}%)'
-        let l:statusline .=   '%( %{&spell ? "SPELL" : ""}%)'
+        let l:statusline .=   s:hi_setting('paste', 'a', a:active)
+        let l:statusline .=   s:hi_setting('spell', 'a', a:active)
         let l:statusline .= ' %)'
     endif
     "

@@ -12,6 +12,7 @@ function! StatusLineGitRoot()
     " get commit and branch from fugitive
     let l:info = FugitiveStatusline()[4:-2]     " remove '[Git' and ']'
     let l:info = substitute(l:info, '\v\C\(master\)$', '', '')
+    let l:info = substitute(l:info, '\v\C\(main\)$', '', '')
     if strlen(l:info) > 0
         call add(l:parts, l:info)
     endif

@@ -1,13 +1,28 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
+VERBOSE=0
+if (( $# > 0 )) ; then
+    case "$1" in
+        "")
+            : ;;
+        -v|--verbose)
+            VERBOSE=1
+            ;;
+        *)
+            echo "usage: $(basename $0) [-v|--verbose]"
+            exit 0
+            ;;
+    esac
+fi
 
 cd $(dirname $0)
 ./brew-list-reverse-dependencies |
-    sed -ne '/:$/s/://p' |
-    while read cask ; do
-        echo -n "${cask}"
-        if ! grep -q -s "${cask}" Brewfile ; then
-            echo -n " (not in Brewfile)"
+    sed -lne '/:$/s/://p' |
+    while read formula ; do
+        if ! grep -q -s "${formula}" Brewfile ; then
+            echo "${formula}"
+        elif (( ${VERBOSE} == 1 )) ; then
+            echo "${formula} (in Brewfile)"
         fi
-        echo ""
     done

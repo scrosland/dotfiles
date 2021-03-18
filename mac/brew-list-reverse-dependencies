@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-brew list -1 |
-while read cask ; do
-    echo -n "${cask}:"
-    brew uses "${cask}" --installed | awk '{ printf(" %s", $0) }' -
+brew list --formulae -1 |
+while read formula ; do
+    echo -n "${formula}:"
+    brew uses ${formula} --installed | awk '{ printf(" %s", $0) }' -
     echo ""
 done

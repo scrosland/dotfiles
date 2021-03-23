@@ -1,0 +1,219 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# inspiration from:
+# https://github.com/mathiasbynens/dotfiles/blob/master/.macos
+
+READONLY=1
+
+if (( $# > 0 )) ; then
+    if [[ "$1" = "--doit" ]] ; then
+        READONLY=0
+        shift
+    fi
+fi
+        
+is_admin()
+{
+    id -Gn | grep -q -s -w admin
+}
+
+if ! is_admin ; then
+    echo "Not in group admin - need to Make Me Admin"
+    exit 1
+fi
+
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until this script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+maybe()
+{
+    ARGS=( "$@" )
+    echo "+${ARGS[@]}"
+    if (( ${READONLY} == 0 )) ; then
+        "${ARGS[@]}"
+        return
+    fi
+
+    local cmd=0 ; local subcmd=1
+    if [[ "${ARGS[$cmd]}" = "sudo" ]] ; then
+        cmd=1 ; subcmd=2
+    fi
+    if [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "write" ]] ; then
+        # read the current setting instead of writing a new one
+        domain=$(( ${subcmd} + 1 ))
+        end=$(( ${subcmd} + 3 ))
+        saved=( "${ARGS[@]}" )
+        ARGS[$subcmd]="read"
+        ARGS=( "${ARGS[@]:0:$end}" )    # bash array slice
+        echo "++${ARGS[@]}"
+        "${ARGS[@]}" 2>/dev/null || echo "[not found]"
+    else
+        # don't know how to read the current setting
+        echo "[unknown]"
+    fi
+    return 0
+}
+
+# ----- General -----
+
+# Expand save panel by default
+maybe defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+maybe defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# Expand print panel by default
+maybe defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+maybe defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+# Save to disk (not to iCloud) by default
+maybe defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
+# Automatically quit printer app once the print jobs complete
+maybe defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+
+# Reveal IP address, hostname, OS version, etc. when clicking the clock
+# in the login window
+maybe sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+
+# Disable sound effects when changing volume
+maybe defaults write NSGlobalDomain com.apple.sound.beep.feedback -int 0
+
+# Disable user interface sounds
+maybe defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
+
+# Set alert volume
+# Values from my MacBook Pro running macOS 11.2.3:
+#  "75%": 0.7788008
+#  "50%": 0.6065307
+#  "25%": 0.4723665
+maybe defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0.4723665
+
+# ----- Audio -----
+
+# Increase sound quality for Bluetooth headphones/headsets
+# See also:
+# https://smarterco.de/mac-os-choppy-audio-over-bluetooth-with-bose-quietcomfort-35/
+#maybe defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+
+# ----- Localization -----
+
+# Set language and text formats
+maybe defaults write NSGlobalDomain AppleLanguages -array "en-GB" "en"
+maybe defaults write NSGlobalDomain AppleLocale -string "en_GB"
+maybe defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
+maybe defaults write NSGlobalDomain AppleMetricUnits -bool true
+
+# Show language menu in the menu bar
+maybe defaults write com.apple.TextInputMenu visible -bool true
+
+# Show language menu in the top right corner of the boot screen
+maybe sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
+
+# Add the Australian keyboard into the list of input sources
+partial_plist="$(dirname $0)/defaults/keyboard.language.plist"
+maybe /usr/libexec/PlistBuddy -c "Merge ${partial_plist}" ~/Library/Preferences/com.apple.HIToolbox.plist
+echo "Note: the current input source needs to be changed manually"
+
+# Set the timezone; see `sudo systemsetup -listtimezones` for other values
+maybe sudo systemsetup -settimezone "Europe/London"
+
+# ----- Power -----
+
+# various pmset things ... or not
+
+# ----- Screen -----
+
+# Require password immediately after sleep or screen saver begins
+maybe defaults write com.apple.screensaver askForPassword -int 1
+maybe defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+# Save screenshots to the desktop
+maybe defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+
+# Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
+maybe defaults write com.apple.screencapture type -string "png"
+
+# Disable subpixel font rendering on non-Apple LCDs
+# Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
+maybe defaults write NSGlobalDomain AppleFontSmoothing -int 0
+
+# Show icons for servers, and removable media on the desktop
+maybe defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
+maybe defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+maybe defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+maybe defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+
+# Finder: show all filename extensions
+maybe defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# Finder: show path bar
+maybe defaults write com.apple.finder ShowPathbar -bool true
+
+# Finder: show tool bar
+maybe defaults write com.apple.finder Showtoolbar -bool true
+
+# When performing a search, search the current folder by default
+maybe defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+# ----- Dock, spaces, hot corners -----
+
+# Move the dock to the left
+maybe defaults write com.apple.dock orientation -string "left"
+
+# Set the icon size of Dock items to 42 pixels
+maybe defaults write com.apple.dock tilesize -int 42
+
+# Show indicator lights for open applications in the Dock
+maybe defaults write com.apple.dock show-process-indicators -bool true
+
+# Don’t automatically rearrange Spaces based on most recent use
+maybe defaults write com.apple.dock mru-spaces -bool false
+
+# Don’t show recent applications in Dock
+maybe defaults write com.apple.dock show-recents -bool false
+
+# Bottom left screen corner → Show desktop
+maybe defaults write com.apple.dock wvous-bl-corner -int 4
+maybe defaults write com.apple.dock wvous-bl-modifier -int 0
+
+# ----- Safari -----
+
+# Show favourite bookmarks bar and status bar (link target preview)
+maybe defaults write com.apple.Safari ShowFavoritesBar-v2 -bool true
+maybe defaults write com.apple.Safari ShowOverlayStatusBar -bool true
+
+# Enable the Develop menu and the Web Inspector in Safari
+maybe defaults write com.apple.Safari IncludeDevelopMenu -bool true
+maybe defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+
+# ----- TextEdit -----
+
+# Use plain text mode for new TextEdit documents
+maybe defaults write com.apple.TextEdit RichText -int 0
+# Open and save files as UTF-8 in TextEdit
+maybe defaults write com.apple.TextEdit PlainTextEncoding -int 4
+maybe defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+
+# ----- Restart affected applications -----
+
+for app in \
+    "Activity Monitor" \
+    "cfprefsd" \
+    "Dock" \
+    "Finder" \
+    "Safari" \
+    "SystemUIServer" \
+    "Terminal" \
+    "TextEdit" \
+    ; do
+    maybe killall "${app}"
+done
+
+echo "Done. Note that some of these changes require a logout/restart to take effect."

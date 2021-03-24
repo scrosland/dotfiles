@@ -46,7 +46,9 @@ maybe()
     if [[ "${ARGS[$cmd]}" = "sudo" ]] ; then
         cmd=1 ; subcmd=2
     fi
-    if [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "write" ]] ; then
+    if [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "read" ]] ; then
+        "${ARGS[@]}"
+    elif [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "write" ]] ; then
         # read the current setting instead of writing a new one
         domain=$(( ${subcmd} + 1 ))
         end=$(( ${subcmd} + 3 ))
@@ -93,7 +95,7 @@ maybe defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
 #  "75%": 0.7788008
 #  "50%": 0.6065307
 #  "25%": 0.4723665
-maybe defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0.4723665
+maybe defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0.6065307
 
 # ----- Audio -----
 

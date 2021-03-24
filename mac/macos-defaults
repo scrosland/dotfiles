@@ -32,6 +32,7 @@ sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until this script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+KEEPALIVE=$!
 
 maybe()
 {
@@ -59,7 +60,7 @@ maybe()
         "${ARGS[@]}" 2>/dev/null || echo "[not found]"
     else
         # don't know how to read the current setting
-        echo "[unknown]"
+        echo "-not-run-"
     fi
     return 0
 }
@@ -107,7 +108,7 @@ maybe defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0.6065307
 # ----- Localization -----
 
 # Set language and text formats
-maybe defaults write NSGlobalDomain AppleLanguages -array "en-GB" "en"
+maybe defaults write NSGlobalDomain AppleLanguages -array "en-GB"
 maybe defaults write NSGlobalDomain AppleLocale -string "en_GB"
 maybe defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 maybe defaults write NSGlobalDomain AppleMetricUnits -bool true
@@ -219,3 +220,4 @@ for app in \
 done
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."
+kill -TERM ${KEEPALIVE}

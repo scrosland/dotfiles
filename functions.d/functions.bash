@@ -73,6 +73,37 @@ _sc_prompt_command()
     return 0
 }
 
+_sc_csi_decset_state()
+{
+    local ps="$1"
+    local onoff
+    case "$2" in
+        on|ON)
+            onoff="h"
+            ;;
+        off|OFF)
+            onoff="l"
+            ;;
+        *)
+            echo "error: \"$2\" unknown option, should be \"on\" or \"off\"" >&2
+            return 1
+            ;;
+    esac
+    printf '\e[?%s%s' "${ps}" "${onoff}"
+}
+
+application-cursor()
+{
+    # Turn on/off application cursor
+    _sc_csi_decset_state 1 "$1"
+}
+
+mouse-reporting()
+{
+    # Turn on/off mouse reporting
+    _sc_csi_decset_state 1000 "$1"
+}
+
 # set terminal title
 set_title()
 {

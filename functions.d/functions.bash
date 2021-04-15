@@ -123,6 +123,11 @@ fi
 if [[ -n $PS1 ]] ; then
     PROMPT_COMMAND="_sc_prompt_command"
 
+    source_when_readable \
+        /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
+        /usr/local/etc/profile.d/bash_completion.sh \
+        /etc/profile.d/bash_completion.sh
+
     if [[ -r $HOME/.fzf.bash ]] ; then
         _fzf_compgen_path() {
             fzf-list-command "$1"

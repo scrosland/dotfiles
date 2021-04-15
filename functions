@@ -37,6 +37,17 @@ resize_terminal()
 
 alias resize-terminal=resize_terminal
 
+source_when_readable()
+{
+    local _file
+    for _file in "$@" ; do
+        if [ -f "${_file}" -a -r "${_file}" ] ; then
+            . "${_file}"
+        fi
+    done
+    unset _file
+}
+
 # general aliases
 alias ls='ls -CF'
 alias r='fc -s'
@@ -51,11 +62,7 @@ fi
 
 # ----- other functions -----
 
-for _function_script in ${HOME}/dotfiles/functions.d/functions.* ; do
-    if [ -r "${_function_script}" ] ; then
-        . "${_function_script}"
-    fi
-done
+source_when_readable ${HOME}/dotfiles/functions.d/functions.*
 
 # ----- Fallback functions for non-bash shells -----
 

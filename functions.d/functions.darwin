@@ -25,11 +25,4 @@ if [ -z "$BASH_VERSION" ] ; then
     return
 fi
 
-COMPLETIONS=( \
-    /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
-    /usr/local/etc/profile.d/bash_completion.sh \
-)
-for comp in "${COMPLETIONS[@]}" ; do
-    [ -r "${comp}" ] &&
-        source "${comp}"
-done
+# bash only ...

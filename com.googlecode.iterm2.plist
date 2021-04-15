@@ -135,6 +135,8 @@
 	<true/>
 	<key>HotkeyMigratedFromSingleToMulti</key>
 	<true/>
+	<key>IRMemory</key>
+	<integer>4</integer>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -738,7 +740,11 @@
 				<key>Red Component</key>
 				<real>0.91611063480377197</real>
 			</dict>
+			<key>Send Bell Alert</key>
+			<false/>
 			<key>Send Code When Idle</key>
+			<false/>
+			<key>Send Session Ended Alert</key>
 			<false/>
 			<key>Session Close Undo Timeout</key>
 			<integer>10</integer>

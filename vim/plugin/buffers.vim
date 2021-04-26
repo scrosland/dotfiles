@@ -58,7 +58,9 @@ endfunction
 
 function! s:DelBufferEvt()
     try | call remove(g:sc#buffers, 0+expand('<abuf>')) | catch | endtry
-    try | call remove(t:buffer_list, 0+expand('<abuf>')) | catch | endtry
+    if exists('t:buffer_list')
+        try | call remove(t:buffer_list, 0+expand('<abuf>')) | catch | endtry
+    endif
 endfunction
 
 "augroup BufferEvtDebug

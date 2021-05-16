@@ -22,6 +22,6 @@ brew "ruby"
 brew "vim"
 brew "watch"
 
-cask "font-dejavu-sans"
+cask "font-dejavu"
 cask "font-hack"
 cask "font-input"

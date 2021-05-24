@@ -300,7 +300,7 @@ command! -nargs=1 SetShiftWidth call s:set_shift_width(<q-args>)
 
 if has("autocmd")
     function! s:init_golang()
-        setlocal noexpandtab nosmarttab softtabstop=0 tabstop=4
+        setlocal noexpandtab nosmarttab softtabstop=0 tabstop=8
     endfunction
 
     augroup filetype_golang

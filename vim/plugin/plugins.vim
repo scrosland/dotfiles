@@ -278,6 +278,11 @@ let g:python_highlight_file_headers_as_comments = 0
 let g:rubycomplete_classes_in_global = 1
 let g:rubycomplete_buffer_loading = 1
 
+" ---- vim-go ----
+
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+
 " ---- Terminal management via neoterm ----
 
 if has('patch-8.0.1108')

@@ -69,6 +69,7 @@ Plug 'lifepillar/vim-solarized8'          " with truecolor support
 "
 Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1', { 'for': 'ps1' }

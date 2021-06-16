@@ -3,6 +3,7 @@
   ```
   git clone https://github.com/scrosland/dotfiles $HOME/dotfiles
   git config --global core.excludesfile $HOME/dotfiles/gitignore.global
+  git config --global commit.verbose true
   # Copy skeleton/* the equivalent $HOME/.* files,
   # or otherwise configure the same files.
   # This is one option:

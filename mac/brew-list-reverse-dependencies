@@ -1,9 +1,22 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env python3
 
-brew list --formulae -1 |
-while read formula ; do
-    echo -n "${formula}:"
-    brew uses ${formula} --installed | awk '{ printf(" %s", $0) }' -
-    echo ""
-done
+from collections import defaultdict
+import re
+import subprocess
+
+result = subprocess.run(['brew', 'deps', '--full-name', '--installed'],
+        check=True, stdout=subprocess.PIPE, encoding='UTF-8')
+
+rdeps = defaultdict(list)
+for line in result.stdout.splitlines():
+    fields = list(filter(lambda x: x != '', line.split(' ')))
+    dependee = re.sub(r':$', '', fields[0])
+    # ensure every formula is inserted into rdeps as a key
+    _ = rdeps[dependee]
+    # store the reverse dependencies
+    for formula in fields[1:]:
+        rdeps[formula].append(dependee)
+
+for formula in sorted(rdeps.keys()):
+    users = rdeps[formula]
+    print(f'{formula}: {" ".join(users)}')

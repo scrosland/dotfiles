@@ -17,8 +17,7 @@ if (( $# > 0 )) ; then
 fi
 
 cd $(dirname $0)
-./brew-list-reverse-dependencies |
-    sed -lne '/:$/s/://p' |
+brew leaves |
     while read formula ; do
         if ! grep -q -s "${formula}" Brewfile ; then
             echo "${formula}"

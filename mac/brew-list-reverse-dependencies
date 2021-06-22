@@ -4,16 +4,22 @@ from collections import defaultdict
 import re
 import subprocess
 
-result = subprocess.run(['brew', 'deps', '--full-name', '--installed'],
+# Using 'brew deps --installed' doesn't always get the complete list of
+# dependencies right, but using --for-each mode with an explicit list of the
+# formulae that are installed does work as expected.
+
+result = subprocess.run(['brew', 'list', '-1', '--formulae'],
+        check=True, stdout=subprocess.PIPE, encoding='UTF-8')
+installed_formulae = result.stdout.splitlines()
+
+result = subprocess.run(
+        ['brew', 'deps', '--full-name', '--for-each'] + installed_formulae,
         check=True, stdout=subprocess.PIPE, encoding='UTF-8')
 
-rdeps = defaultdict(list)
+rdeps = dict((formula,list()) for formula in installed_formulae)
 for line in result.stdout.splitlines():
     fields = list(filter(lambda x: x != '', line.split(' ')))
     dependee = re.sub(r':$', '', fields[0])
-    # ensure every formula is inserted into rdeps as a key
-    _ = rdeps[dependee]
-    # store the reverse dependencies
     for formula in fields[1:]:
         rdeps[formula].append(dependee)
 

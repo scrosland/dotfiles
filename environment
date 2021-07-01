@@ -30,7 +30,7 @@ LESS='-RXm' ; export LESS
 MACHINE_THAT_GOES_PING=1 # illumos / Solaris — exporting would break scripts
 SCM_EDITOR='viterm' ; export SCM_EDITOR
 
-add_to_path_var()
+_add_to_path_var()
 {
     local varname="$1"
     local dirToAdd="$2"
@@ -50,10 +50,16 @@ add_to_path_var()
     return 0
 }
 
+add_to_path_var()
+{
+    _add_to_path_var "$@" || true
+    return 0
+}
+
 add_to_path_var_and_export()
 {
     local varname="$1"
-    if add_to_path_var "$@" ; then
+    if _add_to_path_var "$@" ; then
         export "${varname}"
     fi
 }

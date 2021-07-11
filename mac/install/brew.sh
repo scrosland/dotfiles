@@ -9,13 +9,13 @@ fi
 echo "# Installing applications into ${APPLICATIONS}"
 
 # Install brew if needed
-brew=$(which brew 2>/dev/null)
+brew=$(which brew 2>/dev/null || true)
 if [[ -n ${brew} ]] ; then
     echo "Brew is ${brew}"
 else
     echo "Brew not found in \$PATH"
     SCRIPT=/tmp/brew.$$
-    URL="https://raw.githubusercontent.com/Homebrew/install/master/install"
+    URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
     echo "Getting brew install script."
     run curl -fsSL "${URL}" > ${SCRIPT}
     echo "Check the script before running."
@@ -23,7 +23,7 @@ else
     less ${SCRIPT}
     echo "Interrupt now or the script will be run"
     sleep 5
-    run /usr/bin/ruby ${SCRIPT}
+    run /bin/bash ${SCRIPT}
     rm -f ${SCRIPT}
 fi
 unset brew

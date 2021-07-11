@@ -22,6 +22,7 @@ brew "rsync"
 brew "ruby"
 brew "vim"
 brew "watch"
+brew "youtube-dl"
 
 cask "font-dejavu"
 cask "font-hack"

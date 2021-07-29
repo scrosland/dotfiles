@@ -6,6 +6,8 @@
 	<false/>
 	<key>AlternateMouseScroll</key>
 	<true/>
+	<key>CopySelection</key>
+	<false/>
 	<key>Default Arrangement Name</key>
 	<string>Wide x2</string>
 	<key>Default Bookmark Guid</key>

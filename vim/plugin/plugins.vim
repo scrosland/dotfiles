@@ -182,6 +182,10 @@ augroup filetype_vimplug
     autocmd FileType vim-plug nmap <buffer> o <cr>
 augroup end
 
+" ---- EditorConfig ----
+
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+
 " ---- Files and directories ----
 
 " Netrw should ignore case in sort

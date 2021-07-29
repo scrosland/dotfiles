@@ -81,6 +81,7 @@ Plug (g:is_osx ? 'itspriddle/vim-marked' : 'iamcco/markdown-preview.vim'),
 " utilities
 "
 Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
+Plug 'editorconfig/editorconfig-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'kassio/neoterm'
 Plug 'majutsushi/tagbar'

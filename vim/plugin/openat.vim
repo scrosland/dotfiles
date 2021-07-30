@@ -13,23 +13,34 @@ endif
 let g:vimrc_openat = 1
 
 if has("autocmd")
+    " Accept file:123 and ignore trailing characters
+    let s:regexp = '\(.\{-1,}\):\(\d\+\)'
     function! s:open_file_at_line()
-        let l:arg = expand("%:p") . "junk"
-        " See ':help list' and the section on 'List unpack'
-        let [l:file, l:line; rest] = split(l:arg, ":")
+        let l:match = matchlist(expand('%:p'), s:regexp)
+        if empty(l:match)
+            return v:false
+        endif
+        let l:file = l:match[1]
+        let l:line = l:match[2]
+        if !filereadable(l:file)
+            return v:false
+        endif
         let l:initial_buffer = winbufnr(0)
-        execute "edit! +" . l:line . " " . l:file
-        execute "doautocmd BufNewFile " . l:file
-        execute "bdelete " . l:initial_buffer
+        " Use of ++nested on the autocmd that calls this function causes
+        " the usual autocmd events to be run this :edit command
+        execute 'keepalt edit!' '+'..l:line fnameescape(l:file)
+        execute 'bwipeout' l:initial_buffer
+        return v:true
     endfunction
 
     " The public interface
     function! OpenAtLine()
-        call s:open_file_at_line()
+        return s:open_file_at_line()
     endfunction
 
     augroup open_at_line
         autocmd!
-        autocmd BufNewFile *:*:* call OpenAtLine()
+        " Only fires for files which do not exist
+        autocmd BufNewFile *:* nested call OpenAtLine()
     augroup END
 endif

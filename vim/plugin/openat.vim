@@ -28,7 +28,7 @@ if has("autocmd")
         let l:initial_buffer = winbufnr(0)
         " Use of ++nested on the autocmd that calls this function causes
         " the usual autocmd events to be run this :edit command
-        execute 'keepalt edit!' '+'..l:line fnameescape(l:file)
+        execute 'keepalt edit!' '+'.l:line fnameescape(l:file)
         execute 'bwipeout' l:initial_buffer
         return v:true
     endfunction

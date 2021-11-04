@@ -19,7 +19,7 @@ function! s:BufCleanup(action)
         echohl MoreMsg | echo 'No '.a:action.' buffers to cleanup' | echohl None
     else
         echo 'Cleaning up buffer numbers: '.join(l:bufnumbers, ', ')
-        execute 'bdelete '.join(l:bufnumbers)
+        execute 'bdelete' join(l:bufnumbers)
     endif
 endfunction
 
@@ -56,10 +56,17 @@ function! s:AddBufferEvt()
     endif
 endfunction
 
+function! s:silentRemove(list, bufnr)
+    if has_key(a:list, a:bufnr)
+        call remove(a:list, a:bufnr)
+    endif
+endfunction
+
 function! s:DelBufferEvt()
-    try | call remove(g:sc#buffers, 0+expand('<abuf>')) | catch | endtry
+    let l:bufnr = 0+expand('<abuf>')
+    call s:silentRemove(g:sc#buffers, l:bufnr)
     if exists('t:buffer_list')
-        try | call remove(t:buffer_list, 0+expand('<abuf>')) | catch | endtry
+        call s:silentRemove(t:buffer_list, l:bufnr)
     endif
 endfunction
 
@@ -69,7 +76,7 @@ endfunction
 "                \ 'WinEnter', 'BufWinEnter', 'BufEnter',
 "                \ 'BufDelete', 'BufHidden', 'BufUnload'
 "                \ ]
-"        execute 'autocmd '.evt.' * call s:EventDebug("'.evt.'")'
+"        execute 'autocmd' evt ' * call s:EventDebug("'.evt.'")'
 "    endfor
 "augroup END
 
@@ -101,7 +108,7 @@ function! s:Bdelete(bang)
     endif
     " only delete the buffer if it's not still visible in a window
     if empty(win_findbuf(l:bufnr_to_delete))
-        execute 'bdelete'.l:bang.' '.l:bufnr_to_delete
+        execute 'bdelete'.l:bang l:bufnr_to_delete
     endif
 endfunction
 
@@ -124,7 +131,7 @@ function! s:NextOrPrev(bang, direction, ...)
     endfor
     if l:target != l:current
         let l:bang = a:bang ? '!' : ''
-        execute 'buffer'.l:bang.' '.l:target
+        execute 'buffer'.l:bang l:target
     endif
 endfunction
 

@@ -32,9 +32,9 @@ function! s:CheckInToolWithRepo(repo)
     " and hence the cleaning up the lcd
     tabnew | redraw
     let l:bufnr = bufnr("")
-    execute 'lcd '.a:repo
+    execute 'lcd' a:repo
     call s:CheckInTool()
-    execute 'bdelete '.l:bufnr
+    execute 'bdelete' l:bufnr
 endfunction
 
 function! s:CheckInToolCommand(...)

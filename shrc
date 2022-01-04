@@ -34,8 +34,11 @@ if [ -n "$BASH_VERSION" ] ; then
     shopt -s checkwinsize
     # tell bash to expand directories from environment vars during
     # tab completion - this works around the annoying \$ escape bug
-    # see http://askubuntu.com/questions/41891/bash-auto-complete-for-environment-variables/
-    # and http://lists.gnu.org/archive/html/bug-bash/2011-02/msg00274.html
+    # references:
+    # https://askubuntu.com/questions/41891/bash-auto-complete-for-environment-variables/
+    # https://lists.gnu.org/archive/html/bug-bash/2011-02/msg00274.html
+    # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=650626 (closed)
+    # https://bugs.launchpad.net/ubuntu/+source/bash/+bug/778627 (still open)
     if shopt | grep -s -q direxpand ; then
         shopt -s direxpand
     fi

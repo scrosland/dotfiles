@@ -1,7 +1,17 @@
 ## For Linux/Unix:
 
+Preparation:
   ```
   git clone https://github.com/scrosland/dotfiles $HOME/dotfiles
+  ```
+
+Automatic process:
+  ```
+  $HOME/dotfiles/bootstrap.sh
+  ```
+
+Manual process:
+  ```
   git config --global core.excludesfile $HOME/dotfiles/gitignore.global
   git config --global commit.verbose true
   # Copy skeleton/* the equivalent $HOME/.* files,
@@ -21,9 +31,10 @@
 ## For Mac OS X:
 
   1. Follow the Linux/Unix instructions.
-  1. If applications need to be installed to the user Applications folder:
+  1. If using the manual process for Linux above, then:
+    1. If applications need to be installed to the user Applications folder:
     `touch $HOME/.install_to_user_applications`
-  1. Run `$HOME/dotfiles/mac/install.sh` to install some basics.
+    1. Run `$HOME/dotfiles/mac/install.sh` to install some basics.
   1. Install Marked2 from http://marked2app.com.
 
 

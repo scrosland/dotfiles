@@ -53,6 +53,11 @@ if [ -z `command -v git` ] ; then
     exit 101
 fi
 
+if [ -e "${HOME}/.vimrc" -a -e "${HOME}/.gvimrc" ] ; then
+    echo ".vimrc and .gvimrc exist - has bootstrap already been run?" >&2
+    exit 102
+fi
+
 printf "Git email address: "
 read _email
 printf "Git user name (first last): "

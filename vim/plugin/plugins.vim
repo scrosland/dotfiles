@@ -52,10 +52,6 @@ catch /E117/
                 \. "Consider running vim -c 'call plugins#bootstrap()'"
 endtry
 
-if s:error != 0
-    finish
-endif
-
 " basics
 "
 Plug 'tpope/vim-sensible'
@@ -96,6 +92,10 @@ Plug 'tpope/vim-eunuch'
 Plug 'lifepillar/vim-mucomplete'
 
 call plug#end()
+
+if s:error != 0
+    finish
+endif
 
 " --- Plugin options ---
 

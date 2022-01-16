@@ -36,8 +36,8 @@ install_file()
 {
     _src="$1" ; shift
     _dst="$1" ; shift
-    if [ -e "${_src}" ] ; then
-        mv "${_src}" "${_src}.bootstrap"
+    if [ -e "${_dst}" ] ; then
+        mv "${_dst}" "${_dst}.bootstrap"
     fi
     cat "${_src}" > "${_dst}"
     do_chmod "${_dst}" "$@"
@@ -80,6 +80,7 @@ cd ${HOME}
 
 wait_for_user "About to bootstrap vim configuration."
 maybe vim -c "call plugins#bootstrap()"
+maybe vim -c "PlugInstall"
 
 echo ""
 echo "Optional local configuration:"

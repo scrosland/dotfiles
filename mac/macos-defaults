@@ -148,8 +148,8 @@ maybe defaults write com.apple.screencapture type -string "png"
 maybe defaults write NSGlobalDomain AppleFontSmoothing -int 0
 
 # Show icons for servers, and removable media on the desktop
-maybe defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
-maybe defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+maybe defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+maybe defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
 maybe defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 maybe defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
@@ -216,7 +216,7 @@ for app in \
     "Terminal" \
     "TextEdit" \
     ; do
-    maybe killall "${app}"
+    maybe killall "${app}" || true
 done
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."

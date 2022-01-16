@@ -3,7 +3,15 @@
 source "$(dirname $0)/functions.shlib"
 
 # Install bash
-LOCALBASH=/usr/local/bin/bash
+LOCALBASH=""
+case $(uname -p) in
+    arm)
+        LOCALBASH=/opt/homebrew/bin/bash
+        ;;
+    *)
+        LOCALBASH=/usr/local/bin/bash
+        ;;
+esac
 if [[ -x ${LOCALBASH} ]] ; then
     if ! grep -q -s ${LOCALBASH} /etc/shells ; then
         echo "# Adding ${LOCALBASH} to the available shells"

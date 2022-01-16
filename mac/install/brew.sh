@@ -61,7 +61,16 @@ hash -r
 installer="$(dirname $0)/install_app_or_service.sh"
 echo ""
 echo "# Copying apps into ${APPLICATIONS}"
-find /usr/local/Cellar -depth 3 -maxdepth 3 -type d -name '*.app' -print |
+cellar=""
+case $(uname -p) in
+    arm)
+        cellar=/opt/homebrew/Cellar
+        ;;
+    *)
+        cellar=/usr/local/Cellar
+        ;;
+esac
+find "${cellar}" -depth 3 -maxdepth 3 -type d -name '*.app' -print |
 while read app ; do
     run ${installer} "${app}" "${APPLICATIONS}"
 done

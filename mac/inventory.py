@@ -74,7 +74,7 @@ def pretty_keys(pairs):
 
 def select_applications(apps):
     """Select interesting applications and their details."""
-    for name,details in filter(interesting_apps, apps): 
+    for name,details in filter(interesting_apps, apps):
         filtered_details = filter(interesting_details, details.items())
         # The keys of the details are prettified, but not the application name!
         yield name,dict(pretty_keys(filtered_details))
@@ -88,9 +88,14 @@ def list_hardware():
     title,details = next(items)
     groups.append(pretty(title), pretty_keys(details.items()))
 
+def list_os():
+    items = get_items("SPSoftwareDataType")
+    title,details = next(items)
+    groups.append(pretty(title), pretty_keys(details.items()))
+
 def parse_options():
     parser = argparse.ArgumentParser(
-        description="Inventory applications and hardware.")
+        description="Inventory applications, hardware and OS.")
     parser.add_argument("--json", action="store_true", help="output in JSON")
     global args
     args = parser.parse_args()
@@ -98,5 +103,6 @@ def parse_options():
 if __name__ == "__main__":
     parse_options()
     list_hardware()
+    list_os()
     list_applications()
     groups.dump()

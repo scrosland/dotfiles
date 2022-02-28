@@ -110,6 +110,7 @@ if [ -n "$(which ruby)" ] ; then
 fi
 add_to_path_var PATH "/opt/homebrew/bin"
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
+add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
 add_to_path_var PATH "${HOME}/go/bin"

@@ -32,9 +32,9 @@ Manual process:
 
   1. Follow the Linux/Unix instructions.
   1. If using the manual process for Linux above, then:
-    1. If applications need to be installed to the user Applications folder:
-    `touch $HOME/.install_to_user_applications`
-    1. Run `$HOME/dotfiles/mac/install.sh` to install some basics.
+      1. If applications need to be installed to the user Applications folder, run:
+      `touch $HOME/.install_to_user_applications`
+      1. Run `$HOME/dotfiles/mac/install.sh` to install some basics.
   1. Install Marked2 from http://marked2app.com.
 
 

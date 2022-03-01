@@ -7,6 +7,7 @@ GO111MODULE=on ; export GO111MODULE
 TOOLS=()
 TOOLS+=( golang.org/x/tools/gopls@latest )
 TOOLS+=( github.com/fatih/motion@latest )
+TOOLS+=( github.com/go-delve/delve/cmd/dlv@latest )
 TOOLS+=( github.com/jstemmer/gotags@master )
 # for vscode until replaced by gopls
 TOOLS+=( github.com/ramya-rao-a/go-outline@latest )

@@ -10,6 +10,10 @@ fi
 
 _sc_select_browser()
 {
+    if [ -n "${BROWSER}" ] ; then
+        echo "${BROWSER}"
+        return
+    fi
     if [ -x /usr/bin/open ] ; then
         echo /usr/bin/open
     elif [ -n "${DISPLAY}" ] ; then
@@ -29,6 +33,11 @@ HISTCONTROL=ignoreboth ; export HISTCONTROL
 LESS='-RXm' ; export LESS
 MACHINE_THAT_GOES_PING=1 # illumos / Solaris — exporting would break scripts
 SCM_EDITOR='viterm' ; export SCM_EDITOR
+
+echo "environment BROWSER=${BROWSER}"
+if echo "${BROWSER}" | grep -q -s '.vscode-server' ; then
+    VSCODE_PATH=$(echo "${BROWSER}" | sed -e 's!/helpers.*!/remote-cli!')
+fi
 
 _add_to_path_var()
 {
@@ -112,6 +121,9 @@ add_to_path_var PATH "/opt/homebrew/bin"
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
+if [ -n "${VSCODE_PATH}" ] ; then
+    add_to_path_var PATH "${VSCODE_PATH}"
+fi
 add_to_path_var PATH "${HOME}/go/bin"
 add_to_path_var PATH "${HOME}/dotfiles/bin"
 add_to_path_var PATH "${HOME}/bin"

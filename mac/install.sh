@@ -7,6 +7,7 @@ install/brew.sh
 # fix the PATH in case this was an install from clean
 source ../environment
 install/bash.sh
+install/fzf.sh
 install/git.sh
 install/golang.sh
 install/java.sh

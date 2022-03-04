@@ -4,9 +4,9 @@ source "$(dirname $0)/functions.shlib"
 
 INSTALL="${HOME}/.fzf"
 if [[ -d "${INSTALL}" ]] ; then
-    git -C "${INSTALL}" pull
+    run git -C "${INSTALL}" pull
 else
-    git clone https://github.com/junegunn/fzf.git "${INSTALL}"
+    run git clone https://github.com/junegunn/fzf.git "${INSTALL}"
 fi
 
-"${INSTALL}/install" --all --no-update-rc
+run "${INSTALL}/install" --all --no-update-rc

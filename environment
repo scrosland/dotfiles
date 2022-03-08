@@ -130,3 +130,11 @@ add_to_path_var PATH "${HOME}/bin"
 
 add_to_path_var_and_export PYTHONPATH /Users/Shared/tools/libs/python
 add_to_path_var_and_export RUBYLIB /Users/Shared/tools/libs/ruby
+
+# After $PATH has been set
+if command -v code >/dev/null 2>&1 ; then
+    # Use vscode as the visual editor
+    GIT_EDITOR="code --wait" ; export GIT_EDITOR
+    VISUAL="code --wait" ; export VISUAL
+    SCM_EDITOR="code --wait --goto" # already exported
+fi

@@ -19,3 +19,15 @@ fi
 if ! git config --global --get pull.rebase >/dev/null 2>&1 ; then
     run git config --global pull.rebase false
 fi
+
+# add vscode as a difftool ...
+if ! git config --global --get difftool.vscode.cmd >/dev/null 2>&1 ; then
+    run git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
+fi
+
+# ... and add as mergetool
+if ! git config --global --get mergetool.vscode.cmd >/dev/null 2>&1 ; then
+    # At some point vscode might support proper 3-way merges 
+    # https://github.com/microsoft/vscode/issues/37350 
+    run git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+fi

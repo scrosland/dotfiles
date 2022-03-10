@@ -74,3 +74,6 @@ find "${cellar}" -depth 3 -maxdepth 3 -type d -name '*.app' -print |
 while read app ; do
     run ${installer} "${app}" "${APPLICATIONS}"
 done
+
+# Stop the isync service which otherwise runs every 5 minutes
+brew services stop isync

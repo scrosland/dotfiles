@@ -98,6 +98,9 @@ maybe defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
 #  "25%": 0.4723665
 maybe defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0.6065307
 
+# Disable fast user switching
+maybe sudo defaults write /Library/Preferences/.GlobalPreferences MultipleSessionEnabled -bool false
+
 # ----- Audio -----
 
 # Increase sound quality for Bluetooth headphones/headsets

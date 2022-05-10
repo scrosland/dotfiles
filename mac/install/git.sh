@@ -31,3 +31,5 @@ if ! git config --global --get mergetool.vscode.cmd >/dev/null 2>&1 ; then
     # https://github.com/microsoft/vscode/issues/37350 
     run git config --global mergetool.vscode.cmd 'code --wait $MERGED'
 fi
+
+run git lfs install

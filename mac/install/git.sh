@@ -32,4 +32,5 @@ if ! git config --global --get mergetool.vscode.cmd >/dev/null 2>&1 ; then
     run git config --global mergetool.vscode.cmd 'code --wait $MERGED'
 fi
 
-run git lfs install
+# install git lfs for the current user
+run git -C $HOME lfs install

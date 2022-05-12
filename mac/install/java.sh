@@ -6,7 +6,7 @@ checkForUpdate()
 {
     local baseversion="$1"
 
-    local infoJSON=$(infoData $(infoURL "openjdk${baseversion}"))
+    local infoJSON=$(infoData $(infoURL "${baseversion}"))
     local updated=$(echo "${infoJSON}" | updatedAt "${baseversion}")
 
     local installed=$(installedAt "${baseversion}")
@@ -25,13 +25,13 @@ checkForUpdate()
 downloadURL()
 {
     # infoData will be read from stdin
-    jq '.binaries|.[]|.installer_link' | tail -1 | xargs echo
+    jq '.binary|.installer|.link' | tail -1 | xargs echo
 }
 
 installedAt()
 {
     local baseversion="$1"
-    stat -f%B "/Library/Java/JavaVirtualMachines/adoptopenjdk-${baseversion}.jdk/Contents/Info.plist" 2>/dev/null || echo 0
+    stat -f%B "/Library/Java/JavaVirtualMachines/*-${baseversion}.jdk/Contents/Info.plist" 2>/dev/null || echo 0
 }
 
 releaseName()
@@ -42,20 +42,36 @@ releaseName()
 updatedAt()
 {
     # infoData will be read from stdin
-    jq '.timestamp' | tail -1 | xargs echo |
+    jq '.binary|.updated_at' | tail -1 | xargs echo |
         ruby -e 'require "time" ; puts Time.parse($stdin.readline()).to_i()'
 }
 
 infoData()
 {
     local infoURL="$1"
-    curl -sSL "${infoURL}"
+    curl -sSL "${infoURL}" | jq '.[]' | cat 
+}
+
+architecture()
+{
+    case "$(uname -m)" in
+        x86_64|amd64)
+            echo "x64"
+            ;;
+        arm*)
+            echo "aarch64"
+            ;;
+        *)
+            echo "unknown architecture: $(uname -a)" >&2
+            exit 1
+            ;;
+    esac
 }
 
 infoURL()
 {
     local version="$1"
-    echo "https://api.adoptopenjdk.net/v2/info/releases/${version}?openjdk_impl=hotspot&os=mac&release=latest&type=jdk"
+    echo "https://api.adoptium.net/v3/assets/latest/${version}/hotspot?architecture=$(architecture)&image_type=jdk&os=mac&vendor=eclipse"
 }
 
 if ls -1 /Library/Java/JavaVirtualMachines | grep -qs ^jdk ; then
@@ -79,3 +95,4 @@ echo ""
 echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"
 checkForUpdate 8
 checkForUpdate 11
+checkForUpdate 17

@@ -60,6 +60,8 @@ Plug 'tpope/vim-sensible'
 "
 Plug 'altercation/vim-colors-solarized'   " the original
 Plug 'lifepillar/vim-solarized8'          " with truecolor support
+Plug 'romgrk/github-light.vim'            " need to fork and s/'none'/'NONE'/g
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
 
 " language and file format support
 "
@@ -161,10 +163,13 @@ endfunction
 
 " Set initial color scheme
 if s:terminalSupportsTrueColor()
-    call s:initSolarized8()
+    set termguicolors
+    "call s:initSolarized8()
 else
-    call s:initSolarized()
+    "call s:initSolarized()
 endif
+"colorscheme github-light
+colorscheme onehalflight
 
 " ---- vim-plug -----
 

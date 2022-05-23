@@ -37,7 +37,8 @@ _sc_is_login_shell()
 }
 
 # shell setup
-set -o vi
+#set -o vi
+set -o emacs
 
 if [ -n "$BASH_VERSION" ] ; then
     # tells bash to check the window size after each command

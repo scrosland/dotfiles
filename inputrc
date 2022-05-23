@@ -1,7 +1,7 @@
-set editing-mode vi
-$if mode=vi
-  set keymap vi-insert
-$endif
+# set editing-mode vi
+# $if mode=vi
+#   set keymap vi-insert
+# $endif
 
 set bell-style visible
 set prefer-visible-bell on

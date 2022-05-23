@@ -135,6 +135,5 @@ add_to_path_var_and_export RUBYLIB /Users/Shared/tools/libs/ruby
 if command -v code >/dev/null 2>&1 ; then
     # Use vscode as the visual editor
     GIT_EDITOR="code --wait" ; export GIT_EDITOR
-    VISUAL="code --wait" ; export VISUAL
     SCM_EDITOR="code --wait --goto" # already exported
 fi

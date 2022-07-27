@@ -28,6 +28,7 @@ elif [[ "$1" = "--part-two" ]] ; then
     stage golang
     stage java
     stage iterm2
+    stage python
     stage ruby
     stage scm
 else

@@ -124,6 +124,7 @@ add_to_path_var PATH "/Users/Shared/tools/scripts"
 if [ -n "${VSCODE_PATH}" ] ; then
     add_to_path_var PATH "${VSCODE_PATH}"
 fi
+add_to_path_var PATH "${HOME}/.local/bin"
 add_to_path_var PATH "${HOME}/go/bin"
 add_to_path_var PATH "${HOME}/dotfiles/bin"
 add_to_path_var PATH "${HOME}/bin"

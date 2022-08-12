@@ -25,11 +25,14 @@ if ! git config --global --get difftool.vscode.cmd >/dev/null 2>&1 ; then
     run git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
 fi
 
-# ... and add as mergetool
+# ... remove previous mergetool configuration ...
+if ! git config --global --get mergetool.vscode.cmd 2>/dev/null | grep -q -s -- '--merge' ; then
+    run git config --global --unset mergetool.vscode.cmd || true
+fi
+
+# ... and add as mergetool (now supporting 3-way merges)
 if ! git config --global --get mergetool.vscode.cmd >/dev/null 2>&1 ; then
-    # At some point vscode might support proper 3-way merges 
-    # https://github.com/microsoft/vscode/issues/37350 
-    run git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+    run git config --global mergetool.vscode.cmd 'code --wait --merge $REMOTE $LOCAL $BASE $MERGED'
 fi
 
 # install git lfs for the current user

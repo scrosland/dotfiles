@@ -79,23 +79,24 @@ _extract_base_path()
             return
             ;;
     esac
-    # Split the path into elements, keep everything up to but not including
-    # $HOME/bin and then rejoin the path. This is the basic macOS path.
-    echo "$PATH" | tr : '\n' | sed -ne "\:${HOME}/bin:q;p" | paste -s -d: -
+    # Use path_helper to reconstruct the default path from /etc/paths.d.
+    # The clearing of $PATH is important as path_helper will by default append
+    # the current contents of $PATH
+    eval $(env -u PATH /usr/libexec/path_helper -s)
 }
 
 fix_degenerate_macos_path()
 {
-    # Somehow iTerm can end up with a degenerate path when started from Finder
-    # by a workflow or Automator action. This is despite the script calling
-    # osascript to start iTerm having already set up the correct path.
+    # iTerm can end up with a degenerate path when started from Finder by a
+    # workflow or Automator action. This is because the script which starts
+    # iTerm runs as a login shell and /etc/profile will run
+    # /usr/libexec/path_helper which will move any user directories to the end
+    # of the path. There's a good explanation at:
+    # https://checkoway.net/musings/nix/#fixing-shell-integration
     if [ "$(uname -s)" != "Darwin" ] ; then
         return
     fi
-    basepath="$(_extract_base_path)"
-    if [ -n "${basepath}" ] ; then
-        PATH="${basepath}"
-    fi
+    _extract_base_path
 }
 
 if [ -z "${CDPATH}" ] ; then

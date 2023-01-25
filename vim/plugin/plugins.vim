@@ -50,6 +50,7 @@ catch /E117/
     " vim-plug should be in an autoload directory below g:plugins_basedir
     echoerr "Unable to find 'vim-plug' in " . g:plugins_basedir . "/autoload. "
                 \. "Consider running vim -c 'call plugins#bootstrap()'"
+    finish
 endtry
 
 " basics

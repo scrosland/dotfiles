@@ -5,6 +5,7 @@ source "$(dirname $0)/functions.shlib"
 APPLICATIONS="/Applications"
 if [[ -e $HOME/.install_to_user_applications ]] ; then
     APPLICATIONS="${HOME}${APPLICATIONS}"
+    mkdir -p "${HOME}${APPLICATIONS}" || true
 fi
 echo "# Installing applications into ${APPLICATIONS}"
 

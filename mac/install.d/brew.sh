@@ -32,6 +32,13 @@ unset brew
 # Update brew
 run brew update
 
+# From 4.0 the taps of homebrew/core and homebre/cask are not needed
+for tap in homebrew/core homebrew/cask ; do
+    if [[ $(brew tap-info ${tap} | grep -c "Not installed") = 0 ]] ; then
+        run brew untap ${tap}
+    fi
+done
+
 opython=$(brew info python3 | grep libexec || true)
 
 # Install and upgrade packages using bundle ...

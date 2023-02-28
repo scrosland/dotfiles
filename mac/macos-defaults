@@ -101,6 +101,9 @@ maybe defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0.6065307
 # Disable fast user switching
 maybe sudo defaults write /Library/Preferences/.GlobalPreferences MultipleSessionEnabled -bool false
 
+# Enable two-button mode for the Apple Magic Mouse
+maybe sudo defaults write com.apple.AppleMultitouchMouse MouseButtonMode -string TwoButton
+
 # ----- Audio -----
 
 # Increase sound quality for Bluetooth headphones/headsets

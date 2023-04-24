@@ -25,7 +25,7 @@ _sc_seen_profile()
 _sc_is_login_shell()
 {
     bshell=$(basename "${SHELL}")
-    cmd=$(ps -o 'command=' -p $$)
+    cmd=$(ps -o comm= -p $$)
     arg=$(echo "${cmd}" | egrep -w -- "-l|--login")
     if [ "${cmd}" = "-${SHELL}" ] ||
        [ "${cmd}" = "-${bshell}" ] ||

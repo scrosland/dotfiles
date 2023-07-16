@@ -66,22 +66,11 @@ hash -r
 # Copy apps into the applications folder.
 # This is not using "brew linkapps" because that creates symlinks into /usr
 # which Spotlight will refuse to index.
-installer="$(dirname $0)/install_app_or_service.sh"
+
 echo ""
 echo "# Copying apps into ${APPLICATIONS}"
-cellar=""
-case $(uname -p) in
-    arm)
-        cellar=/opt/homebrew/Cellar
-        ;;
-    *)
-        cellar=/usr/local/Cellar
-        ;;
-esac
-find "${cellar}" -depth 3 -maxdepth 3 -type d -name '*.app' -print |
-while read app ; do
-    run ${installer} "${app}" "${APPLICATIONS}"
-done
+run $(realpath "$(dirname $0)/../brew-copy-apps")
+echo ""
 
 # Stop the isync service which otherwise runs every 5 minutes
 brew services stop isync

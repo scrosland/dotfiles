@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+
+from collections import defaultdict
+from functools import cache
+from packaging import version
+from pathlib import Path
+import re
+import subprocess
+
+Program = Path(__file__)
+Installer = Program.parent / "install.d/install_app_or_service.sh"
+
+@cache
+def cellar():
+    for p in [Path(x) for x in ("/opt/homebrew/Cellar", "/usr/local/Cellar")]:
+        if p.is_dir():
+            return p
+
+@cache
+def target():
+    if (Path.home() / ".install_to_user_applications").exists():
+        return Path.home() / "Applications"
+    return Path("/Applications")
+
+def copy_application(path):
+    print(f"# Copying \"{path}\" to {target()}")
+    result = subprocess.run([Installer, path, target()], check=True)
+
+# apps is { app: { version: path_to_app } }
+apps = defaultdict(dict)
+
+for app in cellar().glob("*/*/*.app"):
+    if not app.is_dir():
+        continue
+    version_string = "0.0"
+    if (m := re.search('[@](?P<version>[\w.]+)/', str(app))) is not None:
+        version_string = m.group('version')
+    apps[app.name][version.parse(version_string)] = app
+
+# Copy the latest version of each app into the target directory
+for app in apps:
+    latest = sorted(apps[app].keys())[-1]
+    selected = apps[app][latest]
+    copy_application(selected)

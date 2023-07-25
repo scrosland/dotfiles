@@ -29,3 +29,10 @@ brew "youtube-dl"
 cask "font-dejavu"
 cask "font-hack"
 cask "font-input"
+
+# MacTex may need to sudo, so have to be in group admin(80)
+if (Process.gid == 80) || (Process.groups.include? 80)
+    cask "mactex-no-gui"
+else
+    $stderr.puts("Warning: Not installing mactex-no-gui which needs sudo")
+end

@@ -12,7 +12,13 @@ SAVE_DIRECTORY="${HOME}/Library/Application Support/iTerm2/scrosland"
 THEME_FILENAME="${THEME_NAME}.itermcolors"
 THEME="${SAVE_DIRECTORY}/${THEME_FILENAME}"
 
-installed=$(plutil -p ${HOME}/Library/Preferences/com.googlecode.iterm2.plist | grep "${THEME_NAME}" || true)
+ITERM_PREFERENCES="${HOME}/Library/Preferences/com.googlecode.iterm2.plist"
+if [[ ! -r ${ITERM_PREFERENCES} ]]; then
+    echo "# iTerm2 preferences not found (iTerm not installed?), skipping..."
+    exit 0
+fi
+
+installed=$(plutil -p ${ITERM_PREFERENCES} | grep "${THEME_NAME}" || true)
 if [[ -n "${installed}" ]]; then
     echo "Theme \"${THEME_NAME}\" is already installed in iTerm preferences"
 else

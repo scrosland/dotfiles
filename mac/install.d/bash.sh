@@ -14,7 +14,7 @@ arm)
 esac
 if [[ -x ${LOCALBASH} ]]; then
     if ! grep -q -s ${LOCALBASH} /etc/shells; then
-        if ! $(id -G | grep -q -s -w 80); then
+        if ! $(id -Gn | grep -q -s -w admin); then
             echo "# Cannot add ${LOCALBASH} to the available shells - not in group admin(80)" >&2
             exit 1
         fi

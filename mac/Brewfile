@@ -24,6 +24,7 @@ brew "rsync"
 brew "ruby"
 brew "vim"
 brew "watch"
+brew "wget"
 brew "youtube-dl"
 
 cask "font-dejavu"

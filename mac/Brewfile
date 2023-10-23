@@ -1,3 +1,4 @@
+# vim: set filetype=ruby :
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 
@@ -10,6 +11,7 @@ brew "exiftool"
 brew "ffmpeg"
 brew "flac"
 brew "git-lfs"
+brew "gitui"
 brew "go"
 brew "lame"
 brew "ipcalc"

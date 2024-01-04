@@ -12,7 +12,7 @@ _sc_prompt_path()
 {
     local tilde="~"
     local cwd="${PWD/#$HOME/${tilde}}"
-    if (( "${#cwd}" <= 35 )) ; then
+    if (( "${#cwd}" <= 35 )) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
         echo "${cwd}"
         return 0
     fi

@@ -10,6 +10,11 @@ if ! git config --global --get commit.verbose >/dev/null 2>&1 ; then
     run git config --global commit.verbose true
 fi
 
+# ensure git uses "main" as the default branch in new repos
+if ! git config --global --get init.defaultBranch >/dev/null 2>&1; then
+    run git config --global init.defaultBranch main
+fi
+
 # configure pull to fast-forward when possible and merge otherwise ...
 if ! git config --global --get pull.ff >/dev/null 2>&1 ; then
     run git config --global pull.ff true

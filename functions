@@ -52,6 +52,11 @@ source_when_readable()
 alias ls='ls -CF'
 alias r='fc -s'
 
+if [ -x /usr/bin/parallel-ssh -a -z "$(which pssh)" ] ; then
+    alias pssh=parallel-ssh
+    alias pscp=parallel-ssh
+fi
+
 if [ -z "$(which sgrep)" ] ; then
     alias sgrep='rg --no-heading --line-number --with-filename'
 fi

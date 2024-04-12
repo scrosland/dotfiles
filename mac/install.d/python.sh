@@ -2,4 +2,5 @@
 
 source "$(dirname $0)/functions.shlib"
 
-run pip3 install black
+# Now installed from Brew
+#run pip3 install black

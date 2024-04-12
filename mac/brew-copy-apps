@@ -33,7 +33,7 @@ for app in cellar().glob("*/*/*.app"):
     if not app.is_dir():
         continue
     version_string = "0.0"
-    if (m := re.search('[@](?P<version>[\w.]+)/', str(app))) is not None:
+    if (m := re.search(r'[@](?P<version>[\w.]+)/', str(app))) is not None:
         version_string = m.group('version')
     apps[app.name][version.parse(version_string)] = app
 

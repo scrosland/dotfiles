@@ -367,10 +367,17 @@ if has("autocmd")
         autocmd FileType ruby setlocal path=.,,**
     augroup end
 
-    " Change tab stops for shell code
+    " Change tab stops for shell code and set up shfmt
+    function s:set_shfmt_args()
+        let g:shfmt_extra_args = '-i ' . &l:shiftwidth . ' --func-next-line'
+        let g:shfmt_fmt_on_save = 1
+        let &l:formatprg='shfmt ' . g:shfmt_extra_args
+    endfunction
+
     augroup filetype_shell
         autocmd!
         autocmd FileType sh setlocal softtabstop=4 shiftwidth=4
+        autocmd FileType sh call s:set_shfmt_args()
     augroup end
 endif " has autocmd
 

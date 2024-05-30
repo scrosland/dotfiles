@@ -1,5 +1,5 @@
 #!/bin/sh -eu
-# 
+#
 # Deliberately use the lowest common denominator shell, i.e. POSIX shell.
 
 #DEBUG=true
@@ -7,7 +7,7 @@ DEBUG=${DEBUG:-false}
 
 maybe()
 {
-    if ${DEBUG} ; then
+    if ${DEBUG}; then
         printf "# "
         printf "'%s' " "$@"
         printf "\n"
@@ -25,21 +25,25 @@ wait_for_user()
 
 do_chmod()
 {
-    _dst="$1" ; shift
-    if [ -n "$*" ] ; then
-        _mode="$1" ; shift
+    _dst="$1"
+    shift
+    if [ -n "$*" ]; then
+        _mode="$1"
+        shift
         chmod "${_mode}" "${_dst}"
     fi
 }
 
 install_file()
 {
-    _src="$1" ; shift
-    _dst="$1" ; shift
-    if [ -e "${_dst}" ] ; then
+    _src="$1"
+    shift
+    _dst="$1"
+    shift
+    if [ -e "${_dst}" ]; then
         mv "${_dst}" "${_dst}.bootstrap"
     fi
-    cat "${_src}" > "${_dst}"
+    cat "${_src}" >"${_dst}"
     do_chmod "${_dst}" "$@"
 }
 
@@ -47,13 +51,13 @@ install_file()
 # main
 #
 
-if [ -z `command -v git` ] ; then
+if [ -z $(command -v git) ]; then
     echo "Cannot find the git command." >&2
     echo "How did we get here without using cloning the dotfiles repo?!" >&2
     exit 101
 fi
 
-if [ -e "${HOME}/.vimrc" -a -e "${HOME}/.gvimrc" ] ; then
+if [ -e "${HOME}/.vimrc" -a -e "${HOME}/.gvimrc" ]; then
     echo ".vimrc and .gvimrc exist - has bootstrap already been run?" >&2
     exit 102
 fi
@@ -71,12 +75,14 @@ maybe git config --global pull.ff true
 maybe git config --global pull.rebase false
 
 cd ${HOME}/dotfiles/skeleton
-for skel in * ; do
+for skel in *; do
     maybe install_file "${skel}" "${HOME}/.${skel}"
 done
 maybe sed -i ".bootstrap" -e "s!%HOME%!${HOME}!g" ${HOME}/.inputrc
 
 cd ${HOME}
+mkdir -p .config
+ln -sf ../dotfiles/zellij .config/zellij
 
 # dotfiles/environment requires ~/bin to fix up degenerate macOS paths
 mkdir "${HOME}"/bin
@@ -91,18 +97,18 @@ echo "Create \$HOME/.vim/after/plugin/local.vim if required."
 echo "Create \$HOME/.{environment,functions,shrc}.local if required."
 echo ""
 
-if [ `uname -s` = "Darwin" ] ; then
-    while : ; do
+if [ $(uname -s) = "Darwin" ]; then
+    while :; do
         printf "Should apps be installed locally in \$HOME/Applications? [yn] "
         read _choice
         case "${_choice}" in
-            y|Y)
-                maybe touch ${HOME}/.install_to_user_applications
-                break
-                ;;
-            n|N)
-                break
-                ;;
+        y | Y)
+            maybe touch ${HOME}/.install_to_user_applications
+            break
+            ;;
+        n | N)
+            break
+            ;;
         esac
     done
 

@@ -42,9 +42,29 @@ cask "font-dejavu"
 cask "font-hack"
 cask "font-input"
 
-# MacTex may need to sudo, so have to be in group admin(80)
-if (Process.gid == 80) || (Process.groups.include? 80)
-    cask "mactex-no-gui"
-else
-    $stderr.puts("Warning: Not installing mactex-no-gui which needs sudo")
-end
+RestrictedItems = {
+  "mactext-no-gui" => {
+    :type => :cask,
+    :sudo => true,
+    :work => false,
+  },
+  "lookaway" => {
+    :type => :cask,
+    :sudo => true,
+    :work => true,
+  },
+}
+
+CanSudo = (Process.gid == 80) || (Process.groups.include? 80)
+IsWork = ["/Library/HDS", "/usr/local/hitachi", "/usr/local/jamf"].any? { |d| File.exist? d }
+
+RestrictedItems.each() { |name,details|
+  if details[:sudo] && !CanSudo
+    $stderr.puts("Warning: Not installing #{name} which needs sudo")
+    next
+  end
+  if details[:work] && !IsWork
+    next
+  end
+  send(details[:type], name)
+}

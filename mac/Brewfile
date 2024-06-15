@@ -43,7 +43,7 @@ cask "font-hack"
 cask "font-input"
 
 RestrictedItems = {
-  "mactext-no-gui" => {
+  "mactex-no-gui" => {
     :type => :cask,
     :sudo => true,
     :work => false,

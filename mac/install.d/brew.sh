@@ -3,7 +3,7 @@
 source "$(dirname $0)/functions.shlib"
 
 APPLICATIONS="/Applications"
-if [[ -e $HOME/.install_to_user_applications ]] ; then
+if [[ -e $HOME/.install_to_user_applications ]]; then
     APPLICATIONS="${HOME}${APPLICATIONS}"
     mkdir -p "${HOME}${APPLICATIONS}" || true
 fi
@@ -11,14 +11,14 @@ echo "# Installing applications into ${APPLICATIONS}"
 
 # Install brew if needed
 brew=$(which brew 2>/dev/null || true)
-if [[ -n ${brew} ]] ; then
+if [[ -n ${brew} ]]; then
     echo "Brew is ${brew}"
 else
     echo "Brew not found in \$PATH"
     SCRIPT=/tmp/brew.$$
     URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
     echo "Getting brew install script."
-    run curl -fsSL "${URL}" > ${SCRIPT}
+    run curl -fsSL "${URL}" >${SCRIPT}
     echo "Check the script before running."
     sleep 5
     less ${SCRIPT}
@@ -33,8 +33,8 @@ unset brew
 run brew update
 
 # From 4.0 the taps of homebrew/core and homebre/cask are not needed
-for tap in homebrew/core homebrew/cask ; do
-    if [[ $(brew tap-info ${tap} | grep -c "Not installed") = 0 ]] ; then
+for tap in homebrew/core homebrew/cask; do
+    if [[ $(brew tap-info ${tap} | grep -c "Not installed") = 0 ]]; then
         run brew untap ${tap}
     fi
 done
@@ -43,7 +43,7 @@ opython=$(brew info python3 | grep libexec || true)
 
 # Install and upgrade packages using bundle ...
 BREWFILE="$HOME/dotfiles/mac/Brewfile"
-if [[ ! -r ${BREWFILE} ]] ; then
+if [[ ! -r ${BREWFILE} ]]; then
     echo "Cannot find the brewfile, '${BREWFILE}'" >&2
     exit 1
 fi
@@ -54,7 +54,7 @@ run brew upgrade
 run brew cleanup
 
 python=$(brew info python3 | grep libexec || true)
-if [[ ${opython} != ${python} ]] ; then
+if [[ ${opython} != ${python} ]]; then
     echo "Python 3.x has been updated to 3.y"
     echo "was: ${opython}"
     echo "is : ${python}"
@@ -73,4 +73,9 @@ run $(realpath "$(dirname $0)/../brew-copy-apps")
 echo ""
 
 # Stop the isync service which otherwise runs every 5 minutes
-brew services stop isync
+brew services stop isync >/dev/null
+
+if [[ ! -L ${HOME}/bin/clang-format ]]; then
+    mkdir -p ${HOME}/bin
+    ln -s $(command -v clang-format) ${HOME}/bin/clang-format
+fi

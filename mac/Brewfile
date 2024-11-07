@@ -13,6 +13,7 @@ brew "ctags"
 brew "exiftool"
 brew "ffmpeg"
 brew "flac"
+brew "gh" # github
 brew "git-lfs"
 brew "gitui"
 brew "go"

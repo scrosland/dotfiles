@@ -5,10 +5,10 @@ stage()
     local stage="$1"
     echo "# Installing $1..."
     install.d/${stage}.sh
-    
+
     printf '\nPress Return to continue with next stage.'
-    read -p' ' 
-    # erase line: 
+    read -p' '
+    # erase line:
     #   \e[1A ANSI CSI cursor up (to previous line - the press return prompt)
     #   \e[0K ANSI CSI Erase in Line
     printf '\e[1A\e[0K'
@@ -16,15 +16,16 @@ stage()
 
 cd $(dirname $0)
 
-if (( $# == 0 )) ; then
+if (($# == 0)); then
     stage xcode
     stage brew
     # the environment might be messed up so re-exec for the next part
     exec "$0" --part-two
-elif [[ "$1" = "--part-two" ]] ; then
+elif [[ "$1" = "--part-two" ]]; then
     stage bash
     stage fzf
     stage git
+    stage github
     stage golang
     stage java
     stage iterm2

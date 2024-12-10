@@ -82,7 +82,7 @@ maybe sed -i ".bootstrap" -e "s!%HOME%!${HOME}!g" ${HOME}/.inputrc
 
 cd ${HOME}
 mkdir -p .config
-ln -sf ../dotfiles/zellij .config/zellij
+#ln -sf ../dotfiles/example .config/example
 
 # dotfiles/environment requires ~/bin to fix up degenerate macOS paths
 mkdir "${HOME}"/bin

@@ -370,7 +370,9 @@ if has("autocmd")
     " Change tab stops for shell code and set up shfmt
     function s:set_shfmt_args()
         let g:shfmt_extra_args = '-i ' . &l:shiftwidth . ' --func-next-line'
-        let g:shfmt_fmt_on_save = 1
+        " It's very hard to disable format on save because of the way it is
+        " implemented. Probably need to reimplement it locally.
+        "let g:shfmt_fmt_on_save = 1
         let &l:formatprg='shfmt ' . g:shfmt_extra_args
     endfunction
 

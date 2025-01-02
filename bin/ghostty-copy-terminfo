@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# This should work for any terminal, not just ghostty
+
+if (($# < 1)); then
+    echo "error: no host specified" >&2
+    echo "usage: $(basename $0) host ..."
+    exit 1
+fi
+
+for remote in "$@"; do
+    echo "Copying terminfo to ${remote}"
+    infocmp -x | ssh "${remote}" -- tic -x -
+done
+
+exit 0

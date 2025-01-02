@@ -80,9 +80,12 @@ for skel in *; do
 done
 maybe sed -i ".bootstrap" -e "s!%HOME%!${HOME}!g" ${HOME}/.inputrc
 
-cd ${HOME}
-mkdir -p .config
-#ln -sf ../dotfiles/example .config/example
+mkdir -p "${HOME}/.config"
+cd "${HOME}/dotfiles/config"
+for cf in *; do
+    maybe ln -sf "${HOME}/dotfiles/config/${cf}" "${HOME}/.config/${cf}"
+done
+cd "${HOME}"
 
 # dotfiles/environment requires ~/bin to fix up degenerate macOS paths
 mkdir "${HOME}"/bin

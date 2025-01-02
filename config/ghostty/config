@@ -1,0 +1,25 @@
+theme = base24-github
+# override the very pale foreground and subtle highlights in base24-github
+foreground = #333333
+cursor-color = #333333
+selection-background = #c8c8fa
+selection-background = #f1d007
+selection-foreground = #333333
+
+font-family = Input Mono
+font-size = 13
+# tighten up the horizontal spacing for Input Mono
+adjust-cell-width = -10%
+# disable programming ligatures
+font-feature = -calt
+
+# initial window size
+window-height = 42
+window-width = 80
+
+clipboard-read = allow
+clipboard-write = allow
+
+macos-titlebar-style = native
+macos-non-native-fullscreen = false
+# macos-option-as-alt = left

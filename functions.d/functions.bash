@@ -4,7 +4,7 @@
 # Bash functions
 #
 
-if [ -z "${BASH_VERSION}" ] ; then
+if [ -z "${BASH_VERSION}" ]; then
     return
 fi
 
@@ -12,12 +12,12 @@ _sc_prompt_path()
 {
     local tilde="~"
     local cwd="${PWD/#$HOME/${tilde}}"
-    if (( "${#cwd}" <= 35 )) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
+    if (("${#cwd}" <= 35)) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
         echo "${cwd}"
         return 0
     fi
     local prefix="~/"
-    if [[ "${cwd}" != "${prefix}*" ]] ; then
+    if [[ "${cwd}" != "${prefix}*" ]]; then
         prefix="${cwd:0:5}"
     fi
     local headtail="${prefix}...${cwd: -20}"
@@ -44,7 +44,7 @@ _sc_prompt_path()
 _sc_prompt_reset()
 {
     # bold helps the end mark stand out
-    printf "\e[1m↵\e[m%$((COLUMNS-1))s\r" ""
+    printf "\e[1m↵\e[m%$((COLUMNS - 1))s\r" ""
 }
 
 _sc_prompt_string()
@@ -62,10 +62,11 @@ _sc_prompt_command()
     _sc_prompt_reset
 
     local level=""
-    if (( ${IS_LOGIN_SHELL} == 0 && ${SHLVL} > 1 )) ; then
-        declare -i count=$(( (${SHLVL} - 1) * 2 ))
+    if ((${IS_LOGIN_SHELL} == 0 && ${SHLVL} > 1)); then
+        declare -i count=$(((${SHLVL} - 1) * 2))
         printf -v level "%.*s" ${count} '\$\$\$\$\$\$\$\$\$'
     fi
+    local options="" # e.g. git branch
     local prompt="$(_sc_prompt_string)"
     printf -v PS1 "${prompt}${options}${level}\$ "
 
@@ -78,16 +79,16 @@ _sc_csi_decset_state()
     local ps="$1"
     local onoff
     case "$2" in
-        on|ON)
-            onoff="h"
-            ;;
-        off|OFF)
-            onoff="l"
-            ;;
-        *)
-            echo "error: \"$2\" unknown option, should be \"on\" or \"off\"" >&2
-            return 1
-            ;;
+    on | ON)
+        onoff="h"
+        ;;
+    off | OFF)
+        onoff="l"
+        ;;
+    *)
+        echo "error: \"$2\" unknown option, should be \"on\" or \"off\"" >&2
+        return 1
+        ;;
     esac
     printf '\e[?%s%s' "${ps}" "${onoff}"
 }
@@ -111,8 +112,9 @@ set_title()
     return 0
 }
 
-if [ -z "$(which sfind)" ] ; then
-    sfind() {
+if [ -z "$(which sfind)" ]; then
+    sfind()
+    {
         rg --files "$@" | sed -e 's/^/"/' -e 's/$/"/'
     }
 fi
@@ -120,7 +122,7 @@ fi
 # From the bash man page:
 #   "PS1 is set and $- includes i if bash is interactive, allowing a
 #    shell script or a startup file to test this state."
-if [[ -n $PS1 ]] ; then
+if [[ -n $PS1 ]]; then
     PROMPT_COMMAND="_sc_prompt_command"
 
     source_when_readable \
@@ -128,13 +130,17 @@ if [[ -n $PS1 ]] ; then
         /usr/local/etc/profile.d/bash_completion.sh \
         /etc/profile.d/bash_completion.sh
 
-    if [[ -r $HOME/.fzf.bash ]] ; then
-        _fzf_compgen_path() {
+    if [[ -r $HOME/.fzf.bash ]]; then
+        _fzf_compgen_path()
+        {
             fzf-list-command "$1"
         }
-        FZF_DEFAULT_COMMAND="fzf-list-command" ; export FZF_DEFAULT_COMMAND
-        FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND" ; export FZF_CTRL_T_COMMAND
-        FZF_DEFAULT_OPTS="--color=light --cycle" ; export FZF_DEFAULT_OPTS
+        FZF_DEFAULT_COMMAND="fzf-list-command"
+        export FZF_DEFAULT_COMMAND
+        FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_CTRL_T_COMMAND
+        FZF_DEFAULT_OPTS="--color=light --cycle"
+        export FZF_DEFAULT_OPTS
         source $HOME/.fzf.bash
     fi
 fi

@@ -42,6 +42,9 @@ _add_to_path_var()
 {
     local varname="$1"
     local dirToAdd="$2"
+    if [ -z "${dirToAdd}" ] ; then
+        return 1
+    fi
     if [ ! -d "${dirToAdd}" ] ; then
         return 1
     fi
@@ -118,13 +121,12 @@ if [ -n "$(which ruby)" ] ; then
     add_to_path_var PATH "$(ruby -e 'puts Gem.bindir()' 2>/dev/null)"
 fi
 add_to_path_var PATH "/opt/homebrew/bin"
+add_to_path_var PATH "${GHOSTTY_BIN_DIR}"
 add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
-if [ -n "${VSCODE_PATH}" ] ; then
-    add_to_path_var PATH "${VSCODE_PATH}"
-fi
+add_to_path_var PATH "${VSCODE_PATH}"
 add_to_path_var PATH "${HOME}/.local/bin"
 add_to_path_var PATH "${HOME}/go/bin"
 add_to_path_var PATH "${HOME}/dotfiles/bin"

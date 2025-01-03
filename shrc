@@ -72,6 +72,12 @@ if [ "$TERM" = "xterm" ] ; then
     unset info
 fi
 
+if [ "$TERM" = "xterm-ghostty" -o "$TERM" = "ghostty" ] ; then
+    if [ -z "$COLORTERM" ] ; then
+        COLORTERM=truecolor ; export COLORTERM
+    fi
+fi
+
 #    if [ -z "$TMUX" -a "$TERM" = "screen-256color" ] ; then
 #        stty erase ^h kill ^u
 #    fi

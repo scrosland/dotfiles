@@ -127,6 +127,7 @@ if [[ -n $PS1 ]]; then
 
     source_when_readable \
         /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
+        "${GHOSTTY_RESOURCES_DIR}/../bash-completion/completions/ghostty.bash" \
         /usr/local/etc/profile.d/bash_completion.sh \
         /etc/profile.d/bash_completion.sh
 

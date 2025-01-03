@@ -383,6 +383,11 @@ execute 'set rtp^=' . s:scripts
 runtime! plugin/plugins.vim
 execute 'set rtp+=' . s:scripts . '/after'
 
+let s:ghostty = resolve(expand("$GHOSTTY_RESOURCES_DIR/../vim/vimfiles"))
+if isdirectory(s:ghostty)
+    execute 'set rtp+=' . s:ghostty
+endif
+
 " --- local options ---
 
 " Add local options to an after/ plugin called local.vim

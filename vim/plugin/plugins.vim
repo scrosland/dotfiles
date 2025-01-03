@@ -74,8 +74,7 @@ Plug 'plasticboy/vim-markdown'
 Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
 Plug 'vim-python/python-syntax'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-Plug (g:is_osx ? 'itspriddle/vim-marked' : 'iamcco/markdown-preview.vim'),
-    \ { 'for': ['markdown', 'mkd'] }
+Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
 Plug 'z0mbix/vim-shfmt'
 
 " utilities

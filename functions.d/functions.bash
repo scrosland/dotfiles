@@ -3,6 +3,8 @@
 #
 # Bash functions
 #
+# dotfiles/functions ensures that this is only run for interactive shells
+#
 
 if [ -z "${BASH_VERSION}" ]; then
     return
@@ -119,31 +121,26 @@ if [ -z "$(which sfind)" ]; then
     }
 fi
 
-# From the bash man page:
-#   "PS1 is set and $- includes i if bash is interactive, allowing a
-#    shell script or a startup file to test this state."
-if [[ -n $PS1 ]]; then
-    PROMPT_COMMAND="_sc_prompt_command"
+PROMPT_COMMAND="_sc_prompt_command"
 
-    source_when_readable \
-        /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
-        "${GHOSTTY_RESOURCES_DIR}/../bash-completion/completions/ghostty.bash" \
-        /usr/local/etc/profile.d/bash_completion.sh \
-        /etc/profile.d/bash_completion.sh
+source_when_readable \
+    /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
+    "${GHOSTTY_RESOURCES_DIR}/../bash-completion/completions/ghostty.bash" \
+    /usr/local/etc/profile.d/bash_completion.sh \
+    /etc/profile.d/bash_completion.sh
 
-    if [[ -r $HOME/.fzf.bash ]]; then
-        _fzf_compgen_path()
-        {
-            fzf-list-command "$1"
-        }
-        FZF_DEFAULT_COMMAND="fzf-list-command"
-        export FZF_DEFAULT_COMMAND
-        FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-        export FZF_CTRL_T_COMMAND
-        FZF_DEFAULT_OPTS="--color=light --cycle"
-        export FZF_DEFAULT_OPTS
-        source $HOME/.fzf.bash
-    fi
+if [[ -r $HOME/.fzf.bash ]]; then
+    _fzf_compgen_path()
+    {
+        fzf-list-command "$1"
+    }
+    FZF_DEFAULT_COMMAND="fzf-list-command"
+    export FZF_DEFAULT_COMMAND
+    FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_CTRL_T_COMMAND
+    FZF_DEFAULT_OPTS="--color=light --cycle"
+    export FZF_DEFAULT_OPTS
+    source $HOME/.fzf.bash
 fi
 
 # ----- END -----

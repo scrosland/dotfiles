@@ -80,7 +80,6 @@ Plug 'z0mbix/vim-shfmt'
 
 " utilities
 "
-Plug 'alok/notational-fzf-vim', { 'on': 'NV' }
 Plug 'editorconfig/editorconfig-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'kassio/neoterm'
@@ -219,29 +218,6 @@ function! s:fzf_find(bang, ...)
     call fzf#run(fzf#wrap('find', l:opts, a:bang))
 endfunction
 command! -nargs=* -bang Find :call s:fzf_find(<bang>0, <f-args>)
-
-" ---- Notes with notational-fzf-vim ----
-
-let g:nv_search_paths = []
-function! AddToNVSearchPath(dir)
-    " expand(pattern, nosuffix, return-list)
-    for l:dir in expand(a:dir, 0, 1)
-        if isdirectory(l:dir)
-            call add(g:nv_search_paths, l:dir)
-        endif
-    endfor
-endfunction
-function! RemoveFromNVSearchPath(dir)
-    " expand(pattern, nosuffix, return-list)
-    for l:dir in expand(a:dir, 0, 1)
-        if isdirectory(l:dir)
-            call filter(g:nv_search_paths, {idx,val -> val !~ l:dir})
-        endif
-    endfor
-endfunction
-call AddToNVSearchPath('$USERPROFILE/Dropbox/notes')
-call AddToNVSearchPath('$HOME/Dropbox/notes')
-call AddToNVSearchPath('$HOME/Desktop')
 
 " ---- Autocompletion ----
 

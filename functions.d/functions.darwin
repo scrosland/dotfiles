@@ -4,7 +4,7 @@
 # Shell functions for Darwin systems
 #
 
-if [ "$(uname -s)" != "Darwin" ] ; then
+if [ "$(uname -s)" != "Darwin" ]; then
     return
 fi
 
@@ -12,7 +12,7 @@ fi
 
 man()
 {
-    if [ ! -t 1 ] ; then
+    if [ ! -t 1 ]; then
         MANWIDTH=80 MANPAGER='col -bx' command man "$@"
         return
     fi
@@ -21,7 +21,7 @@ man()
 
 # ----- bash specific functions -----
 
-if [ -z "$BASH_VERSION" ] ; then
+if [ -z "$BASH_VERSION" ]; then
     return
 fi
 

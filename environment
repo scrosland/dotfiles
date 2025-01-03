@@ -4,37 +4,43 @@
 # Environment
 #
 
-if uname -a | grep -q -s Microsoft ; then
-    WSL=$(uname -r) ; export WSL
+if uname -a | grep -q -s Microsoft; then
+    WSL=$(uname -r)
+    export WSL
 fi
 
 _sc_select_browser()
 {
-    if [ -n "${BROWSER}" ] ; then
+    if [ -n "${BROWSER}" ]; then
         echo "${BROWSER}"
         return
     fi
-    if [ -x /usr/bin/open ] ; then
+    if [ -x /usr/bin/open ]; then
         echo /usr/bin/open
-    elif [ -n "${DISPLAY}" ] ; then
-        if [ -n "${GNOME_DESKTOP_SESSION_ID}" -a -x /usr/bin/gnome-open ] ; then
+    elif [ -n "${DISPLAY}" ]; then
+        if [ -n "${GNOME_DESKTOP_SESSION_ID}" -a -x /usr/bin/gnome-open ]; then
             echo /usr/bin/gnome-open
-        elif [ -x /usr/bin/x-www-browser ] ; then
+        elif [ -x /usr/bin/x-www-browser ]; then
             echo /usr/bin/x-www-browser
-        elif [ -x /usr/bin/xdg-open ] ; then
+        elif [ -x /usr/bin/xdg-open ]; then
             echo /usr/bin/xdg-open
         fi
     fi
 }
 
-BROWSER=$(_sc_select_browser) ; export BROWSER
-EDITOR='vim' ; export EDITOR
-HISTCONTROL=ignoreboth ; export HISTCONTROL
-LESS='-RXm' ; export LESS
+BROWSER=$(_sc_select_browser)
+export BROWSER
+EDITOR='vim'
+export EDITOR
+HISTCONTROL=ignoreboth
+export HISTCONTROL
+LESS='-RXm'
+export LESS
 MACHINE_THAT_GOES_PING=1 # illumos / Solaris — exporting would break scripts
-SCM_EDITOR='viterm' ; export SCM_EDITOR
+SCM_EDITOR='viterm'
+export SCM_EDITOR
 
-if echo "${BROWSER}" | grep -q -s '.vscode-server' ; then
+if echo "${BROWSER}" | grep -q -s '.vscode-server'; then
     VSCODE_PATH=$(echo "${BROWSER}" | sed -e 's!/helpers.*!/remote-cli!')
 fi
 
@@ -42,17 +48,17 @@ _add_to_path_var()
 {
     local varname="$1"
     local dirToAdd="$2"
-    if [ -z "${dirToAdd}" ] ; then
+    if [ -z "${dirToAdd}" ]; then
         return 1
     fi
-    if [ ! -d "${dirToAdd}" ] ; then
+    if [ ! -d "${dirToAdd}" ]; then
         return 1
     fi
     eval local current=\$${varname}
     local newvalue=""
-    if echo ":${current}:" | grep -q -s ":${dirToAdd}:" ; then
+    if echo ":${current}:" | grep -q -s ":${dirToAdd}:"; then
         return 0
-    elif [ -n "${current}" ] ; then
+    elif [ -n "${current}" ]; then
         newvalue="${dirToAdd}:${current}"
     else
         newvalue="${dirToAdd}"
@@ -70,7 +76,7 @@ add_to_path_var()
 add_to_path_var_and_export()
 {
     local varname="$1"
-    if _add_to_path_var "$@" ; then
+    if _add_to_path_var "$@"; then
         export "${varname}"
     fi
 }
@@ -78,9 +84,9 @@ add_to_path_var_and_export()
 _extract_base_path()
 {
     case "$PATH" in
-        ${HOME}/*)
-            return
-            ;;
+    ${HOME}/*)
+        return
+        ;;
     esac
     # Use path_helper to reconstruct the default path from /etc/paths.d.
     # The clearing of $PATH is important as path_helper will by default append
@@ -96,19 +102,20 @@ fix_degenerate_macos_path()
     # /usr/libexec/path_helper which will move any user directories to the end
     # of the path. There's a good explanation at:
     # https://checkoway.net/musings/nix/#fixing-shell-integration
-    if [ "$(uname -s)" != "Darwin" ] ; then
+    if [ "$(uname -s)" != "Darwin" ]; then
         return
     fi
     _extract_base_path
 }
 
-if [ -z "${CDPATH}" ] ; then
+if [ -z "${CDPATH}" ]; then
     add_to_path_var CDPATH "/Users/Shared"
     add_to_path_var CDPATH "${HOME}"
     add_to_path_var CDPATH "${HOME}/repos"
     add_to_path_var CDPATH "${HOME}/workspace"
     add_to_path_var CDPATH "."
-    VIM_CDPATH="${CDPATH}" ; export VIM_CDPATH
+    VIM_CDPATH="${CDPATH}"
+    export VIM_CDPATH
 fi
 
 add_to_path_var MANPATH "$HOME/.local/share/man"
@@ -118,7 +125,7 @@ fix_degenerate_macos_path
 add_to_path_var PATH "/usr/local/go/bin"
 add_to_path_var PATH "/usr/local/opt/ruby/bin"
 add_to_path_var PATH "/opt/homebrew/opt/ruby/bin"
-if [ -n "$(which ruby)" ] ; then
+if [ -n "$(which ruby)" ]; then
     add_to_path_var PATH "$(ruby -e 'puts Gem.bindir()' 2>/dev/null)"
 fi
 add_to_path_var PATH "/opt/homebrew/bin"
@@ -137,8 +144,9 @@ add_to_path_var_and_export PYTHONPATH /Users/Shared/tools/libs/python
 add_to_path_var_and_export RUBYLIB /Users/Shared/tools/libs/ruby
 
 # After $PATH has been set
-if command -v code >/dev/null 2>&1 ; then
+if command -v code >/dev/null 2>&1; then
     # Use vscode as the visual editor
-    GIT_EDITOR="code --wait" ; export GIT_EDITOR
+    GIT_EDITOR="code --wait"
+    export GIT_EDITOR
     SCM_EDITOR="code --wait --goto" # already exported
 fi

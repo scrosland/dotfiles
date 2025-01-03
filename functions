@@ -5,8 +5,8 @@
 #
 
 case "$-" in
-    *i*)    : ;;    # interactive
-    *)      return ;;
+*i*) : ;; # interactive
+*) return ;;
 esac
 
 #
@@ -19,7 +19,7 @@ esac
 abs_file()
 {
     local file="$1"
-    if [ -n "$(which ruby)" ] ; then
+    if [ -n "$(which ruby)" ]; then
         ruby -we 'require "pathname" ; puts Pathname.new(ARGV.shift).realpath' "${file}"
         return
     fi
@@ -40,8 +40,8 @@ alias resize-terminal=resize_terminal
 source_when_readable()
 {
     local _file
-    for _file in "$@" ; do
-        if [ -f "${_file}" -a -r "${_file}" ] ; then
+    for _file in "$@"; do
+        if [ -f "${_file}" -a -r "${_file}" ]; then
             . "${_file}"
         fi
     done
@@ -52,16 +52,16 @@ source_when_readable()
 alias ls='ls -CF'
 alias r='fc -s'
 
-if [ -x /usr/bin/parallel-ssh -a -z "$(which pssh)" ] ; then
+if [ -x /usr/bin/parallel-ssh -a -z "$(which pssh)" ]; then
     alias pssh=parallel-ssh
     alias pscp=parallel-scp
 fi
 
-if [ -z "$(which sgrep)" ] ; then
+if [ -z "$(which sgrep)" ]; then
     alias sgrep='rg --no-heading --line-number --with-filename'
 fi
 
-if [ -z "$(which sha256sum)" -a -n "$(which shasum)" ] ; then
+if [ -z "$(which sha256sum)" -a -n "$(which shasum)" ]; then
     alias sha256sum='shasum -a 256'
 fi
 
@@ -71,7 +71,7 @@ source_when_readable ${HOME}/dotfiles/functions.d/functions.*
 
 # ----- Fallback functions for non-bash shells -----
 
-if ! type set_title >/dev/null 2>&1 ; then
+if ! type set_title >/dev/null 2>&1; then
     # set terminal title
     set_title()
     {

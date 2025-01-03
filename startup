@@ -1,14 +1,14 @@
-# vim: set filetype=sh: 
-# 
+# vim: set filetype=sh:
+#
 # Simply source all the individual scripts
 #
-for _startup_script in environment functions shrc ; do
+for _startup_script in environment functions shrc; do
     # source the common file
     . "$HOME/dotfiles/${_startup_script}"
 
     # source the .local file for system-specific settings
     lcl="$HOME/.${_startup_script}.local"
-    if [ -r "${lcl}" ] ; then
+    if [ -r "${lcl}" ]; then
         . "${lcl}"
     fi
 done

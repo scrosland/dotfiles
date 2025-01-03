@@ -5,8 +5,8 @@
 #
 
 case "$-" in
-    *i*)    : ;;    # interactive
-    *)      return ;;
+*i*) : ;; # interactive
+*) return ;;
 esac
 
 #
@@ -15,7 +15,7 @@ esac
 
 _sc_seen_profile()
 {
-    if [ -n "$BASH_VERSION" ] ; then
+    if [ -n "$BASH_VERSION" ]; then
         echo "${BASH_SOURCE[@]}" | grep -s -q "$HOME/.profile"
         return $?
     fi
@@ -28,9 +28,9 @@ _sc_is_login_shell()
     cmd=$(ps -o comm= -p $$)
     arg=$(echo "${cmd}" | egrep -w -- "-l|--login")
     if [ "${cmd}" = "-${SHELL}" ] ||
-       [ "${cmd}" = "-${bshell}" ] ||
-       [ -n "${arg}" ] ||
-       _sc_seen_profile ; then
+        [ "${cmd}" = "-${bshell}" ] ||
+        [ -n "${arg}" ] ||
+        _sc_seen_profile; then
         return 0
     fi
     return 1
@@ -40,7 +40,7 @@ _sc_is_login_shell()
 
 set -o emacs
 
-if [ -n "$BASH_VERSION" ] ; then
+if [ -n "$BASH_VERSION" ]; then
     # tells bash to check the window size after each command
     shopt -s checkwinsize
     # tell bash to expand directories from environment vars during
@@ -50,31 +50,33 @@ if [ -n "$BASH_VERSION" ] ; then
     # https://lists.gnu.org/archive/html/bug-bash/2011-02/msg00274.html
     # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=650626 (closed)
     # https://bugs.launchpad.net/ubuntu/+source/bash/+bug/778627 (still open)
-    if shopt | grep -s -q direxpand ; then
+    if shopt | grep -s -q direxpand; then
         shopt -s direxpand
     fi
 fi
 
 # if TERM is not set, sort it out
-if [ -z "$TERM" -o "$TERM" = "dumb" ] ; then
-    TERM="xterm" ; export TERM      # lowest common denominator
+if [ -z "$TERM" -o "$TERM" = "dumb" ]; then
+    TERM="xterm"
+    export TERM # lowest common denominator
 fi
 
 # look for the best "xterm" terminfo entry
-if [ "$TERM" = "xterm" ] ; then
-    for info in xterm-256color xterm-debian ; do
-      if infocmp "${info}" > /dev/null 2>&1
-      then
-          TERM=${info} ; export TERM
-          break
-      fi
+if [ "$TERM" = "xterm" ]; then
+    for info in xterm-256color xterm-debian; do
+        if infocmp "${info}" >/dev/null 2>&1; then
+            TERM=${info}
+            export TERM
+            break
+        fi
     done
     unset info
 fi
 
-if [ "$TERM" = "xterm-ghostty" -o "$TERM" = "ghostty" ] ; then
-    if [ -z "$COLORTERM" ] ; then
-        COLORTERM=truecolor ; export COLORTERM
+if [ "$TERM" = "xterm-ghostty" -o "$TERM" = "ghostty" ]; then
+    if [ -z "$COLORTERM" ]; then
+        COLORTERM=truecolor
+        export COLORTERM
     fi
 fi
 
@@ -83,12 +85,12 @@ fi
 #    fi
 
 IS_LOGIN_SHELL=0
-if _sc_is_login_shell ; then
+if _sc_is_login_shell; then
     IS_LOGIN_SHELL=1
     SHLVL=1
 fi
 
-if [ -z "$BASH_VERSION" ] ; then
+if [ -z "$BASH_VERSION" ]; then
     PS1=""
     PS1="${PS1}${debian_chroot:+($debian_chroot)}"
     PS1="${PS1}${USER}@${HOSTNAME:-$(hostname)}"

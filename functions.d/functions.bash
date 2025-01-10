@@ -68,7 +68,7 @@ _sc_prompt_command()
         declare -i count=$(((${SHLVL} - 1) * 2))
         printf -v level "%.*s" ${count} '\$\$\$\$\$\$\$\$\$'
     fi
-    local options="" # e.g. git branch
+    local options="$(__git_ps1)" # e.g. git branch
     local prompt="$(_sc_prompt_string)"
     printf -v PS1 "${prompt}${options}${level}\$ "
 
@@ -125,6 +125,7 @@ PROMPT_COMMAND="_sc_prompt_command"
 
 source_when_readable \
     /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
+    /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh \
     "${GHOSTTY_RESOURCES_DIR}/../bash-completion/completions/ghostty.bash" \
     /usr/local/etc/profile.d/bash_completion.sh \
     /etc/profile.d/bash_completion.sh

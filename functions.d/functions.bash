@@ -10,10 +10,17 @@ if [ -z "${BASH_VERSION}" ]; then
     return
 fi
 
-_sc_prompt_path()
+# Tell bash to trim all but this number of directories from '\w'
+PROMPT_DIRTRIM=2
+
+_sc_cwd()
 {
-    local tilde="~"
-    local cwd="${PWD/#$HOME/${tilde}}"
+    printf "${PWD/#${HOME}/\~}"
+}
+
+_sc_prompt_path_core()
+{
+    local cwd="$(_sc_cwd)"
     if (("${#cwd}" <= 35)) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
         echo "${cwd}"
         return 0
@@ -26,6 +33,31 @@ _sc_prompt_path()
     echo "${headtail}"
     return 0
 }
+
+_sc_prompt_path_trim()
+{
+    if [[ -n "${PROMPT_FULL_PATH}" ]]; then
+        _sc_cwd
+        return 0
+    fi
+    echo '\w'
+}
+
+_sc_prompt_path_shorten()
+{
+    local cwd="$(_sc_cwd)"
+    if (("${#cwd}" <= 25)) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
+        echo "${cwd}"
+        return 0
+    fi
+    local path_parent=${cwd%\/*}
+    #local path_parent_short=$(echo $path_parent | sed -r 's|/([^/][^/]\|[^/])[^/]*|/\1|g') # 2 char directory names
+    local path_parent_short=$(echo $path_parent | sed -r 's|/(.)[^/]*|/\1|g') # 1 char directory names
+    local directory=${cwd##*\/}
+    echo "$path_parent_short/$directory"
+}
+
+_SC_PROMPT_PATH=_sc_prompt_path_trim
 
 # This moves the prompt back to the start of a line even if the proceding
 # command failed to output a trailing newline. To show that the command output
@@ -56,7 +88,7 @@ _sc_prompt_string()
         "${debian_chroot:+($debian_chroot)}" \
         "${USER}" \
         "${HOSTNAME%%.*}" \
-        "$(_sc_prompt_path)"
+        "$(${_SC_PROMPT_PATH})"
 }
 
 _sc_prompt_command()
@@ -72,7 +104,7 @@ _sc_prompt_command()
     local prompt="$(_sc_prompt_string)"
     printf -v PS1 "${prompt}${options}${level}\$ "
 
-    printf "\033]0;%s\007" "${TERMINAL_TITLE:-${prompt}}"
+    printf "\033]0;%s\007" "${TERMINAL_TITLE:-${prompt/\\w/$(_sc_cwd)}}"
     return 0
 }
 

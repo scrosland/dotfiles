@@ -20,6 +20,7 @@ if (($# == 0)); then
     stage xcode
     stage brew
     # the environment might be messed up so re-exec for the next part
+    PATH="/opt/homebrew/bin:${PATH}"
     exec "$0" --part-two
 elif [[ "$1" = "--part-two" ]]; then
     stage bash
@@ -28,7 +29,7 @@ elif [[ "$1" = "--part-two" ]]; then
     stage github
     stage golang
     stage java
-    stage iterm2
+    #stage iterm2
     stage nmond
     stage python
     stage ruby

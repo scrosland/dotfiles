@@ -26,6 +26,7 @@ else
     sleep 5
     run /bin/bash ${SCRIPT}
     rm -f ${SCRIPT}
+    PATH="/opt/homebrew/bin:${PATH}"
 fi
 unset brew
 

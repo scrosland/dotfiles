@@ -1,6 +1,5 @@
 # vim: set filetype=ruby :
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
 
 brew "abduco"
 brew "bash"
@@ -36,7 +35,8 @@ brew "shfmt"
 brew "vim"
 brew "watch"
 brew "wget"
-brew "youtube-dl"
+# Disabled upstream in Homebrew
+#brew "youtube-dl"
 
 cask "font-dejavu"
 cask "font-hack"

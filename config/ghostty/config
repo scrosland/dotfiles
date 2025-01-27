@@ -1,10 +1,9 @@
 # vim: set filetype=ghostty :
 
-theme = base24-github
-# override the very pale foreground and subtle highlights in base24-github
-foreground = #333333
+theme = OneHalfLight
+theme = Github
+#foreground = #333333
 cursor-color = #333333
-selection-background = #c8c8fa
 selection-background = #f1d007
 selection-foreground = #333333
 

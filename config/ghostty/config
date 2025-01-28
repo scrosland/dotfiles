@@ -1,7 +1,7 @@
 # vim: set filetype=ghostty :
 
-theme = OneHalfLight
 theme = Github
+theme = OneHalfLight
 #foreground = #333333
 cursor-color = #333333
 selection-background = #f1d007

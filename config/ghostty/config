@@ -2,6 +2,7 @@
 
 theme = Github
 theme = OneHalfLight
+theme = GitHub-Light-Default
 #foreground = #333333
 cursor-color = #333333
 selection-background = #f1d007

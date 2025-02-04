@@ -315,6 +315,7 @@ let g:lsp_settings = {
 \   },
 \   'clangd': {
 \     'cmd': {server_info -> [lsp_settings#exec_path('clangd')]+s:clangd_args()},
+\     'enabled': v:false,
 \   },
 \}
 

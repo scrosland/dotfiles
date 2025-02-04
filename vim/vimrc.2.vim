@@ -174,7 +174,7 @@ if strlen($VIM_CDPATH)
     let &cdpath = substitute(substitute($VIM_CDPATH, ':', ',', 'g'), '^.,', ',', '')
 endif
 
-command! -nargs=0 -bar ReformatFile normal gg=G
+command! -nargs=0 -bar ReformatFile normal gggqG
 command! -nargs=0 -bar ReindentFile ReformatFile
 
 " Add a :Shell command to run a command and read the stdout into a new buffer

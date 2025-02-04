@@ -93,10 +93,13 @@ nnoremap <Leader>q :silent nohlsearch<CR>
 " disable :X encryption
 nnoremap :X :echo "Encryption disabled"<CR>
 
-" Only include the rest of startup if this looks like a reasonable version.
-if has("eval") && v:version > 703
-    let s:sensible = resolve(expand("<sfile>:p").".sensible")
-    if filereadable(s:sensible)
-        execute "source " . s:sensible
-    endif
+" Bail out if this is a very old version of Vim
+if has("eval") && v:version < 704
+    finish
+endif
+
+" include the rest of startup if this looks like a reasonable version.
+let s:continuation = resolve(expand("<sfile>:p").".2.vim")
+if filereadable(s:continuation)
+    execute "source " . s:continuation
 endif

@@ -357,7 +357,7 @@ if has("autocmd")
     " Open the quickfix or location line window after any grep command
     augroup quickfix_mapping
         autocmd!
-        autocmd QuickFixCmdPost grep*,*[^l]grep* copen | redraw!
+        autocmd QuickFixCmdPost grep*,*[^l]grep*,make* copen | redraw!
         autocmd QuickFixCmdPost *lgrep* lopen | redraw!
     augroup end
 

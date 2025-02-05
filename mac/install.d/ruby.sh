@@ -3,4 +3,3 @@
 source "$(dirname $0)/functions.shlib"
 
 run gem install iStats
-run gem install rubocop

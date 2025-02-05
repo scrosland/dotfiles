@@ -288,10 +288,20 @@ let g:lsp_settings_root_markers = [
 \   '.bzr'
 \ ]
 
+" Python LSP.
 " Disable McCabe complexity checker.
 " Prefer Black, installed separately, for formatting.
-" Disable all the formatters except pycodestyle which lsp requires, and
+" Disable all the formatters except pycodestyle which pylsp requires, and
 " configure pycodestyle to be compatible with Black.
+"
+" Ruby LSP.
+" Disable formatters as ruby-lsp requires e.g. rubocop to be in the workspace
+" Gemfile, and most of the ruby I use is not in projects configured with a
+" Gemfile. Ruby-lsp options are documented at:
+"   https://shopify.github.io/ruby-lsp/editors.html#all-initialization-options
+"
+" clangd LSP.
+" Disable clangd by default as it works best with a compile_commands.json file.
 let g:lsp_settings = {
 \   'pylsp-all': {
 \     'workspace_config': {
@@ -308,7 +318,11 @@ let g:lsp_settings = {
 \       },
 \       'ruby-lsp': {
 \         'initialization_options': {
-\           'excluded_patterns': ['**/spec/**/*.rb'],
+\           'enabledFeatures': { 'formatting': v:false },
+\           'formatter': 'none',
+\           'indexing': {
+\             'excludedPatterns': ['**/spec/**/*.rb'],
+\           },
 \         },
 \       },
 \     }

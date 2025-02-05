@@ -100,6 +100,4 @@ endif
 
 " include the rest of startup if this looks like a reasonable version.
 let s:continuation = resolve(expand("<sfile>:p").".2.vim")
-if filereadable(s:continuation)
-    execute "source " . s:continuation
-endif
+runtime s:continuation

@@ -6,7 +6,7 @@ set redraw        " vi only
 if has("eval")
     " Debugging
     "
-    " Run the folowing to enable debug messages.
+    " Run the following to enable debug messages.
     "
     " vim --cmd 'let g:vimrc_debug=1' ...
     let g:vimrc_debug = get(g:, 'vimrc_debug', 0)
@@ -100,4 +100,4 @@ endif
 
 " include the rest of startup if this looks like a reasonable version.
 let s:continuation = resolve(expand("<sfile>:p").".2.vim")
-runtime s:continuation
+exec 'source ' . s:continuation

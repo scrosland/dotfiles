@@ -14,6 +14,9 @@ filetype on
 filetype plugin on
 filetype indent off
 
+" A place for my global config
+let g:user = {}
+
 " --- System Detection ---
 
 function! s:getSystemType()
@@ -299,78 +302,11 @@ endfunction
 command! -nargs=1 SetShiftWidth call s:set_shift_width(<q-args>)
 
 if has("autocmd")
-    function! s:init_golang()
-        setlocal noexpandtab nosmarttab softtabstop=0 shiftwidth=8 tabstop=8
-    endfunction
-
-    augroup filetype_golang
-        autocmd!
-        autocmd FileType go call s:init_golang()
-    augroup end
-
-    function! s:init_markdown()
-        setlocal nofoldenable
-        setlocal conceallevel=2
-        call s:set_shift_width(4)
-    endfunction
-
-    augroup filetype_markdown
-        autocmd!
-        autocmd FileType markdown call s:init_markdown()
-        autocmd FileType mkd      call s:init_markdown()
-    augroup end
-
-    " reStructuredText should start unfolded
-    augroup filetype_rst
-        autocmd!
-        autocmd FileType rst setlocal nofoldenable
-    augroup END
-
-    " vim files should support folding based on markers, but start unfolded
-    augroup filetype_vim
-        autocmd!
-        autocmd FileType vim setlocal foldmethod=marker nofoldenable
-    augroup end
-
-    " Smart dash to EN DASH and EM DASH conversation
-    function! s:smartdashes()
-        iab <buffer> -- <c-k>n-
-        iab <buffer> ~~ <c-k>m-
-    endfunction
-
-    " use soft wrap for text-like files
-    function s:init_textlike()
-        call s:smartdashes()
-        setlocal spell
-        WrapSoft
-    endfunction
-
-    augroup filetype_textlike
-        autocmd!
-        autocmd FileType markdown  call s:init_textlike()
-        autocmd FileType mkd       call s:init_textlike()
-        autocmd FileType mediawiki call s:init_textlike()
-        autocmd FileType rst       call s:init_textlike()
-        autocmd FileType text      call s:init_textlike()
-    augroup end
-
     " Open the quickfix or location line window after any grep command
     augroup quickfix_mapping
         autocmd!
         autocmd QuickFixCmdPost grep*,*[^l]grep*,make* copen | redraw!
         autocmd QuickFixCmdPost *lgrep* lopen | redraw!
-    augroup end
-
-    " Reset path as the ruby ftplugin will change it to the ruby load path
-    augroup filetype_ruby
-        autocmd!
-        autocmd FileType ruby setlocal path=.,,**
-    augroup end
-
-    " Change tab stops for shell code. See also vim/after/plugin/shfmt.vim
-    augroup filetype_shell
-        autocmd!
-        autocmd FileType sh setlocal softtabstop=4 shiftwidth=4
     augroup end
 endif " has autocmd
 

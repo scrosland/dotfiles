@@ -221,6 +221,29 @@ function! s:fzf_find(bang, ...)
 endfunction
 command! -nargs=* -bang Find :call s:fzf_find(<bang>0, <f-args>)
 
+" A set of files and directories that are markers for the root directory of a
+" project for a loose definition of 'project'. Multi-root workspaces may not
+" work with go.mod in this.
+let g:user.project_markers = [
+\   '.bk/',
+\   '.bzr',
+\   '.git',
+\   '.git/',
+\   '.hg',
+\   '.svn',
+\   '.vscode/',
+\   'BitKeeper',
+\   'cargo.toml',
+\   'Gemfile',
+\   'go.mod',
+\   'requirements.txt',
+\]
+
+function! s:get_project_root_path() dict
+    return lsp_settings#root_path([])
+endfunction
+let g:user.project_root_path = funcref('s:get_project_root_path')
+
 " ---- Autocompletion ----
 
 set completeopt=""
@@ -277,16 +300,7 @@ let g:lsp_settings_enable_suggestions = 0
 " Force a particular LSP server for a filetype
 let g:lsp_settings_filetype_ruby = [ 'ruby-lsp' ]
 
-" Add BitKeeper to the default list of root markers
-let g:lsp_settings_root_markers = [
-\   '.git',
-\   '.git/',
-\   '.bk/',
-\   'BitKeeper/',
-\   '.svn',
-\   '.hg',
-\   '.bzr'
-\ ]
+let g:lsp_settings_root_markers = g:user.project_markers
 
 " Python LSP.
 " Disable McCabe complexity checker.
@@ -381,7 +395,12 @@ endfunction
 function! s:clangd_args()
     let l:format = s:clangd_format()
     let l:format_string = get(s:clangd_format_definitions, l:format, '')
-    return [ '--fallback-style=' . l:format_string ]
+    let l:compile_commands_dir = lsp_settings#root_path([]) . '/'
+    return [
+    \   '--compile-commands-dir=' . l:compile_commands_dir,
+    \   '--header-insertion=never',
+    \   '--fallback-style=' . l:format_string,
+    \]
 endfunction
 
 " ---- Jedi for python intelligence ----

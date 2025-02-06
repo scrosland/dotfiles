@@ -1,3 +1,4 @@
+" loaded once for each file of this type, so uses buffer or window local variables
 if exists('b:loaded_python_black')
   finish
 endif

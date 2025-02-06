@@ -109,10 +109,10 @@ endif
 
 function! s:fixHighlights(yellow)
     highlight IncSearch term=reverse cterm=reverse ctermfg=Red ctermbg=NONE
-    " PuTTY and Gnome Terminator treat 'Yellow' higlighting differently
+    " PuTTY and Gnome Terminator treat 'Yellow' highlighting differently
     " so force 'LightYellow' for them irrespective of the argument
     let l:force_light_yellow = 0
-    if !g:is_osx && !g:is_windows
+    if !g:user.system.mac && !g:user.system.wsl
         if strlen($DISPLAY) == 0 || strlen($TERMINATOR_UUID)
             let l:force_light_yellow = 1
         endif
@@ -224,7 +224,8 @@ command! -nargs=* -bang Find :call s:fzf_find(<bang>0, <f-args>)
 " A set of files and directories that are markers for the root directory of a
 " project for a loose definition of 'project'. Multi-root workspaces may not
 " work with go.mod in this.
-let g:user.project_markers = [
+let g:user.project = {}
+let g:user.project.markers = [
 \   '.bk/',
 \   '.bzr',
 \   '.git',
@@ -242,7 +243,7 @@ let g:user.project_markers = [
 function! s:get_project_root_path() dict
     return lsp_settings#root_path([])
 endfunction
-let g:user.project_root_path = funcref('s:get_project_root_path')
+let g:user.project.root_path = funcref('s:get_project_root_path')
 
 " ---- Autocompletion ----
 
@@ -300,7 +301,7 @@ let g:lsp_settings_enable_suggestions = 0
 " Force a particular LSP server for a filetype
 let g:lsp_settings_filetype_ruby = [ 'ruby-lsp' ]
 
-let g:lsp_settings_root_markers = g:user.project_markers
+let g:lsp_settings_root_markers = g:user.project.markers
 
 " Python LSP.
 " Disable McCabe complexity checker.

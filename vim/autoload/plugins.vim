@@ -8,7 +8,7 @@ function! plugins#bootstrap()
     endif
 
     let l:vimplug = expand(g:plugins_basedir . '/autoload/plug.vim')
-    if g:is_windows
+    if g:user.system.windows
         let l:url = 'https://github.com/junegunn/vim-plug'
         echom "See instructions at " . l:url .
                 \ " and save as '" . l:vimplug . "'"

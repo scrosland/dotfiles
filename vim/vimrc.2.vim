@@ -19,33 +19,23 @@ let g:user = {}
 
 " --- System Detection ---
 
-function! s:getSystemType()
-    if has("win32") || has("win64")
-        return "windows"
+function! s:detect_wsl()
+    let l:release = trim(system('uname -r'))
+    if l:release =~ '-Microsoft$' || l:release =~ 'microsoft-standard-WSL2$'
+        return 1
     endif
-    if has("mac") || has("macunix") || has("gui_macvim")
-        return "osx"
-    endif
-    if has("unix")
-        " case insensitive regex comparison
-        let l:uname = system("uname -a")
-        if l:uname =~? "Darwin"
-            return "osx"
-        elseif l:uname =~? "Microsoft" || isdirectory("/mnt/c/Windows")
-            return "wsl"
-        else
-            return "unix"
-        endif
-    endif
-    throw "s:getSystemType(): unknown system type"
+    return 0
 endfunction
 
-let g:system_type = s:getSystemType()
-let g:is_osx      = (g:system_type == "osx")
-let g:is_unix     = (g:system_type == "unix" || g:system_type == "wsl")
-let g:is_windows  = (g:system_type == "windows")
-let g:is_wsl      = (g:system_type == "wsl")
-lockvar g:system_type g:is_osx g:is_unix g:is_windows g:is_wsl
+let g:user.system = {}
+let g:user.system.mac = (has("mac") || has("macunix") || has("gui_macvim"))
+let g:user.system.unix = has("unix")
+let g:user.system.windows = (has("win32") || has("win64"))
+let g:user.system.wsl = (!g:user.system.mac && !g:user.system.windows && s:detect_wsl())
+let g:user.system.type = g:user.system.mac ? 'mac'
+                \ : g:user.system.windows ? 'windows'
+                \ : g:user.system.wsl ? 'wsl'
+                \ : 'unix'
 
 function! s:find_directories(choices)
     return filter(copy(a:choices), 'isdirectory(expand(v:val))')
@@ -62,7 +52,7 @@ endfunction
 
 " --- MS Windows ---
 
-if g:is_windows
+if g:user.system.windows
     " Get the system defaults
     call s:source_if_readable("$VIMRUNTIME/mswin.vim")
 
@@ -157,7 +147,7 @@ if exists('+spelloptions')
     set spelloptions+=camel
 end
 set spellsuggest=5
-if g:is_windows
+if g:user.system.windows
     set spellfile=~/vimfiles/spellfile.utf-8.add
 else
     set spellfile=~/.vim/spellfile.utf-8.add
@@ -177,8 +167,9 @@ if strlen($VIM_CDPATH)
     let &cdpath = substitute(substitute($VIM_CDPATH, ':', ',', 'g'), '^.,', ',', '')
 endif
 
+" This works with &formatprg to format the file. The previous version used
+" &equalprg which is rarely set to something useful.
 command! -nargs=0 -bar ReformatFile normal gggqG
-command! -nargs=0 -bar ReindentFile ReformatFile
 
 " Add a :Shell command to run a command and read the stdout into a new buffer
 command! -nargs=+ -complete=shellcmd Shell 
@@ -189,26 +180,6 @@ command! -nargs=+ -complete=shellcmd Shell
 if has("terminal")
     command! -nargs=* -complete=shellcmd Term rightbelow term ++noclose <args>
     command! -nargs=* -complete=shellcmd Vterm vertical rightbelow term ++noclose <args>
-endif
-
-if has("pythonx")
-    " Set a preferred python version
-    if &pyxversion == 0
-        if has("python3")
-            set pyxversion=3
-        elseif has("python")
-            set pyxversion=2
-        endif
-    endif
-    let s:pyinterp = "python" . &pyxversion
-    if 0 && &pyxversion > 0 && executable(s:pyinterp)
-        " vim on Windows and Mac have broken sys.executable values which point
-        " to vim itself not the python interpreter.
-        " See https://github.com/davidhalter/jedi-vim/issues/870.
-        pythonx sys.executable = vim.eval("exepath(s:pyinterp)")
-        pythonx vim.command("VimrcDebug 'sys.executable=%s'" % (sys.executable))
-    endif
-    unlet s:pyinterp
 endif
 
 " --- Wrap mode ---
@@ -329,6 +300,6 @@ endif
 " Add local options to an after/ plugin called local.vim
 "   Unix: ~/.vim/after/plugin/local.vim
 "   Windows: $HOME/vimfiles/after/plugin/local.vim or $USERPROFILE/...
-if g:is_windows
+if g:user.system.windows
     set rtp+=$USERPROFILE/vimfiles/after
 endif

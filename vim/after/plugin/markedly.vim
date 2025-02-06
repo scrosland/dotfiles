@@ -32,9 +32,10 @@ elseif s:have_plugin("markdown-preview.vim")
     let g:mkdp_auto_close = 1
     let g:mkdp_command_for_global = 1
 
-    function! s:browser_osx()
+    function! s:browser_mac()
         return "open -a Safari"
     endfunction
+
     function! s:browser_unix()
         if executable("gnome-open")
             return "gnome-open"
@@ -77,5 +78,5 @@ elseif s:have_plugin("markdown-preview.vim")
         return s:browser_windows_like(l:prefixes)
     endfunction
 
-    let g:mkdp_path_to_chrome = s:browser_{g:system_type}()
+    let g:mkdp_path_to_chrome = s:browser_{g:user.system.type}()
 end

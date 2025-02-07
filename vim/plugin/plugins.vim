@@ -319,32 +319,32 @@ let g:lsp_settings_root_markers = g:user.project.markers
 " Disable clangd by default as it works best with a compile_commands.json file.
 let g:lsp_settings = {
 \   'pylsp-all': {
-\     'workspace_config': {
-\       'pylsp': {
-\         'plugins': {
-\           'pycodestyle': {
-\             'maxLineLength' : 80,
-\             'ignore': 'E203,E701',
+\       'workspace_config': {
+\           'pylsp': {
+\               'plugins': {
+\                   'pycodestyle': {
+\                       'maxLineLength' : 80,
+\                       'ignore': 'E203,E701',
+\                   },
+\                   'autopep8': { 'enabled': v:false },
+\                   'mccabe': { 'enabled': v:false },
+\                   'yapf': { 'enabled': v:false },
+\               },
 \           },
-\           'autopep8': { 'enabled': v:false },
-\           'mccabe': { 'enabled': v:false },
-\           'yapf': { 'enabled': v:false },
-\         }
 \       },
-\       'ruby-lsp': {
-\         'initialization_options': {
+\   },
+\   'ruby-lsp': {
+\       'initialization_options': {
 \           'enabledFeatures': { 'formatting': v:false },
 \           'formatter': 'none',
 \           'indexing': {
-\             'excludedPatterns': ['**/spec/**/*.rb'],
+\               'excludedPatterns': ['**/spec/**/*.rb'],
 \           },
-\         },
 \       },
-\     }
 \   },
 \   'clangd': {
-\     'cmd': {server_info -> [lsp_settings#exec_path('clangd')]+s:clangd_args()},
-\     'disabled': v:true,
+\       'cmd': {server_info -> [lsp_settings#exec_path('clangd')]+s:clangd_args()},
+\       'disabled': v:true,
 \   },
 \}
 
@@ -367,40 +367,11 @@ augroup END
 
 " ---- clangd LSP helpers ----
 
-let s:clangd_format_definitions = {
-\   'legacy': '{ BasedOnStyle: Google, IndentWidth: 4, TabWidth: 4, ColumnLimit: 0, BreakConstructorInitializers: BeforeComma, AccessModiferOffset: -2, IncludeBlocks: Preserve, SortIncludes: Never }',
-\   'modern': 'Google',
-\}
-
-" {root_path -> format}
-let s:clangd_format_cache = {}
-
-function! s:clangd_format()
-    let l:root = lsp_settings#root_path([])
-    if len(l:root) == 0
-        return 'modern'
-    endif
-    let l:format = get(s:clangd_format_cache, l:root, '')
-    if len(l:format) != 0
-        return l:format
-    endif
-    if isdirectory(l:root . '/.bk') || isdirectory(l:root . '/BitKeeper')
-        let l:format = 'legacy'
-    else
-        let l:format = 'modern'
-    endif
-    let s:clangd_format_cache[l:root] = l:format
-    return l:format
-endfunction
-
 function! s:clangd_args()
-    let l:format = s:clangd_format()
-    let l:format_string = get(s:clangd_format_definitions, l:format, '')
-    let l:compile_commands_dir = lsp_settings#root_path([]) . '/'
     return [
-    \   '--compile-commands-dir=' . l:compile_commands_dir,
+    \   '--compile-commands-dir=' . lsp_settings#root_path([]) . '/',
     \   '--header-insertion=never',
-    \   '--fallback-style=' . l:format_string,
+    \   '--fallback-style=' . CppToolsClangFormatString(),
     \]
 endfunction
 

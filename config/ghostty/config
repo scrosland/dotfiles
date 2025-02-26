@@ -17,7 +17,7 @@ font-feature = -calt
 
 # initial window size
 window-height = 42
-window-width = 80
+window-width = 82
 
 clipboard-read = allow
 clipboard-write = allow

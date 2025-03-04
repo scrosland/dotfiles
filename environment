@@ -134,10 +134,11 @@ add_to_path_var PATH "/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 add_to_path_var PATH "${HOME}/Applications/SCM.app/Contents/Resources/scm/bin"
 add_to_path_var PATH "/Users/Shared/tools/scripts"
+add_to_path_var PATH "${HOME}/dotfiles/bin"
 add_to_path_var PATH "${VSCODE_PATH}"
 add_to_path_var PATH "${HOME}/.local/bin"
+add_to_path_var PATH "${HOME}/.cargo/bin"
 add_to_path_var PATH "${HOME}/go/bin"
-add_to_path_var PATH "${HOME}/dotfiles/bin"
 add_to_path_var PATH "${HOME}/bin"
 
 add_to_path_var_and_export PYTHONPATH /Users/Shared/tools/libs/python

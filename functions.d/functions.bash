@@ -91,6 +91,13 @@ _sc_prompt_string()
         "$(${_SC_PROMPT_PATH})"
 }
 
+if [[ -z $(declare -F __git_ps1) ]]; then
+    __git_ps1()
+    {
+        :
+    }
+fi
+
 _sc_prompt_command()
 {
     _sc_prompt_reset

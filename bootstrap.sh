@@ -78,7 +78,7 @@ cd ${HOME}/dotfiles/skeleton
 for skel in *; do
     maybe install_file "${skel}" "${HOME}/.${skel}"
 done
-maybe sed -i ".bootstrap" -e "s!%HOME%!${HOME}!g" ${HOME}/.inputrc
+maybe sed -i.bootstrap -e "s!%HOME%!${HOME}!g" ${HOME}/.inputrc
 
 mkdir -p "${HOME}/.config"
 cd "${HOME}/dotfiles/config"

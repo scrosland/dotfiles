@@ -88,7 +88,7 @@ done
 cd "${HOME}"
 
 # dotfiles/environment requires ~/bin to fix up degenerate macOS paths
-mkdir "${HOME}"/bin
+mkdir -p "${HOME}"/bin
 
 wait_for_user "About to bootstrap vim configuration."
 maybe vim -c "call plugins#bootstrap()"

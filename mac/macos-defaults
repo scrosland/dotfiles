@@ -6,22 +6,30 @@ set -euo pipefail
 
 READONLY=1
 
-if (( $# > 0 )) ; then
-    if [[ "$1" = "--doit" ]] ; then
+if (($# > 0)); then
+    if [[ "$1" = "--doit" ]]; then
         READONLY=0
         shift
     fi
 fi
-        
+
 is_admin()
 {
     id -Gn | grep -q -s -w admin
 }
 
-if ! is_admin ; then
+if ! is_admin; then
     echo "Not in group admin - need to Make Me Admin"
     exit 1
 fi
+
+# FIXME: Add a check for full disk access
+echo "===== ===== ===== ===== ===== ====="
+echo "This script needs full disk access."
+echo "Check that the current terminal has been granted full disk access"
+echo ""
+echo "Ctrl-C now if you need to restart (waiting for 5 seconds)"
+sleep 5
 
 # Close any open System Preferences panes, to prevent them from overriding
 # settings we’re about to change
@@ -31,31 +39,37 @@ osascript -e 'tell application "System Preferences" to quit'
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until this script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2>/dev/null &
 KEEPALIVE=$!
 
 maybe()
 {
-    ARGS=( "$@" )
+    ARGS=("$@")
     echo "+${ARGS[@]}"
-    if (( ${READONLY} == 0 )) ; then
+    if ((${READONLY} == 0)); then
         "${ARGS[@]}"
         return
     fi
 
-    local cmd=0 ; local subcmd=1
-    if [[ "${ARGS[$cmd]}" = "sudo" ]] ; then
-        cmd=1 ; subcmd=2
+    local cmd=0
+    local subcmd=1
+    if [[ "${ARGS[$cmd]}" = "sudo" ]]; then
+        cmd=1
+        subcmd=2
     fi
-    if [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "read" ]] ; then
+    if [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "read" ]]; then
         "${ARGS[@]}"
-    elif [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "write" ]] ; then
+    elif [[ "${ARGS[$cmd]}" = "defaults" ]] && [[ "${ARGS[$subcmd]}" = "write" ]]; then
         # read the current setting instead of writing a new one
-        domain=$(( ${subcmd} + 1 ))
-        end=$(( ${subcmd} + 3 ))
-        saved=( "${ARGS[@]}" )
+        domain=$((${subcmd} + 1))
+        end=$((${subcmd} + 3))
+        saved=("${ARGS[@]}")
         ARGS[$subcmd]="read"
-        ARGS=( "${ARGS[@]:0:$end}" )    # bash array slice
+        ARGS=("${ARGS[@]:0:$end}") # bash array slice
         echo "++${ARGS[@]}"
         "${ARGS[@]}" 2>/dev/null || echo "[not found]"
     else
@@ -212,6 +226,8 @@ maybe defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 # ----- Restart affected applications -----
 
+# FIXME: Add a confirmation before restarting apps
+
 for app in \
     "Activity Monitor" \
     "cfprefsd" \
@@ -220,8 +236,7 @@ for app in \
     "Safari" \
     "SystemUIServer" \
     "Terminal" \
-    "TextEdit" \
-    ; do
+    "TextEdit"; do
     maybe killall "${app}" || true
 done
 

@@ -48,7 +48,7 @@ if [[ ! -r ${BREWFILE} ]]; then
     echo "Cannot find the brewfile, '${BREWFILE}'" >&2
     exit 1
 fi
-run brew bundle --no-lock --file=${BREWFILE}
+run brew bundle --file=${BREWFILE}
 # ... and then a manual upgrade just to be sure
 run brew upgrade
 # Cleanup temporary brew files

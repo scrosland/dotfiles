@@ -62,7 +62,9 @@ RestrictedItems.each() { |name,details|
     $stderr.puts("Warning: Not installing #{name} which needs sudo")
     next
   end
-  if details[:work] && !IsWork
+  if details[:work] != IsWork
+    MachineType = IsWork ? "work" : "non-work"
+    $stderr.puts("Warning: Not installing #{name} on #{MachineType} machine")
     next
   end
   send(details[:type], name)

@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+# Test the brewfile by mocking the Homebrew environment
+
+def brew(name)
+  puts("brew #{name}")
+end
+
+def cask(name)
+  puts("cask #{name}")
+end
+
+brewfile = File.join(File.dirname(__FILE__), "Brewfile")
+load brewfile

@@ -92,3 +92,4 @@ echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"
 checkForUpdate 8
 checkForUpdate 11
 checkForUpdate 17
+checkForUpdate 21

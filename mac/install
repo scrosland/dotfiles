@@ -31,7 +31,6 @@ elif [[ "$1" = "--part-two" ]]; then
     stage java
     #stage iterm2
     stage nmond
-    stage python
     stage ruby
     stage scm
 else

@@ -42,7 +42,8 @@ augroup local_shfmt
 augroup end
 
 function s:set_shfmt_args()
-    let g:shfmt_extra_args = '-i ' . &l:shiftwidth . ' --func-next-line'
+    " Google style won. Add --func-next-line to restore previous behaviour
+    let g:shfmt_extra_args = '-i ' . &l:shiftwidth
     " Set the local format-on-save to on by default.
     let b:local_shfmt_fmt_on_save = 1
     " Set `formatprg` to enable textobject formating like g$ or gq.

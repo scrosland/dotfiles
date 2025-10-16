@@ -11,7 +11,10 @@ fi
 
 for remote in "$@"; do
     echo "Copying terminfo to ${remote}"
+    # Copy for the current user
     infocmp -x | ssh "${remote}" -- tic -x -
+    # Try to copy for root, but allow it to fail
+    infocmp -x | ssh "${remote}" -- sudo -n tic -x - || true
 done
 
 exit 0

@@ -18,6 +18,7 @@ brew "lame"
 brew "ipcalc"
 brew "isync"
 brew "jq"
+brew "mas"  # Mac App Store cli
 brew "pandoc"
 brew "pssh"
 brew "pstree"

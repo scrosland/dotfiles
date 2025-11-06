@@ -89,7 +89,9 @@ fi
 
 echo ""
 echo "# New JDKs can be downloaded from https://adoptopenjdk.net/"
+# LTS versions for max compatibility and support
 checkForUpdate 8
 checkForUpdate 11
 checkForUpdate 17
 checkForUpdate 21
+checkForUpdate 25

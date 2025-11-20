@@ -54,12 +54,16 @@ run brew upgrade
 # Cleanup temporary brew files
 run brew cleanup
 
+echo "# Checking python3 version"
 python=$(brew info python3 | grep libexec || true)
 if [[ ${opython} != ${python} ]]; then
     echo "Python 3.x has been updated to 3.y"
     echo "was: ${opython}"
     echo "is : ${python}"
     echo "It may be necessary to reinstall pip packages"
+else
+    echo "Python 3.x remains the same version"
+    echo "ref: ${python}"
 fi
 
 hash -r

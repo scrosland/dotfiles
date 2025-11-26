@@ -47,6 +47,13 @@ RestrictedItems = {
     :sudo => true,
     :work => false,
   },
+  # https://github.com/jordanbaird/Ice
+  # https://icemenubar.app/
+  "jordanbaird-ice" => {
+    :type => :cask,
+    :sudo => true,
+    :work => true,
+  },
   "lookaway" => {
     :type => :cask,
     :sudo => true,

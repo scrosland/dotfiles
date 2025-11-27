@@ -49,7 +49,7 @@ RestrictedItems = {
   },
   # https://github.com/jordanbaird/Ice
   # https://icemenubar.app/
-  "jordanbaird-ice" => {
+  "jordanbaird-ice@beta" => {
     :type => :cask,
     :sudo => true,
     :work => true,

@@ -54,6 +54,7 @@ run brew upgrade
 # Cleanup temporary brew files
 run brew cleanup
 
+echo ""
 echo "# Checking python3 version"
 python=$(brew info python3 | grep libexec || true)
 if [[ ${opython} != ${python} ]]; then

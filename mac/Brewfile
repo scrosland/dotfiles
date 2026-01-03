@@ -64,6 +64,7 @@ RestrictedItems = {
 
 CanSudo = (Process.gid == 80) || (Process.groups.include? 80)
 IsWork = ["/Library/HDS", "/usr/local/hitachi", "/usr/local/jamf"].any? { |d| File.exist? d }
+MachineType = IsWork ? "work" : "non-work"
 
 RestrictedItems.each() { |name,details|
   if details[:sudo] && !CanSudo
@@ -71,7 +72,6 @@ RestrictedItems.each() { |name,details|
     next
   end
   if details[:work] != IsWork
-    MachineType = IsWork ? "work" : "non-work"
     $stderr.puts("Warning: Not installing #{name} on #{MachineType} machine")
     next
   end

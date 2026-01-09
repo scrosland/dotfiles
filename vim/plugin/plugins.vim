@@ -69,12 +69,7 @@ Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 
-"Plug 'chikamichi/mediawiki.vim', { 'for': 'mediwiki' }
-"Plug 'davidhalter/jedi-vim', { 'for': 'python' }
-"Plug 'fatih/vim-go', { 'for': 'go' }
-"Plug 'peterhoeg/vim-qml', { 'for': 'qml' }
 Plug 'plasticboy/vim-markdown'
-"Plug 'PProvost/vim-ps1', { 'for': 'ps1' }
 Plug 'vim-python/python-syntax'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
@@ -317,6 +312,11 @@ let g:lsp_settings_root_markers = g:user.project.markers
 "
 " clangd LSP.
 " Disable clangd by default as it works best with a compile_commands.json file.
+"
+" Others.
+" If other known language servers are installed, lsp-vim will automatically
+" use them. E.g. if gopls is installed it will be used for Go.
+"
 let g:lsp_settings = {
 \   'pylsp-all': {
 \       'workspace_config': {

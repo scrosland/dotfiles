@@ -2,6 +2,17 @@
 
 source "$(dirname $0)/functions.shlib"
 
-run gem uninstall --silent --executables iStats
+isInstalled() {
+    local name="$1"
+    gem info --quiet --silent --installed "${name}" 2>/dev/null
+}
 
-run gem install ruby-lsp
+if isInstalled iStats; then
+    run gem uninstall --silent --executables iStats
+fi
+
+quieten=""
+if command -v suppress-output-unless-error 2>/dev/null; then
+    quieten="suppress-output-unless-error"
+fi
+run ${quieten} gem install ruby-lsp

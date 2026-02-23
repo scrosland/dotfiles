@@ -12,7 +12,7 @@ if isInstalled iStats; then
 fi
 
 quieten=""
-if command -v suppress-output-unless-error 2>/dev/null; then
+if command -v suppress-output-unless-error >/dev/null; then
     quieten="suppress-output-unless-error"
 fi
 run ${quieten} gem install ruby-lsp

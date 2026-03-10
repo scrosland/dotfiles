@@ -1,5 +1,6 @@
 # vim: set filetype=ghostty :
 
+# last uncommented entry which can be found on disk will be the one used
 theme = Github
 theme = OneHalfLight
 theme = GitHub Light Default
@@ -25,3 +26,11 @@ clipboard-write = allow
 macos-titlebar-style = native
 macos-non-native-fullscreen = false
 # macos-option-as-alt = left
+
+window-inherit-working-directory = false
+tab-inherit-working-directory = true
+split-inherit-working-directory = true
+
+# Shell integration `cursor` (default) sets the cursor to a vertical bar
+shell-integration-features = no-cursor
+

@@ -12,7 +12,7 @@ selection-foreground = #333333
 font-family = Input Mono
 font-size = 13
 # tighten up the horizontal spacing for Input Mono
-adjust-cell-width = -10%
+#adjust-cell-width = -10%
 # disable programming ligatures
 font-feature = -calt
 

@@ -27,12 +27,12 @@ elif [[ "$1" = "--part-two" ]]; then
     stage fzf
     stage git
     stage github
-    stage golang
+    stage go
     stage java
     #stage iterm2
     stage nmond
     stage ruby
-    stage scm
+    #stage scm
 else
     echo "Unexpected argument '$1'" >&2
     exit 1

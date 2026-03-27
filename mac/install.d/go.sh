@@ -21,7 +21,9 @@ TOOLS+=(github.com/mgechev/revive@latest)
 TOOLS+=(golang.org/x/tools/cmd/goimports@latest)
 TOOLS+=(honnef.co/go/tools/cmd/staticcheck@latest)
 
-declare -p TOOLS
+#declare -p TOOLS
+
+run go version
 
 for tool in "${TOOLS[@]}"; do
     run go install "${tool}"

@@ -45,6 +45,10 @@ cask "font-dejavu"
 cask "font-hack"
 cask "font-input"
 
+# https://github.com/narugit/smctemp
+tap "narugit/tap"
+brew "narugit/tap/smctemp"
+
 RestrictedItems = {
   # https://github.com/jordanbaird/Ice
   # https://icemenubar.app/

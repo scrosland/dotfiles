@@ -52,7 +52,15 @@ brew "narugit/tap/smctemp"
 RestrictedItems = {
   # https://github.com/jordanbaird/Ice
   # https://icemenubar.app/
-  "jordanbaird-ice@beta" => {
+  # Dormant due to the maintainer's lack of time.
+  #"jordanbaird-ice@beta" => {
+  #  :type => :cask,
+  #  :sudo => true,
+  #  :work => true,
+  #},
+  # https://github.com/stonerl/Thaw
+  # A fork of Ice which is being maintained
+  "thaw" => {
     :type => :cask,
     :sudo => true,
     :work => true,

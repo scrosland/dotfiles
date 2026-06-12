@@ -153,7 +153,7 @@ _sc_setup_bash_completion() {
     # Find and load bash-completion
     local _bash_completion
     for _bash_completion in \
-        /opt/homebrew/share/bash-completion/bash_completion \
+        /opt/homebrew/etc/profile.d/bash_completion.sh \
         /etc/profile.d/bash_completion.sh; do
         if [[ -r ${_bash_completion} ]]; then
             source ${_bash_completion}

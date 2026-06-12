@@ -88,19 +88,24 @@ elseif executable("rg")
 endif
 
 " Clipboard, select mode and mouse settings need to be after sourcing mswin.vim
+" 'clipboard' says to use ^= (prepend) instead of += (append)
 if !has("mac")
     " On macOS autoselect usually results in me pasting the wrong thing.
     " Instead use Option-click to cut/paste from/to the system clipboard.
-    set clipboard+=autoselect
+    set clipboard^=autoselect
 endif
-" Using unnamed allows easy yank into the clipboard.
-" Counterintuitively in iTerm2 this requires _unchecking_
-" the "Applications in terminal may access clipboard" option in
-"   Preferences > General > Selection
-" That setting enables iTerm's special ANSI escape sequences for clipboard
-" integration which isn't what is wanted. See:
-"   https://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
-set clipboard+=unnamed
+" Using 'unnamed' causes all yank/put to go into the '*' clipboard register. I
+" used to like this, but I now find it just causes me overwrite whatever I have
+" carefully saved in the clipboard, e.g. copy to clipboard in GUI, then in vim
+" press 'C' and paste and ... the 'C' overwrites the clipboard before I paste.
+"   iTerm note:
+"     Counterintuitively in iTerm2 this requires _unchecking_
+"     the "Applications in terminal may access clipboard" option in
+"       Preferences > General > Selection
+"     That setting enables iTerm's special ANSI escape sequences for clipboard
+"     integration which isn't what is wanted. See:
+"       https://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
+set clipboard-=unnamed
 " Disable the awful Select mode
 set selectmode=""
 " Mouse in normal, visual, command and prompts.

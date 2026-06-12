@@ -13,13 +13,11 @@ fi
 # Tell bash to trim all but this number of directories from '\w'
 PROMPT_DIRTRIM=2
 
-_sc_cwd()
-{
+_sc_cwd() {
     printf "${PWD/#${HOME}/\~}"
 }
 
-_sc_prompt_path_core()
-{
+_sc_prompt_path_core() {
     local cwd="$(_sc_cwd)"
     if (("${#cwd}" <= 35)) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
         echo "${cwd}"
@@ -34,8 +32,7 @@ _sc_prompt_path_core()
     return 0
 }
 
-_sc_prompt_path_trim()
-{
+_sc_prompt_path_trim() {
     if [[ -n "${PROMPT_FULL_PATH}" ]]; then
         _sc_cwd
         return 0
@@ -43,8 +40,7 @@ _sc_prompt_path_trim()
     echo '\w'
 }
 
-_sc_prompt_path_shorten()
-{
+_sc_prompt_path_shorten() {
     local cwd="$(_sc_cwd)"
     if (("${#cwd}" <= 25)) || [[ -n "${PROMPT_FULL_PATH}" ]]; then
         echo "${cwd}"
@@ -75,14 +71,12 @@ _SC_PROMPT_PATH=_sc_prompt_path_trim
 #   ⤆  U+2906
 #   ←  U+2190
 #   ¶  U+00B6
-_sc_prompt_reset()
-{
+_sc_prompt_reset() {
     # bold helps the end mark stand out
     printf "\e[1m↵\e[m%$((COLUMNS - 1))s\r" ""
 }
 
-_sc_prompt_string()
-{
+_sc_prompt_string() {
     # based on __vte_prompt_command() as supplied with gnome-terminal
     printf "%s%s@%s:%s" \
         "${debian_chroot:+($debian_chroot)}" \
@@ -92,14 +86,12 @@ _sc_prompt_string()
 }
 
 if [[ -z $(declare -F __git_ps1) ]]; then
-    __git_ps1()
-    {
+    __git_ps1() {
         :
     }
 fi
 
-_sc_prompt_command()
-{
+_sc_prompt_command() {
     _sc_prompt_reset
 
     local level=""
@@ -115,8 +107,7 @@ _sc_prompt_command()
     return 0
 }
 
-_sc_csi_decset_state()
-{
+_sc_csi_decset_state() {
     local ps="$1"
     local onoff
     case "$2" in
@@ -134,44 +125,55 @@ _sc_csi_decset_state()
     printf '\e[?%s%s' "${ps}" "${onoff}"
 }
 
-application-cursor()
-{
+application-cursor() {
     # Turn on/off application cursor
     _sc_csi_decset_state 1 "$1"
 }
 
-mouse-reporting()
-{
+mouse-reporting() {
     # Turn on/off mouse reporting
     _sc_csi_decset_state 1000 "$1"
 }
 
 # set terminal title
-set_title()
-{
+set_title() {
     TERMINAL_TITLE="$1"
     return 0
 }
 
 if [ -z "$(which sfind)" ]; then
-    sfind()
-    {
+    sfind() {
         rg --files "$@" | sed -e 's/^/"/' -e 's/$/"/'
     }
 fi
 
 PROMPT_COMMAND="_sc_prompt_command"
 
-source_when_readable \
-    /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
-    /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh \
-    "${GHOSTTY_RESOURCES_DIR}/../bash-completion/completions/ghostty.bash" \
-    /usr/local/etc/profile.d/bash_completion.sh \
-    /etc/profile.d/bash_completion.sh
+_sc_setup_bash_completion() {
+    # Find and load bash-completion
+    local _bash_completion
+    for _bash_completion in \
+        /opt/homebrew/share/bash-completion/bash_completion \
+        /etc/profile.d/bash_completion.sh; do
+        if [[ -r ${_bash_completion} ]]; then
+            source ${_bash_completion}
+            #declare -p BASH_COMPLETION_VERSINFO
+            break
+        fi
+    done
+
+    # Load extra completions when available
+    source_when_readable \
+        /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash \
+        /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh \
+        "${GHOSTTY_RESOURCES_DIR}/../bash-completion/completions/ghostty.bash"
+}
+
+# doit
+_sc_setup_bash_completion
 
 if [[ -r $HOME/.fzf.bash ]]; then
-    _fzf_compgen_path()
-    {
+    _fzf_compgen_path() {
         fzf-list-command "$1"
     }
     FZF_DEFAULT_COMMAND="fzf-list-command"

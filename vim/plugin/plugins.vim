@@ -72,7 +72,8 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'plasticboy/vim-markdown'
 Plug 'vim-python/python-syntax'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
+" Archived, new version has too many dependencies
+"Plug 'iamcco/markdown-preview.vim', { 'for': ['markdown', 'mkd'] }
 Plug 'z0mbix/vim-shfmt'
 
 " utilities

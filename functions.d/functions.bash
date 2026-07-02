@@ -130,6 +130,26 @@ application-cursor() {
     _sc_csi_decset_state 1 "$1"
 }
 
+# wrap cd so that without arguments it goes to the root of the current repo
+# rather than $HOME, unless $PWD is already the root, in which case revert to
+# standard behaviour
+cdw() {
+    if [[ -z "$@" ]]; then
+        # work bk repos
+        if [[ -n "$SOFTWARE" ]] && [[ "$SOFTWARE" != "$PWD" ]]; then
+            cd $SOFTWARE
+            return $?
+        fi
+        # git repos
+        local toplevel=$(git rev-parse --show-toplevel || true)
+        if [[ -n "${toplevel}" ]] && [[ "${toplevel}" != "${PWD}" ]]; then
+            cd "${toplevel}"
+            return $?
+        fi
+    fi
+    cd "$@"
+}
+
 mouse-reporting() {
     # Turn on/off mouse reporting
     _sc_csi_decset_state 1000 "$1"

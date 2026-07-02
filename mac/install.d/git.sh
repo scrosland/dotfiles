@@ -49,3 +49,9 @@ fi
 if ! git config --global --get filter.lfs.process >/dev/null 2>&1; then
     run git -C $HOME lfs install
 fi
+
+# set the default sort order for git branch with the most recent update at the top
+# hat tip to Julia Evans, https://social.jvns.ca/@b0rk/116618490484124963
+if ! git config --global --get branch.sort >/dev/null 2>&1; then
+    run git config --global branch.sort '-committerdate'
+fi
